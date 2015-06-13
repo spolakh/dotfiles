@@ -1,10 +1,21 @@
+set nocompatible
+filetype off
+
+call vundle#rc()
+
+Bundle 'scrooloose/nerdcommenter.git'
+Bundle 'Lokaltog/vim-easymotion'
+Bundle 'kien/ctrlp.vim'
+Bundle 'xolox/vim-misc'
+Bundle 'xolox/vim-easytags'
+
+
 syntax on
 filetype plugin on
 filetype plugin indent on
 
 set t_Co=256
 set clipboard+=unnamed "yank and copy to X clipboard
-set nocompatible
 set encoding=utf-8
 
 "Syntax:
@@ -71,4 +82,31 @@ nnoremap    <F2> :<C-U>setlocal lcs=tab:>-,trail:-,eol:$ list! list? <CR>
 
 let g:pep8_ignore="E501"
 
-set tags=./tags;/
+"set tags=./tags;/
+
+set relativenumber 
+set number
+
+"Ctrl-P
+let g:ctrlp_clear_cache_on_exit = 0
+"if executable('ag')*/
+  " Use Ag over Grep*/
+"  /*set grepprg=ag\ --nogroup\ --nocolor*/
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore*/
+"  /*let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'*/
+
+  " ag is fast enough that CtrlP doesn't need to cache*/
+"  /*let g:ctrlp_use_caching = 0*/
+"endif*/
+
+" bind K to grep word under cursor*/
+"nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>*/
+
+"Easymotion
+map <space> <Plug>(easymotion-prefix)
+
+let g:EasyMotion_smartcase = 1
+map <space>j <Plug>(easymotion-j)
+map <space>k <Plug>(easymotion-k)
+nmap s <Plug>(easymotion-s)

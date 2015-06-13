@@ -11,6 +11,8 @@
 
 !.Xresources
 !.Xdefaults
+!.zshrc
+!.profile
 !.startm*
 !.startg*
 !.xmonad*
