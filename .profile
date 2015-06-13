@@ -19,6 +19,8 @@ PATH=$PATH:/home/quadrocube/Dropbox/prog/utils/backup
 
 export PYTHONSTARTUP=$HOME/.config/python_startup
 
+HOSTNAME=$(hostname)
+
 # grep colorize
 export GREP_OPTIONS="--color=auto"
 alias grep="/usr/bin/grep $GREP_OPTIONS"
