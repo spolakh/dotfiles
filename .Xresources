@@ -7,7 +7,7 @@ dzen2.background: black
 
 !!!urxvt
 
-URxvt*.backgroundPixmap: /home/quadrocube/urxvtbgs.png;style=tiled
+!URxvt*.backgroundPixmap: /home/quadrocube/urxvtbgs.png;style=tiled
 URxvt*cursorBlink:		true
 URxvt*scrollBar:		false
 URxvt*.depth: 32

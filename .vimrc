@@ -20,6 +20,7 @@ set encoding=utf-8
 
 "Syntax:
 colorscheme shobogenzo
+"colorscheme badwolf
 
 "Searching:
 set hlsearch "highlight search
