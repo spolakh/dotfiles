@@ -8,6 +8,8 @@ Bundle 'Lokaltog/vim-easymotion'
 Bundle 'kien/ctrlp.vim'
 Bundle 'xolox/vim-misc'
 Bundle 'xolox/vim-easytags'
+Plugin 'whatyouhide/vim-gotham'
+Plugin 'vim-scripts/colorsupport.vim'
 
 
 syntax on
@@ -19,7 +21,8 @@ set clipboard+=unnamed "yank and copy to X clipboard
 set encoding=utf-8
 
 "Syntax:
-colorscheme shobogenzo
+colorscheme gotham
+"colorscheme shobogenzo
 "colorscheme badwolf
 
 "Searching:
@@ -87,6 +90,14 @@ let g:pep8_ignore="E501"
 
 set relativenumber 
 set number
+
+" Keep all the temporary and backup files in one place
+set backup
+set backupdir=~/.vim/backup
+set directory=~/.vim/tmp
+
+"Easytags
+let g:easytags_file = '~/.vim/tags'
 
 "Ctrl-P
 let g:ctrlp_clear_cache_on_exit = 0
