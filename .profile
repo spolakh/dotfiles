@@ -3,6 +3,7 @@ alias sshfs='eval $(/usr/bin/keychain --eval --agents ssh -Q --quiet ~/.ssh/id_r
 alias scp='eval $(/usr/bin/keychain --eval --agents ssh -Q --quiet ~/.ssh/id_rsa) && scp'
 git() { eval $(/usr/bin/keychain --eval --agents ssh -Q --quiet ~/.ssh/id_rsa) && /usr/bin/git "$@"; }
 alias subpull='find . -type d -name .git -exec sh -c "cd \"{}\"/../ && pwd && git pull && git submodule update" \;'
+alias sc='starcluster'
 
 function parse_git_branch () {
   /usr/bin/git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
@@ -11,11 +12,13 @@ function parse_git_branch () {
 # add local bin path
 PATH=$PATH:$HOME/.bin
 PATH=$PATH:/usr/local/bin
+PATH=$PATH:/opt/anaconda2/bin
 PATH=$PATH:/usr/local/sbin
 PATH=$PATH:/usr/local/mysql/bin
 PATH=$PATH:/usr/local/pgsql/bin
 PATH=/home/quadrocube/Dropbox/prog/utils/depot_tools:$PATH
 PATH=$PATH:/home/quadrocube/Dropbox/prog/utils/backup
+PATH=~/.cabal/bin:$PATH
 
 export PYTHONSTARTUP=$HOME/.config/python_startup
 
@@ -130,3 +133,5 @@ function prompt_command {
 
 #[ "$1" =~ (Bugatti[[:alpha:][:digit:][:punct:][:blank:]]*) ]] && tmp[0]="${BASH_REMATCH[1]}"
 [[ "$(tty)" =~ (/dev/tty[0-9]+) ]] || PROMPT_COMMAND=prompt_command
+
+source "$HOME/.vim/bundle/gruvbox/gruvbox_256palette.sh"

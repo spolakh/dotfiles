@@ -6,10 +6,12 @@ call vundle#rc()
 Bundle 'scrooloose/nerdcommenter.git'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'kien/ctrlp.vim'
-Bundle 'xolox/vim-misc'
-Bundle 'xolox/vim-easytags'
 Plugin 'whatyouhide/vim-gotham'
 Plugin 'vim-scripts/colorsupport.vim'
+Plugin 'morhetz/gruvbox'
+Plugin 'sheerun/vim-polyglot'
+Plugin 'powerline/powerline'
+Plugin 'rking/ag.vim'
 
 
 syntax on
@@ -21,6 +23,8 @@ set clipboard+=unnamed "yank and copy to X clipboard
 set encoding=utf-8
 
 "Syntax:
+let g:gruvbox_italic=0
+"colorscheme gruvbox
 colorscheme gotham
 "colorscheme shobogenzo
 "colorscheme badwolf
@@ -101,16 +105,17 @@ let g:easytags_file = '~/.vim/tags'
 
 "Ctrl-P
 let g:ctrlp_clear_cache_on_exit = 0
-"if executable('ag')*/
+let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+if executable('ag')
   " Use Ag over Grep*/
-"  /*set grepprg=ag\ --nogroup\ --nocolor*/
+  set grepprg=ag\ --nogroup\ --nocolor
 
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore*/
-"  /*let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'*/
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l -u --nocolor -g ""'
 
-  " ag is fast enough that CtrlP doesn't need to cache*/
-"  /*let g:ctrlp_use_caching = 0*/
-"endif*/
+  " ag is fast enough that CtrlP doesn't need to cache
+"  let g:ctrlp_use_caching = 0
+endif
 
 " bind K to grep word under cursor*/
 "nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>*/

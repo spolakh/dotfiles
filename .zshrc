@@ -104,6 +104,10 @@ export EDITOR='vim'
 # ssh
 export SSH_KEY_PATH="~/.ssh/id_rsa"
 
+
+#function zle-line-init() {}
+#function zle-line-finish() {}
+
 # For a full list of active aliases, run `alias`.
 
 ZSH_CACHE_DIR=$HOME/.oh-my-zsh-cache
@@ -112,3 +116,6 @@ if [[ ! -d $ZSH_CACHE_DIR ]]; then
 fi
 
 source $ZSH/oh-my-zsh.sh
+
+bindkey "\e$terminfo[kcub1]" backward-word
+bindkey "\e$terminfo[kcuf1]" forward-word
