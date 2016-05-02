@@ -4,7 +4,6 @@ filetype off
 call vundle#rc()
 
 Bundle 'scrooloose/nerdcommenter.git'
-Bundle 'Lokaltog/vim-easymotion'
 Bundle 'kien/ctrlp.vim'
 Plugin 'whatyouhide/vim-gotham'
 Plugin 'vim-scripts/colorsupport.vim'
@@ -21,6 +20,10 @@ filetype plugin indent on
 set t_Co=256
 set clipboard+=unnamed "yank and copy to X clipboard
 set encoding=utf-8
+
+let mapleader=" "
+map <leader>e :Explore<cr>
+let g:netrw_liststyle=3
 
 "Syntax:
 let g:gruvbox_italic=0
@@ -60,7 +63,7 @@ nnoremap <F9> za
 onoremap <F9> <C-C>za
 vnoremap <F9> zf
 
-:nnoremap <F5> :buffers<CR>:buffer<Space>
+:nnoremap <F4> :buffers<CR>:buffer<Space>
 
 "Line numbering
 highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE
@@ -120,10 +123,3 @@ endif
 " bind K to grep word under cursor*/
 "nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>*/
 
-"Easymotion
-map <space> <Plug>(easymotion-prefix)
-
-let g:EasyMotion_smartcase = 1
-map <space>j <Plug>(easymotion-j)
-map <space>k <Plug>(easymotion-k)
-nmap s <Plug>(easymotion-s)
