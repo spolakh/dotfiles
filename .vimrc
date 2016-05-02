@@ -1,8 +1,10 @@
 set nocompatible
 filetype off
 
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
+Plugin 'VundleVim/Vundle.vim'
 Bundle 'scrooloose/nerdcommenter.git'
 Bundle 'kien/ctrlp.vim'
 Plugin 'whatyouhide/vim-gotham'
@@ -11,6 +13,8 @@ Plugin 'morhetz/gruvbox'
 Plugin 'sheerun/vim-polyglot'
 Plugin 'powerline/powerline'
 Plugin 'rking/ag.vim'
+
+call vundle#end()
 
 
 syntax on
