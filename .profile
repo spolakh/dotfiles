@@ -24,6 +24,8 @@ export PYTHONSTARTUP=$HOME/.config/python_startup
 
 HOSTNAME=$(hostname)
 
+MESA_GL_VERSION_OVERRIDE=3.30
+
 # grep colorize
 export GREP_OPTIONS="--color=auto"
 alias grep="/usr/bin/grep $GREP_OPTIONS"

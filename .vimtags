@@ -1,0 +1,99 @@
+!_TAG_FILE_SORTED	2	/0=unsorted, 1=sorted, 2=foldcase/
+) mymainmenu:toggle	/home/quadrocube/.config/awesome/rc.lua	/^awesome_icon:buttons(awful.util.table.join( awful.button({ }, 1, function() mymainmenu:toggle() end)))$/;"	f	language:Lua
+) os.execute	/home/quadrocube/.config/awesome/rc.lua	/^    awful.key({ modkey }, "Print", function() os.execute("xfce4-screenshooter -r &") end),$/;"	f	language:Lua
+<C-H>	/home/quadrocube/.vimrc	/^map <C-H> <C-W>-$/;"	m	language:Vim
+<C-J>	/home/quadrocube/.vimrc	/^map <C-J> <C-W>j$/;"	m	language:Vim
+<C-K>	/home/quadrocube/.vimrc	/^map <C-K> <C-W>k$/;"	m	language:Vim
+<C-L>	/home/quadrocube/.vimrc	/^map <C-L> <C-W>+$/;"	m	language:Vim
+<F2>	/home/quadrocube/.vimrc	/^nnoremap    <F2> :<C-U>setlocal lcs=tab:>-,trail:-,eol:$ list! list? <CR>$/;"	m	language:Vim
+<F9>	/home/quadrocube/.vimrc	/^inoremap <F9> <C-O>za$/;"	m	language:Vim
+<F9>	/home/quadrocube/.vimrc	/^nnoremap <F9> za$/;"	m	language:Vim
+<F9>	/home/quadrocube/.vimrc	/^onoremap <F9> <C-C>za$/;"	m	language:Vim
+<F9>	/home/quadrocube/.vimrc	/^vnoremap <F9> zf$/;"	m	language:Vim
+<space>	/home/quadrocube/.vimrc	/^map <space> <Plug>(easymotion-prefix)$/;"	m	language:Vim
+<space>j	/home/quadrocube/.vimrc	/^map <space>j <Plug>(easymotion-j)$/;"	m	language:Vim
+<space>k	/home/quadrocube/.vimrc	/^map <space>k <Plug>(easymotion-k)$/;"	m	language:Vim
+active_job	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^struct active_job$/;"	s	language:C++	file:
+append_str	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^void append_str(char** result, int* len, char** string, int* error)$/;"	f	language:C++
+args	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^    char **args;$/;"	m	language:C++	struct:program	file:
+awful.button({ }, 1, function (c) client.focus 	/home/quadrocube/.config/awesome/rc.lua	/^    awful.button({ }, 1, function (c) client.focus = c; c:raise() end),$/;"	f	language:Lua
+awful.key({ modkey }, "	/home/quadrocube/.config/awesome/rc.lua	/^    awful.key({ modkey }, "=", function () awful.util.spawn_with_shell("echo + > \/home\/quadrocube\/.config\/pianobar\/ctl") end),$/;"	f	language:Lua
+awful.key({ modkey,           }, "f",      function (c) c.fullscreen 	/home/quadrocube/.config/awesome/rc.lua	/^    awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),$/;"	f	language:Lua
+awful.key({ modkey,           }, "t",      function (c) c.ontop 	/home/quadrocube/.config/awesome/rc.lua	/^    awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end),$/;"	f	language:Lua
+biplets	/home/quadrocube/Wiki-Text-Gen/src/analyze_data.py	/^    biplets = defaultdict(lambda: Counter())$/;"	v	language:Python
+BUFF_SIZE	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	21;"	d	language:C++	file:
+cds	/home/quadrocube/.profile	/^cds() { cd "$@" && ls; }$/;"	f	language:Sh
+clear_program	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^void clear_program(struct program old_program)$/;"	f	language:C++
+client.connect_signal("unfocus", function(c) c.border_color 	/home/quadrocube/.config/awesome/rc.lua	/^client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)$/;"	f	language:Lua
+cost	/home/quadrocube/tmp/test.cpp	/^double cost(pair<int, int> a,$/;"	f	language:C++
+Counter	/home/quadrocube/Wiki-Text-Gen/src/analyze_data.py	/^from collections import Counter, defaultdict$/;"	i	language:Python
+defaultdict	/home/quadrocube/Wiki-Text-Gen/src/analyze_data.py	/^from collections import Counter, defaultdict$/;"	i	language:Python
+domain	/home/quadrocube/Wiki-Text-Gen/src/analyze_data.py	/^    domain = sys.argv[1]$/;"	v	language:Python
+edge_id	/home/quadrocube/tmp/test.cpp	/^map <pair<int, int>, int> edge_id;$/;"	v	language:C++
+eg	/home/quadrocube/tmp/test.cpp	/^vector<pair<int, double> > eg[maxM];$/;"	v	language:C++
+errWrap	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^int errWrap(int *errfds, int lenfds, char **cmdnames)$/;"	f	language:C++
+final_edges	/home/quadrocube/tmp/test.cpp	/^vector<int> final_edges;$/;"	v	language:C++
+for s 	/home/quadrocube/.config/awesome/rc.lua	/^for s = 1, screen.count() do screen[s]:connect_signal("arrange", function ()$/;"	f	language:Lua
+g:ctrlp_clear_cache_on_exit	/home/quadrocube/.vimrc	/^let g:ctrlp_clear_cache_on_exit = 0$/;"	v	language:Vim
+g:EasyMotion_smartcase	/home/quadrocube/.vimrc	/^let g:EasyMotion_smartcase = 1$/;"	v	language:Vim
+g:easytags_file	/home/quadrocube/.vimrc	/^let g:easytags_file = '~\/.vim\/tags'$/;"	v	language:Vim
+g:pep8_ignore	/home/quadrocube/.vimrc	/^let g:pep8_ignore="E501"$/;"	v	language:Vim
+getjob	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^int getjob(char** begin, char** string, struct job* new_job)$/;"	f	language:C++
+getprogram	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^int getprogram(char** begin, char** string, struct program* new_program, int* res_job)$/;"	f	language:C++
+get_lexeme	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^int get_lexeme(char** begin, char** cmd, char** result)$/;"	f	language:C++
+gg	/home/quadrocube/tmp/test.cpp	/^vector<int> gg[maxN];$/;"	v	language:C++
+git	/home/quadrocube/.profile	/^git() { eval $(\/usr\/bin\/keychain --eval --agents ssh -Q --quiet ~\/.ssh\/id_rsa) && \/usr\/bin\/git "$@"; }$/;"	f	language:Sh
+group	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^    int group;$/;"	m	language:C++	struct:active_job	file:
+hist	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^program hist[HIST_SIZE];$/;"	v	language:C++
+HIST_SIZE	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	20;"	d	language:C++	file:
+INF	/home/quadrocube/tmp/test.cpp	/^const int INF = 1000000000;$/;"	v	language:C++
+in_file	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^    char *in_file, *out_file;$/;"	m	language:C++	struct:program	file:
+is_banned	/home/quadrocube/Wiki-Text-Gen/src/analyze_data.py	/^from init import setup, is_banned$/;"	i	language:Python
+is_divider	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^int is_divider(char a)$/;"	f	language:C++
+job	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^struct job {$/;"	s	language:C++	file:
+job_name	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^    char* job_name;$/;"	m	language:C++	struct:active_job	file:
+len	/home/quadrocube/tmp/test.cpp	/^double len(pair<int, int> a, pair<int, int> b) {$/;"	f	language:C++
+main	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^int main() {$/;"	f	language:C++
+main	/home/quadrocube/tmp/test.cpp	/^int main() {$/;"	f	language:C++
+maxM	/home/quadrocube/tmp/test.cpp	/^const int maxM = 1000000 + 100;$/;"	v	language:C++
+maxN	/home/quadrocube/tmp/test.cpp	/^const int maxN = 10000 + 100;$/;"	v	language:C++
+most_frequent_biplets	/home/quadrocube/Wiki-Text-Gen/src/analyze_data.py	/^    most_frequent_biplets = {}$/;"	v	language:Python
+most_frequent_solos	/home/quadrocube/Wiki-Text-Gen/src/analyze_data.py	/^    most_frequent_solos = {}$/;"	v	language:Python
+name	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^    char *name;$/;"	m	language:C++	struct:program	file:
+number_of_processes	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^    int number_of_processes;$/;"	m	language:C++	struct:active_job	file:
+n_args	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^    int n_args;$/;"	m	language:C++	struct:program	file:
+n_progs	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^    int n_progs;$/;"	m	language:C++	struct:job	file:
+operator	/home/quadrocube/Wiki-Text-Gen/src/analyze_data.py	/^import operator$/;"	i	language:Python
+os	/home/quadrocube/Wiki-Text-Gen/src/analyze_data.py	/^import os$/;"	i	language:Python
+out_file	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^    char *in_file, *out_file;$/;"	m	language:C++	struct:program	file:
+parse_git_branch	/home/quadrocube/.profile	/^function parse_git_branch () {$/;"	f	language:Sh
+parse_jobs	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^int parse_jobs(char** begin, char* command, struct job** jobs, int* number_of_jobs)$/;"	f	language:C++
+pickle	/home/quadrocube/Wiki-Text-Gen/src/analyze_data.py	/^import pickle$/;"	i	language:Python
+pp	/home/quadrocube/tmp/test.cpp	/^pair<int, int> pp[maxN];$/;"	v	language:C++
+processes	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^    struct process* processes;$/;"	m	language:C++	struct:active_job	typeref:struct:active_job::process	file:
+program	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^struct program {$/;"	s	language:C++	file:
+programs	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^    struct program *programs;$/;"	m	language:C++	struct:job	typeref:struct:job::program	file:
+prompt_command	/home/quadrocube/.profile	/^function prompt_command {$/;"	f	language:Sh
+re	/home/quadrocube/Wiki-Text-Gen/src/analyze_data.py	/^import re$/;"	i	language:Python
+run_job	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^int run_job(struct job* new_job, struct active_job* possible_job)$/;"	f	language:C++
+run_jobs	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^void run_jobs(int n, struct job* jobs)$/;"	f	language:C++
+run_once	/home/quadrocube/.config/awesome/rc.lua	/^function run_once(cmd)$/;"	f	language:Lua
+s	/home/quadrocube/.vimrc	/^nmap s <Plug>(easymotion-s)$/;"	m	language:Vim
+safe_gets	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^int safe_gets(FILE *f, char** string)$/;"	f	language:C++
+settings 	/home/quadrocube/.config/awesome/rc.lua	/^    settings = function ()$/;"	f	language:Lua
+settings 	/home/quadrocube/.config/awesome/rc.lua	/^    settings = function()$/;"	f	language:Lua
+settings 	/home/quadrocube/.config/awesome/rc.lua	/^    settings = function()$/;"	f	language:Lua
+settings 	/home/quadrocube/.config/awesome/rc.lua	/^    settings = function()$/;"	f	language:Lua
+settings 	/home/quadrocube/.config/awesome/rc.lua	/^    settings = function()$/;"	f	language:Lua
+settings 	/home/quadrocube/.config/awesome/rc.lua	/^    settings = function()$/;"	f	language:Lua
+setup	/home/quadrocube/Wiki-Text-Gen/src/analyze_data.py	/^from init import setup, is_banned$/;"	i	language:Python
+solos	/home/quadrocube/Wiki-Text-Gen/src/analyze_data.py	/^    solos = defaultdict(lambda: Counter())$/;"	v	language:Python
+status	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	/^    int status; \/* 1001 - running, 1002 - suspended, 1003 - finished *\/$/;"	m	language:C++	struct:active_job	file:
+sys	/home/quadrocube/Wiki-Text-Gen/src/analyze_data.py	/^import sys$/;"	i	language:Python
+t) awful.tag.viewnext	/home/quadrocube/.config/awesome/rc.lua	/^                    awful.button({ }, 4, function(t) awful.tag.viewnext(awful.tag.getscreen(t)) end),$/;"	f	language:Lua
+t) awful.tag.viewprev	/home/quadrocube/.config/awesome/rc.lua	/^                    awful.button({ }, 5, function(t) awful.tag.viewprev(awful.tag.getscreen(t)) end)$/;"	f	language:Lua
+vi	/home/quadrocube/.bashrc	/^vi()$/;"	f	language:Sh
+vi	/home/quadrocube/.profile	/^vi()$/;"	f	language:Sh
+words	/home/quadrocube/Wiki-Text-Gen/src/analyze_data.py	/^                        words = re.findall("[a-zа-яё]+|\\.", line.lower())$/;"	v	language:Python
+_GNU_SOURCE	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	2;"	d	language:C++	file:
+_XOPEN_SOURCE	/home/quadrocube/Dropbox/homework/6_sem/caos/repos/task-0/main.c	1;"	d	language:C++	file:

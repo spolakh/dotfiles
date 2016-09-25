@@ -1,10 +1,15 @@
 set nocompatible
 filetype off
 
+let g:pymode_lint_ignore="E501"
+let g:pep8_ignore="E501"
+let g:syntastic_python_checkers=["flake8"]
+let g:syntastic_python_checker_args="--ignore=E501"
+
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
-Plugin 'VundleVim/Vundle.vim'
+Plugin 'gmarik/vundle.vim'
 Bundle 'scrooloose/nerdcommenter.git'
 Bundle 'kien/ctrlp.vim'
 Plugin 'whatyouhide/vim-gotham'
@@ -13,6 +18,9 @@ Plugin 'morhetz/gruvbox'
 Plugin 'sheerun/vim-polyglot'
 Plugin 'powerline/powerline'
 Plugin 'rking/ag.vim'
+Plugin 'LaTeX-Box-Team/LaTeX-Box'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-notes'
 
 call vundle#end()
 
@@ -95,8 +103,6 @@ map <C-L> <C-W>+
 
 nnoremap    <F2> :<C-U>setlocal lcs=tab:>-,trail:-,eol:$ list! list? <CR>
 
-let g:pep8_ignore="E501"
-
 "set tags=./tags;/
 
 set relativenumber 
@@ -126,4 +132,12 @@ endif
 
 " bind K to grep word under cursor*/
 "nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>*/
+"nmap <F3> i<C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR><Esc>
+"imap <F3> <C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR>
+nmap <F3> i<C-R>=strftime("%F %T %z")<CR><Esc>
+imap <F3> <C-R>=strftime("%F %T %z")<CR>
 
+set guifont=Consolas\ 13 
+
+let g:notes_directories = ['~/Dropbox/docs/notes/vim']
+let g:polyglot_disabled = ['latex']
