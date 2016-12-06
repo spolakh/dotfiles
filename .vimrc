@@ -21,6 +21,7 @@ Plugin 'rking/ag.vim'
 Plugin 'LaTeX-Box-Team/LaTeX-Box'
 Plugin 'xolox/vim-misc'
 Plugin 'xolox/vim-notes'
+Plugin 'project.tar.gz'
 
 call vundle#end()
 
@@ -30,7 +31,6 @@ filetype plugin on
 filetype plugin indent on
 
 set t_Co=256
-set clipboard+=unnamed "yank and copy to X clipboard
 set encoding=utf-8
 
 let mapleader=" "
@@ -57,6 +57,8 @@ set backspace=indent,eol,start
 if has('mouse')
   set mouse=a
 endif
+
+set clipboard+=unnamed "yank and copy to X clipboard
 
 "Russian keyboard (Ctrl-^ to switch layouts in insert mode)
 set keymap=russian-jcukenwin
@@ -130,10 +132,13 @@ if executable('ag')
 "  let g:ctrlp_use_caching = 0
 endif
 
+set undodir=~/.vim/undodir
+set undofile
+set undolevels=2048
+set undoreload=65538
+
 " bind K to grep word under cursor*/
 "nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>*/
-"nmap <F3> i<C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR><Esc>
-"imap <F3> <C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR>
 nmap <F3> i<C-R>=strftime("%F %T %z")<CR><Esc>
 imap <F3> <C-R>=strftime("%F %T %z")<CR>
 
