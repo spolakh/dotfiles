@@ -17,7 +17,6 @@ Plugin 'vim-scripts/indentpython.vim'
 Bundle 'Valloric/YouCompleteMe'
 Plugin 'vim-syntastic/syntastic'
 Plugin 'flazz/vim-colorschemes'
-Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 
 " ...
 
@@ -41,7 +40,3 @@ let python_highlight_all=1
 set t_Co=256
 syntax on
 colorscheme gruvbox
-
-" Powerline
-let g:Powerline_symbols = 'fancy'
-
