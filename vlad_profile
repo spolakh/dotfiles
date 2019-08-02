@@ -4,6 +4,7 @@ alias gd='git diff'
 alias gco='git checkout'
 alias gcm="git commit -m"
 alias gca="git commit --amend"
+alias watch='watch '
 
 # Completions
 source ~/.git-completion.bash
@@ -38,6 +39,7 @@ function parse_git_branch {
   PS_BRANCH="(git ${ref#refs/heads/}) "
 }
 PROMPT_COMMAND=parse_git_branch
+PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND" # reload history on each command -> share between terminals
 PS_INFO="$RED\u@\h$RESET:$BLUE\w"
 PS_GIT="$YELLOW\$PS_BRANCH"
 PS_TIME="\[\033[\$((COLUMNS-10))G\] $GREEN[\t]"
