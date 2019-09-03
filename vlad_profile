@@ -9,6 +9,7 @@ alias watch='watch '
 # Completions
 source ~/.git-completion.bash
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
 __git_complete gco _git_checkout
 
 # History
