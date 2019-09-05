@@ -39,8 +39,8 @@ alt - r : chunkc tiling::desktop --rotate 90
 
 # reload chunkwm
 meh - r : brew services restart chunkwm
-meh - 1 : sed -i "" 's/.load \".skhdrc_3\"/.load \".skhdrc_1\"/g' ~/dotfiles/vlad_skhdrc
-meh - 3 : sed -i "" 's/.load \".skhdrc_1\"/.load \".skhdrc_3\"/g' ~/dotfiles/vlad_skhdrc
+meh - 1 : sed -i "" 's/.load \".skhdrc_3\"/.load \".skhdrc_1\"/g' ~/dotfiles/vlad_skhdrc && brew services restart chunkwm
+meh - 3 : sed -i "" 's/.load \".skhdrc_1\"/.load \".skhdrc_3\"/g' ~/dotfiles/vlad_skhdrc && brew services restart chunkwm
 
 # app launch hotkeys
 alt - t : /Applications/iTerm.app/Contents/MacOS/iTerm2
