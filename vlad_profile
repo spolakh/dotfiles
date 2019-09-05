@@ -39,7 +39,7 @@ function parse_git_branch {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || return
   PS_BRANCH="(git ${ref#refs/heads/}) "
 }
-PROMPT_COMMAND=parse_git_branch
+PROMPT_COMMAND="$parse_git_branch $PROMPT_COMMAND"
 PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND" # reload history on each command -> share between terminals
 PS_INFO="$RED\u@\h$RESET:$BLUE\w"
 PS_GIT="$YELLOW\$PS_BRANCH"

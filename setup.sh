@@ -10,6 +10,8 @@ echo source ${DIR}/vlad_profile >> ~/.profile
 echo source ${DIR}/vlad_vimrc >> ~/.vimrc
 ln -s ${DIR}/vlad_chunkwmrc ~/.chunkwmrc
 ln -s ${DIR}/vlad_skhdrc ~/.skhdrc
+ln -s ${DIR}/vlad_skhdrc_3 ~/.skhdrc_3
+ln -s ${DIR}/vlad_skhdrc_1 ~/.skhdrc_1
 
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 

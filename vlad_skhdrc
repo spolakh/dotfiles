@@ -33,31 +33,14 @@ shift + alt - l : chunkc tiling::window --warp east
 
 alt - r : chunkc tiling::desktop --rotate 90
 
-# focus desktop
-alt - 1 : chunkc tiling::desktop --focus 4
-alt - 2 : chunkc tiling::desktop --focus 5
-alt - 3 : chunkc tiling::desktop --focus 6
-alt - 4 : chunkc tiling::desktop --focus 7
-alt - 5 : chunkc tiling::desktop --focus 8
-alt - 6 : chunkc tiling::desktop --focus 9
-alt - 7 : chunkc tiling::desktop --focus 1
-alt - 8 : chunkc tiling::desktop --focus 2
-alt - 9 : chunkc tiling::desktop --focus 3
-
-# move focused container to workspace
-shift + alt - 1 : chunkc tiling::window --send-to-desktop 4
-shift + alt - 2 : chunkc tiling::window --send-to-desktop 5
-shift + alt - 3 : chunkc tiling::window --send-to-desktop 6
-shift + alt - 4 : chunkc tiling::window --send-to-desktop 7
-shift + alt - 5 : chunkc tiling::window --send-to-desktop 8
-shift + alt - 6 : chunkc tiling::window --send-to-desktop 9
-shift + alt - 7 : chunkc tiling::window --send-to-desktop 1
-shift + alt - 8 : chunkc tiling::window --send-to-desktop 2
-shift + alt - 9 : chunkc tiling::window --send-to-desktop 3
+# load partial config that defines desktop layout
+# it gets automatically switched depending on the number of monitors
+.load ".skhdrc_3"
 
 # reload chunkwm
 meh - r : brew services restart chunkwm
-meh - e : brew services restart skhd
+meh - 1 : sed -i "" 's/.load \".skhdrc_3\"/.load \".skhdrc_1\"/g' ~/dotfiles/vlad_skhdrc
+meh - 3 : sed -i "" 's/.load \".skhdrc_1\"/.load \".skhdrc_3\"/g' ~/dotfiles/vlad_skhdrc
 
 # app launch hotkeys
 alt - t : /Applications/iTerm.app/Contents/MacOS/iTerm2
