@@ -9,7 +9,7 @@
                  [:3 :!CST3]
                  [:4 :!CST4]]}
        {:des "right cmd -> meh"
-         :rules [[:##right_command :!TOleft_shift nil {:alone :right_command}]]}
+         :rules [[:##right_command :!CTright_option nil {:alone :right_command}]]}
 ;        {:des "right command mode"
          ;:rules [:righ_command-mode
                  ;[:open_bracket :!SOTopen_bracket]

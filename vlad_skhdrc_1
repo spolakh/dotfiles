@@ -1,21 +1,21 @@
 # focus desktop
-meh - 1 : chunkc tiling::desktop --focus 8
-meh - 2 : chunkc tiling::desktop --focus 9
-meh - 3 : chunkc tiling::desktop --focus 10
-meh - 4 : chunkc tiling::desktop --focus 5
-meh - 5 : chunkc tiling::desktop --focus 6
-meh - 6 : chunkc tiling::desktop --focus 7
-meh - 7 : chunkc tiling::desktop --focus 2
-meh - 8 : chunkc tiling::desktop --focus 3
-meh - 9 : chunkc tiling::desktop --focus 4
+cmd + ctrl + alt - 1 : chunkc tiling::desktop --focus 8
+cmd + ctrl + alt - 2 : chunkc tiling::desktop --focus 9
+cmd + ctrl + alt - 3 : chunkc tiling::desktop --focus 10
+cmd + ctrl + alt - 4 : chunkc tiling::desktop --focus 5
+cmd + ctrl + alt - 5 : chunkc tiling::desktop --focus 6
+cmd + ctrl + alt - 6 : chunkc tiling::desktop --focus 7
+cmd + ctrl + alt - 7 : chunkc tiling::desktop --focus 2
+cmd + ctrl + alt - 8 : chunkc tiling::desktop --focus 3
+cmd + ctrl + alt - 9 : chunkc tiling::desktop --focus 4
 
 # move focused container to workspace
-cmd + meh - 1 : chunkc tiling::window --send-to-desktop 8
-cmd + meh - 2 : chunkc tiling::window --send-to-desktop 9
-cmd + meh - 3 : chunkc tiling::window --send-to-desktop 10
-cmd + meh - 4 : chunkc tiling::window --send-to-desktop 5
-cmd + meh - 5 : chunkc tiling::window --send-to-desktop 6
-cmd + meh - 6 : chunkc tiling::window --send-to-desktop 7
-cmd + meh - 7 : chunkc tiling::window --send-to-desktop 2
-cmd + meh - 8 : chunkc tiling::window --send-to-desktop 3
-cmd + meh - 9 : chunkc tiling::window --send-to-desktop 4
+hyper - 1 : chunkc tiling::window --send-to-desktop 8
+hyper - 2 : chunkc tiling::window --send-to-desktop 9
+hyper - 3 : chunkc tiling::window --send-to-desktop 10
+hyper - 4 : chunkc tiling::window --send-to-desktop 5
+hyper - 5 : chunkc tiling::window --send-to-desktop 6
+hyper - 6 : chunkc tiling::window --send-to-desktop 7
+hyper - 7 : chunkc tiling::window --send-to-desktop 2
+hyper - 8 : chunkc tiling::window --send-to-desktop 3
+hyper - 9 : chunkc tiling::window --send-to-desktop 4
