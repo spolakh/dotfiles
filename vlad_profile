@@ -7,6 +7,10 @@ alias gcm="git commit -m"
 alias gca="git commit --amend"
 alias watch='watch '
 
+# Aliases.k8s
+alias s='stern --kubeconfig=kubeconfig'
+alias k='kubectl --kubeconfig=kubeconfig'
+
 # Completions
 source ~/.git-completion.bash
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
@@ -40,8 +44,9 @@ function parse_git_branch {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || return
   PS_BRANCH="(git ${ref#refs/heads/}) "
 }
-PROMPT_COMMAND="$PROMPT_COMMAND; "parse_git_branch
-PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND" # reload history on each command -> share between terminals
+PGB=parse_git_branch
+PROMPT_COMMAND="history -a; history -c; history -r; $PGB"
+#PROMPT_COMMAND="history -a; history -c; history -r; $PGB" # reload history on each command -> share between terminals
 PS_INFO="$RED\u@\h$RESET:$BLUE\w"
 PS_GIT="$YELLOW\$PS_BRANCH"
 PS_TIME="\[\033[\$((COLUMNS-10))G\] $GREEN[\t]"

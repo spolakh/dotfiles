@@ -4,44 +4,42 @@
 
 # enter fullscreen mode for the focused container
 # TODO(Vlad): ... and follow focus
-alt - f : chunkc tiling::window --toggle fullscreen
-
-# change focus between tiling / floating windows
-shift + alt - space : chunkc tiling::window --toggle float
+meh - f : chunkc tiling::window --toggle fullscreen
 
 # change layout of desktop
-alt - e : chunkc tiling::desktop --layout bsp
-alt - w : chunkc tiling::desktop --layout monocle
+meh - e : chunkc tiling::desktop --layout bsp
+meh - w : chunkc tiling::desktop --layout monocle
 
 # kill focused window
-shift + alt - c : chunkc tiling::window --close
+meh + cmd - c : chunkc tiling::window --close
 
 # change focus
-alt - h : chunkc tiling::window --focus west
-alt - j : chunkc tiling::window --focus south
-alt - k : chunkc tiling::window --focus north
-alt - l : chunkc tiling::window --focus east
+meh - h : chunkc tiling::window --focus west
+meh - j : chunkc tiling::window --focus south
+meh - k : chunkc tiling::window --focus north
+meh - l : chunkc tiling::window --focus east
 
-alt - p : chunkc tiling::window --focus prev
-alt - n : chunkc tiling::window --focus next
+meh - p : chunkc tiling::window --focus prev
+meh - n : chunkc tiling::window --focus next
 
 # move focused window
-shift + alt - h : chunkc tiling::window --warp west
-shift + alt - j : chunkc tiling::window --warp south
-shift + alt - k : chunkc tiling::window --warp north
-shift + alt - l : chunkc tiling::window --warp east
+meh + cmd - h : chunkc tiling::window --warp west
+meh + cmd - j : chunkc tiling::window --warp south
+meh + cmd - k : chunkc tiling::window --warp north
+meh + cmd - l : chunkc tiling::window --warp east
 
-alt - r : chunkc tiling::desktop --rotate 90
+meh - r : chunkc tiling::desktop --rotate 90
 
 # load partial config that defines desktop layout
 # it gets automatically switched depending on the number of monitors
 .load ".skhdrc_3"
 
 # reload chunkwm
-meh - r : brew services restart chunkwm
-meh - 1 : sed -i "" 's/.load \".skhdrc_3\"/.load \".skhdrc_1\"/g' ~/dotfiles/vlad_skhdrc && brew services restart chunkwm
-meh - 3 : sed -i "" 's/.load \".skhdrc_1\"/.load \".skhdrc_3\"/g' ~/dotfiles/vlad_skhdrc && brew services restart chunkwm
+cmd + shift + ctrl - r : brew services restart chunkwm
+cmd + shift + ctrl - 1 : sed -i "" 's/.load \".skhdrc_3\"/.load \".skhdrc_1\"/g' ~/dotfiles/vlad_skhdrc && brew services restart chunkwm
+cmd + shift + ctrl - 3 : sed -i "" 's/.load \".skhdrc_1\"/.load \".skhdrc_3\"/g' ~/dotfiles/vlad_skhdrc && brew services restart chunkwm
+cmd + shift + ctrl - 4 : osascript -e 'display notification "its me!"'
 
 # app launch hotkeys
-alt - t : /Applications/iTerm.app/Contents/MacOS/iTerm2
-alt - q : open ~
+meh - t : /Applications/iTerm.app/Contents/MacOS/iTerm2
+meh - q : open ~

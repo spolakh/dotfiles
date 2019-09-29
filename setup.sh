@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eux
+set -eux pipefail
 
 brew install macvim
 brew install autojump
