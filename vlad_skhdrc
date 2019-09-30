@@ -7,10 +7,10 @@ cmd + ctrl + alt - f : chunkc tiling::window --toggle fullscreen
 
 # change layout of desktop
 cmd + ctrl + alt - e : chunkc tiling::desktop --layout bsp
-cmd + ctrl + alt - w : chunkc tiling::desktop --layout monocle
+cmd + ctrl + alt - d : chunkc tiling::desktop --layout monocle
 
 # kill focused window
-hyper - c : chunkc tiling::window --close
+cmd + ctrl + alt - w : chunkc tiling::window --close
 
 # change focus
 cmd + ctrl + alt - h : chunkc tiling::window --focus west
@@ -35,8 +35,8 @@ cmd + ctrl + alt - r : chunkc tiling::desktop --rotate 90
 
 # reload chunkwm
 cmd + shift + ctrl - r : brew services restart chunkwm
-cmd + shift + ctrl - 1 : sed -i "" 's/.load \".skhdrc_3\"/.load \".skhdrc_1\"/g' ~/dotfiles/vlad_skhdrc && brew services restart chunkwm
-cmd + shift + ctrl - 3 : sed -i "" 's/.load \".skhdrc_1\"/.load \".skhdrc_3\"/g' ~/dotfiles/vlad_skhdrc && brew services restart chunkwm
+cmd + shift + ctrl - 1 : sed -i "" 's/.load \".skhdrc_3\"/.load \".skhdrc_1\"/g' ~/dotfiles/vlad_skhdrc && osascript -e 'display notification "1 screen setup!"' && brew services restart chunkwm
+cmd + shift + ctrl - 3 : sed -i "" 's/.load \".skhdrc_1\"/.load \".skhdrc_3\"/g' ~/dotfiles/vlad_skhdrc && osascript -e 'display notification "3 screen setup!"' && brew services restart chunkwm
 cmd + shift + ctrl - 4 : osascript -e 'display notification "its me!"'
 
 # app launch hotkeys
