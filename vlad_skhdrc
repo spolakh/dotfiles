@@ -3,35 +3,35 @@
 
 # enter fullscreen mode for the focused container
 # TODO(Vlad): ... and follow focus
-cmd + ctrl + alt - f : chunkc tiling::window --toggle fullscreen
+rcmd - f : chunkc tiling::window --toggle fullscreen
 
 # change layout of desktop
-cmd + ctrl + alt - e : chunkc tiling::desktop --layout bsp
-cmd + ctrl + alt - d : chunkc tiling::desktop --layout monocle
+rcmd - e : chunkc tiling::desktop --layout bsp
+rcmd - d : chunkc tiling::desktop --layout monocle
 
 # kill focused window
-cmd + ctrl + alt - w : chunkc tiling::window --close
+rcmd - w : chunkc tiling::window --close
 
 # change focus
-cmd + ctrl + alt - h : chunkc tiling::window --focus west
-cmd + ctrl + alt - j : chunkc tiling::window --focus south
-cmd + ctrl + alt - k : chunkc tiling::window --focus north
-cmd + ctrl + alt - l : chunkc tiling::window --focus east
+rcmd - h : chunkc tiling::window --focus west
+rcmd - j : chunkc tiling::window --focus south
+rcmd - k : chunkc tiling::window --focus north
+rcmd - l : chunkc tiling::window --focus east
 
-cmd + ctrl + alt - p : chunkc tiling::window --focus prev
-cmd + ctrl + alt - n : chunkc tiling::window --focus next
+rcmd - p : chunkc tiling::window --focus prev
+rcmd - n : chunkc tiling::window --focus next
 
 # move focused window
-hyper - h : chunkc tiling::window --warp west
-hyper - j : chunkc tiling::window --warp south
-hyper - k : chunkc tiling::window --warp north
-hyper - l : chunkc tiling::window --warp east
+rcmd + shift - h : chunkc tiling::window --warp west
+rcmd + shift - j : chunkc tiling::window --warp south
+rcmd + shift - k : chunkc tiling::window --warp north
+rcmd + shift - l : chunkc tiling::window --warp east
 
-cmd + ctrl + alt - r : chunkc tiling::desktop --rotate 90
+rcmd - r : chunkc tiling::desktop --rotate 90
 
 # load partial config that defines desktop layout
 # it gets automatically switched depending on the number of monitors
-.load ".skhdrc_3"
+.load ".skhdrc_1"
 
 # reload chunkwm
 cmd + shift + ctrl - r : brew services restart chunkwm
@@ -40,5 +40,5 @@ cmd + shift + ctrl - 3 : sed -i "" 's/.load \".skhdrc_1\"/.load \".skhdrc_3\"/g'
 cmd + shift + ctrl - 4 : osascript -e 'display notification "its me!"'
 
 # app launch hotkeys
-cmd + ctrl + alt - t : /Applications/iTerm.app/Contents/MacOS/iTerm2
-cmd + ctrl + alt - q : open ~
+rcmd - t : /Applications/iTerm.app/Contents/MacOS/iTerm2
+rcmd - q : open ~
