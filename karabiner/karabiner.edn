@@ -1,9 +1,19 @@
-{
+{:profiles
+ {:Default {:default true
+         :sim     50
+         :delay   80
+         :alone   120
+         :held    70}}
+
 :simlayers {:caps_lock-mode {:key :caps_lock}
             :right_command-mode {:key :right_command}}
 
 :main [{:des "capskey"
          :rules [:caps_lock-mode
+                 [:l :k]
+                 [:o :i]
+                 [:9 :8]
+                 [:period :comma]
                  [:r :!CSTr]
                  [:1 :!CST1]
                  [:3 :!CST3]
@@ -11,7 +21,7 @@
 ;       {:des "right cmd -> meh"
 ;         :rules [[:##right_command :!CTright_option nil {:alone :right_command}]]}
 ;        {:des "right command mode"
-         ;:rules [:righ_command-mode
+;         :rules [:righ_command-mode
                  ;[:open_bracket :!SOTopen_bracket]
                  ;[:close_bracket :!SOTclose_bracket]
                  ;[:semicolon :!SOTsemicolon]
