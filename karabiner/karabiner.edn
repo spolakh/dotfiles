@@ -6,18 +6,23 @@
          :held    70}}
 
 :simlayers {:caps_lock-mode {:key :caps_lock}
-            :right_command-mode {:key :right_command}}
+            :left_command-mode {:key :left_command}}
 
 :main [{:des "capskey"
-         :rules [:caps_lock-mode
+         :rules [:left_command-mode
                  [:l :k]
                  [:o :i]
-                 [:9 :8]
+                 [:0 :8]
                  [:period :comma]
+                 [:k :k]
+                 [:i :i]
+                 [:8 :8]
+                 [:comma :comma]
                  [:r :!CSTr]
-                 [:1 :!CST1]
-                 [:3 :!CST3]
-                 [:4 :!CST4]]}
+                ; [:1 :!CST1]
+                ; [:3 :!CST3]
+                ]}
+                ; [:4 :!CST4]]}
 ;       {:des "right cmd -> meh"
 ;         :rules [[:##right_command :!CTright_option nil {:alone :right_command}]]}
 ;        {:des "right command mode"
