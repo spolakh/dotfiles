@@ -6,7 +6,14 @@
          :held    70}}
 
 :simlayers {:caps_lock-mode {:key :caps_lock}
+            :c-mode {:key :c}
+            :x-mode {:key :x}
             :left_command-mode {:key :left_command}}
+
+ :templates {:focus_desktop "/usr/local/bin/chunkc tiling::desktop --focus %d >/Users/spolakh/outtest 2>&1"
+             :send_to_desktop "/usr/local/bin/chunkc tiling::window --send-to-desktop %d"
+             :test_mode "osascript -e 'display notification \"its me! %d\"'"}
+
 
 :main [{:des "capskey"
          :rules [:left_command-mode
@@ -16,12 +23,34 @@
                  [:period :comma]
                  [:k :k]
                  [:i :i]
+                 [:up_arrow :right_arrow]
+                 [:down_arrow :left_arrow]
                  [:8 :8]
                  [:comma :comma]
                  [:r :!CSTr]
                 ; [:1 :!CST1]
                 ; [:3 :!CST3]
                 ]}
+       {:des "terminal"
+          :rules [:x-mode
+                  [:equal_sign [:focus_desktop 6]]
+                ]}
+       {:des "chrome"
+          :rules [:c-mode
+                  [:equal_sign [:focus_desktop 5]]
+                  ; rest (quit)
+                  [:1 [:focus_desktop 12]]
+                  ; strategy (what)
+                  [:2 [:focus_desktop 13]]
+                  ; exo/pkm
+                  [:3 [:focus_desktop 11]]
+                  ; body (CT [scan])
+                  [:5 [:focus_desktop 16]]
+                  ; people (C U)
+                  [:7 [:focus_desktop 15]]
+                  ; heal (oohm)
+                  [:9 [:focus_desktop 14]]
+                  ]}
                 ; [:4 :!CST4]]}
 ;       {:des "right cmd -> meh"
 ;         :rules [[:##right_command :!CTright_option nil {:alone :right_command}]]}
