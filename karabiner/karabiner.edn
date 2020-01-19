@@ -7,11 +7,11 @@
 
 :layers {
             :tab-mode {:key :tab}
+            :left_alt-mode {:key :left_alt}
          }
 
 :simlayers {
             :x-mode {:key :x}
-            :left_command-mode {:key :left_command}
             }
 
  :templates {:focus_desktop "/usr/local/bin/chunkc tiling::desktop --focus %d"
@@ -19,8 +19,8 @@
              :test_mode "osascript -e 'display notification \"its me! %d\"'"}
 
 
-:main [{:des "left command"
-         :rules [:left_command-mode
+:main [{:des "left alt"
+         :rules [:left_alt-mode
                  [:l :k]
                  [:o :i]
                  [:0 :8]
@@ -31,9 +31,6 @@
                  [:down_arrow :left_arrow]
                  [:8 :8]
                  [:comma :comma]
-                 [:r :!CSTr]
-                ; [:1 :!CST1]
-                ; [:3 :!CST3]
                 ]}
        {:des "terminal"
           :rules [:x-mode
