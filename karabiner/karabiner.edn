@@ -6,8 +6,8 @@
          :held    70}}
 
 :layers {
-            :tab-mode {:key :tab}
             :left_alt-mode {:key :left_alt}
+            :caps-mode {:key :caps_lock :alone {:key :escape}}
          }
 
 :simlayers {
@@ -37,7 +37,7 @@
                   [:equal_sign [:focus_desktop 6]]
                 ]}
        {:des "domains (chrome)"
-          :rules [:tab-mode
+          :rules [:caps-mode
                   [:equal_sign [:focus_desktop 5]]
                   [:!Sequal_sign [:send_to_desktop 5]]
                   ; rest (quit)
@@ -68,7 +68,6 @@
                   [:0 [:focus_desktop 2]]
                   [:!S0 [:send_to_desktop 2]]
                   ]}
-                ; [:4 :!CST4]]}
 ;       {:des "right cmd -> meh"
 ;         :rules [[:##right_command :!CTright_option nil {:alone :right_command}]]}
 ;        {:des "right command mode"

@@ -1,21 +1,13 @@
 # focus desktop
 rcmd - 1 : chunkc tiling::desktop --focus 8
 rcmd - 2 : chunkc tiling::desktop --focus 9
-rcmd - 3 : chunkc tiling::desktop --focus 10
-rcmd - 4 : chunkc tiling::desktop --focus 5
 rcmd - 5 : chunkc tiling::desktop --focus 6
 rcmd - 6 : chunkc tiling::desktop --focus 7
-rcmd - 7 : chunkc tiling::desktop --focus 2
-rcmd - 8 : chunkc tiling::desktop --focus 3
 rcmd - 9 : chunkc tiling::desktop --focus 4
 
 # move focused container to workspace
 rcmd + shift - 1 : chunkc tiling::window --send-to-desktop 8
 rcmd + shift - 2 : chunkc tiling::window --send-to-desktop 9
-rcmd + shift - 3 : chunkc tiling::window --send-to-desktop 10
-rcmd + shift - 4 : chunkc tiling::window --send-to-desktop 5
 rcmd + shift - 5 : chunkc tiling::window --send-to-desktop 6
 rcmd + shift - 6 : chunkc tiling::window --send-to-desktop 7
-rcmd + shift - 7 : chunkc tiling::window --send-to-desktop 2
-rcmd + shift - 8 : chunkc tiling::window --send-to-desktop 3
 rcmd + shift - 9 : chunkc tiling::window --send-to-desktop 4
