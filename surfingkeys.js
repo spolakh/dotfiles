@@ -128,3 +128,4 @@ settings.mouseSelectToQuery = [];
 // Disable emoji popup. I can see it being potentially useful, but most of the time it's annoying and I already have this via Alfred
 iunmap(":");
 
+unmapAllExcept([], /app.asana.com/);
