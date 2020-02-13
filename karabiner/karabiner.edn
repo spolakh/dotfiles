@@ -6,7 +6,7 @@
          :held    70}}
 
 :layers {
-            :left_alt-mode {:key :left_alt}
+            :left_ctrl-mode {:key :left_control}
             :caps-mode {:key :caps_lock :alone {:key :escape}}
          }
 
@@ -20,7 +20,7 @@
 
 
 :main [{:des "left alt"
-         :rules [:left_alt-mode
+         :rules [:left_ctrl-mode
                  [:l :k]
                  [:o :i]
                  [:0 :8]
