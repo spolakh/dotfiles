@@ -6,12 +6,13 @@
          :held    70}}
 
 :layers {
-            :left_ctrl-mode {:key :left_control}
-            :caps-mode {:key :caps_lock :alone {:key :escape}}
+            ;:caps-mode {:key :caps_lock :alone {:key :escape}}
          }
 
 :simlayers {
             :x-mode {:key :x}
+            :v-mode {:key :v}
+            :z-mode {:key :z}
             }
 
  :templates {:focus_desktop "/usr/local/bin/chunkc tiling::desktop --focus %d"
@@ -19,8 +20,8 @@
              :test_mode "osascript -e 'display notification \"its me! %d\"'"}
 
 
-:main [{:des "left alt"
-         :rules [:left_ctrl-mode
+:main [{:des "v"
+         :rules [:v-mode
                  [:l :k]
                  [:o :i]
                  [:0 :8]
@@ -31,13 +32,14 @@
                  [:down_arrow :left_arrow]
                  [:8 :8]
                  [:comma :comma]
+                 [:spacebar :spacebar]
                 ]}
        {:des "terminal"
           :rules [:x-mode
                   [:equal_sign [:focus_desktop 6]]
                 ]}
        {:des "domains (chrome)"
-          :rules [:caps-mode
+          :rules [:z-mode
                   [:equal_sign [:focus_desktop 5]]
                   [:!Sequal_sign [:send_to_desktop 5]]
                   ; rest (quit)
