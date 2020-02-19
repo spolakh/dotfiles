@@ -12,7 +12,7 @@
 :simlayers {
             :x-mode {:key :x}
             :v-mode {:key :v}
-            :z-mode {:key :z}
+            :c-mode {:key :c}
             }
 
  :templates {:focus_desktop "/usr/local/bin/chunkc tiling::desktop --focus %d"
@@ -23,9 +23,13 @@
 :main [{:des "v"
          :rules [:v-mode
                  [:l :k]
+                 [:#Sl :!Sk]
                  [:o :i]
+                 [:#So :i]
                  [:0 :8]
+                 [:#S0 :8]
                  [:period :comma]
+                 [:#Cperiod :comma]
                  [:k :k]
                  [:i :i]
                  [:up_arrow :right_arrow]
@@ -36,10 +40,10 @@
                 ]}
        {:des "terminal"
           :rules [:x-mode
-                  [:equal_sign [:focus_desktop 6]]
+                  [:equal_sign [:focus_desktop 3]]
                 ]}
        {:des "domains (chrome)"
-          :rules [:z-mode
+          :rules [:c-mode
                   [:equal_sign [:focus_desktop 5]]
                   [:!Sequal_sign [:send_to_desktop 5]]
                   ; rest (quit)
