@@ -13,6 +13,7 @@
             :x-mode {:key :x}
             :v-mode {:key :v}
             :c-mode {:key :c}
+            :z-mode {:key :z}
             }
 
  :templates {:focus_desktop "/usr/local/bin/chunkc tiling::desktop --focus %d"
@@ -23,13 +24,13 @@
 :main [{:des "v"
          :rules [:v-mode
                  [:l :k]
-                 [:#Sl :!Sk]
+                 [:semicolon :!Sk]
                  [:o :i]
-                 [:#So :i]
-                 [:0 :8]
-                 [:#S0 :8]
+                 [:p :!Si]
+                 [:9 :8]
+                 [:0 :!S8]
                  [:period :comma]
-                 [:#Cperiod :comma]
+                 [:slash :!Scomma]
                  [:k :k]
                  [:i :i]
                  [:up_arrow :right_arrow]
@@ -38,41 +39,47 @@
                  [:comma :comma]
                  [:spacebar :spacebar]
                 ]}
+       {:des "exo"
+          :rules [:z-mode
+                  [:equal_sign [:focus_desktop 10]]
+                  [:!Sequal_sign [:send_to_desktop 10]]
+                ]}
        {:des "terminal"
           :rules [:x-mode
                   [:equal_sign [:focus_desktop 3]]
+                  [:!Sequal_sign [:send_to_desktop 3]]
                 ]}
        {:des "domains (chrome)"
           :rules [:c-mode
                   [:equal_sign [:focus_desktop 5]]
                   [:!Sequal_sign [:send_to_desktop 5]]
                   ; rest (quit)
-                  [:1 [:focus_desktop 12]]
-                  [:!S1 [:send_to_desktop 12]]
-                  ; strategy (what)
-                  [:2 [:focus_desktop 13]]
-                  [:!S2 [:send_to_desktop 13]]
-                  ; exo/pkm
-                  [:3 [:focus_desktop 11]]
-                  [:!S3 [:send_to_desktop 11]]
-                  ; lair
-                  [:4 [:focus_desktop 10]]
-                  [:!S4 [:send_to_desktop 10]]
-                  ; body (CT [scan])
-                  [:5 [:focus_desktop 16]]
-                  [:!S5 [:send_to_desktop 16]]
-                  ; Nk (N)
-                  [:6 [:focus_desktop 3]]
-                  [:!S6 [:send_to_desktop 3]]
-                  ; people (C U)
-                  [:7 [:focus_desktop 15]]
-                  [:!S7 [:send_to_desktop 15]]
-                  ; heal (oohm)
-                  [:9 [:focus_desktop 14]]
-                  [:!S9 [:send_to_desktop 14]]
-                  ; flair 
-                  [:0 [:focus_desktop 2]]
-                  [:!S0 [:send_to_desktop 2]]
+                  ;[:1 [:focus_desktop 12]]
+                  ;[:!S1 [:send_to_desktop 12]]
+                  ;; strategy (what)
+                  ;[:2 [:focus_desktop 13]]
+                  ;[:!S2 [:send_to_desktop 13]]
+                  ;; exo/pkm
+                  ;[:3 [:focus_desktop 11]]
+                  ;[:!S3 [:send_to_desktop 11]]
+                  ;; lair
+                  ;[:4 [:focus_desktop 10]]
+                  ;[:!S4 [:send_to_desktop 10]]
+                  ;; body (CT [scan])
+                  ;[:5 [:focus_desktop 16]]
+                  ;[:!S5 [:send_to_desktop 16]]
+                  ;; Nk (N)
+                  ;[:6 [:focus_desktop 3]]
+                  ;[:!S6 [:send_to_desktop 3]]
+                  ;; people (C U)
+                  ;[:7 [:focus_desktop 15]]
+                  ;[:!S7 [:send_to_desktop 15]]
+                  ;; heal (oohm)
+                  ;[:9 [:focus_desktop 14]]
+                  ;[:!S9 [:send_to_desktop 14]]
+                  ;; flair 
+                  ;[:0 [:focus_desktop 2]]
+                  ;[:!S0 [:send_to_desktop 2]]
                   ]}
 ;       {:des "right cmd -> meh"
 ;         :rules [[:##right_command :!CTright_option nil {:alone :right_command}]]}

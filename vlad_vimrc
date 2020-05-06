@@ -21,6 +21,12 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'janko/vim-test'
+Plugin 'relastle/bluewery.vim'
+Plugin 'junk-e/identity.vim'
+Plugin 'tpope/vim-sensible'
+Plugin 'xolox/vim-colorscheme-switcher'
+" dependency of vim-colorscheme-switcher
+Plugin 'xolox/vim-misc'
 " dependency of vim-test
 Plugin 'tpope/vim-dispatch'
 Plugin 'hashivim/vim-terraform'
@@ -55,5 +61,7 @@ map <leader>b  :YcmCompleter GoToReferences<CR>
 let python_highlight_all=1
 set t_Co=256
 syntax on
-" Also try `plastic` colorscheme
-colorscheme gruvbox
+set termguicolors
+"colorscheme bluewery
+"colorscheme gruvbox
+colorscheme identity
