@@ -71,7 +71,20 @@
                 [:!Q0 [:focus_desktop 10]]
                 [:!SQ0 [:send_to_desktop 10]]
 
+                ; toggle monocle mode for current space
                 [:!Qw [:monocle_toggle]]
+                ; toggle floating and bring to center 
+                [:!Qe ["/usr/local/bin/yabai -m window --toggle float; /usr/local/bin/yabai -m window --grid 4:4:1:1:2:2"]]
+                ; rotate windows
+                [:!Qr ["/usr/local/bin/yabai -m space --rotate 90"]]
+                ; move focus around windows
+                [:!Ql ["/usr/local/bin/yabai -m window --focus next"]]
+                [:!Qh ["/usr/local/bin/yabai -m window --focus prev"]]
+                [:!Qk ["/usr/local/bin/yabai -m window --focus north"]]
+                [:!Qj ["/usr/local/bin/yabai -m window --focus south"]]
+                ; non-native fullscreen
+                [:!Qf ["/usr/local/bin/yabai -m window --toggle zoom-fullscreen"]]
+                [:!Qq ["/usr/local/bin/yabai -m window --close"]]
         ]}
        {:des "fix bad key column on sojourner"
          :rules [:v-mode
