@@ -15,6 +15,7 @@ ln -s ${DIR}/vlad_skhdrc_3 ~/.skhdrc_3
 ln -s ${DIR}/vlad_skhdrc_1 ~/.skhdrc_1
 
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+git config --global push.default current
 
 echo "Now run :BundleInstall inside vim\n"
 echo "And then run '~/.vim/bundle/YouCompleteMe/install.py --clang-completer'\n"
