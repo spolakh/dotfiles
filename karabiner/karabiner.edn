@@ -78,7 +78,7 @@
 
 :simlayers {
             :x-mode {:key :x}
-            :v-mode {:key :v}
+            :v-mode {:key :v} ; TODO: maybe if I copy it and add S, vS= will work? 
             :c-mode {:key :c}
             :z-mode {:key :z}
             }

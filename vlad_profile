@@ -13,7 +13,8 @@ alias tg='curl -s -X POST https://api.telegram.org/bot1129105247:AAFMF7Cu0D6ioLU
 
 # Aliases.k8s
 alias s='stern --kubeconfig=kubeconfig'
-alias k='kubectl --kubeconfig=kubeconfig'
+alias k='cloudkey msk/dev kubectl '
+alias kk='kubectl config use-context '
 
 # Completions
 source ~/.git-completion.bash
