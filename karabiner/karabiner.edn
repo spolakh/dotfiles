@@ -1,3 +1,5 @@
+    ;; list of key codes in Karabiner: 
+    ;;   https://github.com/pqrs-org/Karabiner-Elements/issues/925
     ;; !  | mandatory  (not recursive) modifiers which must be pressed
     ;; #  | optional   (recursive) modifiers which can be pressed
     ;; !! | command + control + optional + shift (hyper)
@@ -22,12 +24,39 @@
     ;; code for all this:
     ;; https://github.com/yqrashawn/GokuRakuJoudo/blob/b9b334a187379f9bc8182ad59e2cca2a1789e9c0/src/karabiner_configurator/keys.clj#L68
 
+    ;; each manipulator has a description and multiple rules
+
+    ;;{:des "..."                               ;; -> description
+    ;; :rules[
+    ;;          [<from>  <to>  <conditions>]    ;; -> rule 1
+    ;;          [<from>  <to>  <conditions>]    ;; -> rule 2
+    ;; ]}
+
+    ;; rule [:period ["period-mode" 1] nil {:afterup ["period-mode" 0] :alone :period}]
+    ;;       |_____| |_______________| |_| |_________________________________________|
+    ;;        <from>    <to>      <conditions>         <other options>
+    ;;
+    ;; karabiner docs: ;; https://pqrs.org/osx/karabiner/json.html#complex_modifications-manipulator-definition
+    ;; <other options> includs ~to_if_alone~, ~to_if_held_down~,~to_after_key_up~, ~to_delayed_action~ and ~parameters~.
+    ;;
+
+    ;; (custom variables) & modifiers -> Advanced
+    ;; https://github.com/yqrashawn/GokuRakuJoudo/blob/master/examples.org#custom-variable
+
+
 {:profiles
  {:Default {:default true
          :sim     50
          :delay   80
          :alone   120
          :held    70}}
+
+ :devices {
+    :apple [
+            {:vendor_id 1452}
+            {:vendor_id 76}
+    ]
+  }
 
 :layers {
             ;:caps-mode {:key :caps_lock :alone {:key :escape}}
@@ -85,6 +114,11 @@
                 ; non-native fullscreen
                 [:!Qf ["/usr/local/bin/yabai -m window --toggle zoom-fullscreen"]]
                 [:!Qq ["/usr/local/bin/yabai -m window --close"]]
+        ]}
+       {:des "make apple keyboard more like kinesis"
+        :rules [
+                [:##grave_accent_and_tilde :hyphen :apple]
+                [:##left_control :left_control :apple {:alone :grave_accent_and_tilde} ]
         ]}
        {:des "fix bad key column on sojourner"
          :rules [:v-mode
