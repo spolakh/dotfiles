@@ -1,3 +1,27 @@
+    ;; !  | mandatory  (not recursive) modifiers which must be pressed
+    ;; #  | optional   (recursive) modifiers which can be pressed
+    ;; !! | command + control + optional + shift (hyper)
+    ;; ## | optional any
+
+    ;; to understand better how modifiers work in karabiner
+    ;; karabiner definition of mandatory and optional
+    ;; https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/modifiers/
+
+    ;; C  | left_command
+    ;; T  | left_control
+    ;; O  | left_option
+    ;; S  | left_shift
+    ;; F  | fn
+    ;; Q  | right_command
+    ;; W  | right_control
+    ;; E  | right_option
+    ;; R  | right_shift
+    ;;
+    ;; need to prefix C T O S F with ! or #
+    ;;
+    ;; code for all this:
+    ;; https://github.com/yqrashawn/GokuRakuJoudo/blob/b9b334a187379f9bc8182ad59e2cca2a1789e9c0/src/karabiner_configurator/keys.clj#L68
+
 {:profiles
  {:Default {:default true
          :sim     50
@@ -16,12 +40,36 @@
             :z-mode {:key :z}
             }
 
- :templates {:focus_desktop "/usr/local/bin/chunkc tiling::desktop --focus %d"
-             :send_to_desktop "/usr/local/bin/chunkc tiling::window --send-to-desktop %d"
+ :templates {:focus_desktop "/usr/local/bin/yabai -m space --focus %d"
+             :send_to_desktop "/usr/local/bin/yabai -m window --space %d"
              :test_mode "osascript -e 'display notification \"its me! %d\"'"}
 
 
-:main [{:des "v"
+:main [
+       {:des "yabai"
+        :rules [
+                [:!Q1 [:focus_desktop 1]]
+                [:!SQ1 [:send_to_desktop 1]]
+                [:!Q2 [:focus_desktop 2]]
+                [:!SQ2 [:send_to_desktop 2]]
+                [:!Q3 [:focus_desktop 3]]
+                [:!SQ3 [:send_to_desktop 3]]
+                [:!Q4 [:focus_desktop 4]]
+                [:!SQ4 [:send_to_desktop 4]]
+                [:!Q5 [:focus_desktop 5]]
+                [:!SQ5 [:send_to_desktop 5]]
+                [:!Q6 [:focus_desktop 6]]
+                [:!SQ6 [:send_to_desktop 6]]
+                [:!Q7 [:focus_desktop 7]]
+                [:!SQ7 [:send_to_desktop 7]]
+                [:!Q8 [:focus_desktop 8]]
+                [:!SQ8 [:send_to_desktop 8]]
+                [:!Q9 [:focus_desktop 9]]
+                [:!SQ9 [:send_to_desktop 9]]
+                [:!Q0 [:focus_desktop 10]]
+                [:!SQ0 [:send_to_desktop 10]]
+        ]}
+       {:des "fix bad key column on sojourner"
          :rules [:v-mode
                  [:l :k]
                  [:semicolon :!Sk]
@@ -41,18 +89,18 @@
                 ]}
        {:des "exo"
           :rules [:z-mode
-                  [:equal_sign [:focus_desktop 10]]
-                  [:!Sequal_sign [:send_to_desktop 10]]
+                  [:equal_sign [:focus_desktop 14]]
+                  [:!Sequal_sign [:send_to_desktop 14]]
                 ]}
        {:des "terminal"
           :rules [:x-mode
-                  [:equal_sign [:focus_desktop 3]]
-                  [:!Sequal_sign [:send_to_desktop 3]]
+                  [:equal_sign [:focus_desktop 15]]
+                  [:!Sequal_sign [:send_to_desktop 15]]
                 ]}
        {:des "domains (chrome)"
           :rules [:c-mode
-                  [:equal_sign [:focus_desktop 5]]
-                  [:!Sequal_sign [:send_to_desktop 5]]
+                  [:equal_sign [:focus_desktop 16]]
+                  [:!Sequal_sign [:send_to_desktop 16]]
                   ; rest (quit)
                   ;[:1 [:focus_desktop 12]]
                   ;[:!S1 [:send_to_desktop 12]]
