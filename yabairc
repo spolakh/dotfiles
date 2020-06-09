@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+# delete monocle mode lock files from previous sessions
+find "${TMPDIR}" -type f -perm +111 -name "yabai_${USER}_monocle_mode_*" -delete
+
 # global settings
 yabai -m config mouse_follows_focus          off
 yabai -m config focus_follows_mouse          on

@@ -40,11 +40,13 @@
             :z-mode {:key :z}
             }
 
- :templates {:focus_desktop "/usr/local/bin/yabai -m space --focus %d"
+ :templates {
+             :focus_desktop "/usr/local/bin/yabai -m space --focus %d"
              :send_to_desktop "/usr/local/bin/yabai -m window --space %d"
+             ;; https://github.com/koekeishiya/yabai/issues/83
+             :monocle_toggle "/Users/sojourner/dotfiles/karabiner/toggle_monocle_mode.sh"
              :test_mode "osascript -e 'display notification \"its me! %d\"'"}
-
-
+             
 :main [
        {:des "yabai"
         :rules [
@@ -68,6 +70,8 @@
                 [:!SQ9 [:send_to_desktop 9]]
                 [:!Q0 [:focus_desktop 10]]
                 [:!SQ0 [:send_to_desktop 10]]
+
+                [:!Qw [:monocle_toggle]]
         ]}
        {:des "fix bad key column on sojourner"
          :rules [:v-mode
