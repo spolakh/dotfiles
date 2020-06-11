@@ -28,6 +28,8 @@ shopt -s histappend
 HISTSIZE=10000000
 HISTFILESIZE=10000000
 
+export EDITOR=vim
+
 # PS1
 RESET="\[\033[0m\]"
 RED="\[\033[0;31m\]"

@@ -44,6 +44,10 @@
     ;; https://github.com/yqrashawn/GokuRakuJoudo/blob/master/examples.org#custom-variable
 
 
+; EXAMPLES:
+; https://gist.github.com/kaushikgopal/ff7a92bbc887e59699c804b59074a126
+
+
 {:profiles
  {:Default {:default true
                   
@@ -77,10 +81,10 @@
          }
 
 :simlayers {
-            :x-mode {:key :x}
-            :v-mode {:key :v} ; TODO: maybe if I copy it and add S, vS= will work? 
+            :x-mode {:key :x} ; TODO: maybe if I copy it and add S, vS= will work? 
             :c-mode {:key :c}
             :z-mode {:key :z}
+            :space-mode {:key :spacebar} 
             }
 
  :templates {
@@ -121,10 +125,12 @@
                 ; rotate windows
                 [:!Qr ["/usr/local/bin/yabai -m space --rotate 90"]]
                 ; move focus around windows
-                [:!Ql ["/usr/local/bin/yabai -m window --focus next"]]
-                [:!Qh ["/usr/local/bin/yabai -m window --focus prev"]]
+                [:!Ql ["/usr/local/bin/yabai -m window --focus east"]]
+                [:!Qh ["/usr/local/bin/yabai -m window --focus west"]]
                 [:!Qk ["/usr/local/bin/yabai -m window --focus north"]]
                 [:!Qj ["/usr/local/bin/yabai -m window --focus south"]]
+                [:!Qopen_bracket ["/usr/local/bin/yabai -m window --focus prev"]]
+                [:!Qclose_bracket ["/usr/local/bin/yabai -m window --focus next"]]
                 ; non-native fullscreen
                 [:!Qf ["/usr/local/bin/yabai -m window --toggle zoom-fullscreen"]]
                 [:!Qq ["/usr/local/bin/yabai -m window --close"]]
@@ -134,23 +140,14 @@
                 [:##grave_accent_and_tilde :hyphen :apple]
                 [:##left_control :left_control :apple {:alone :grave_accent_and_tilde} ]
         ]}
-       {:des "fix bad key column on sojourner"
-         :rules [:v-mode
-                 [:l :k]
-                 [:semicolon :!Sk]
-                 [:o :i]
-                 [:p :!Si]
-                 [:9 :8]
-                 [:0 :!S8]
-                 [:period :comma]
-                 [:slash :!Scomma]
-                 [:k :k]
-                 [:i :i]
-                 [:up_arrow :right_arrow]
-                 [:down_arrow :left_arrow]
-                 [:8 :8]
-                 [:comma :comma]
-                 [:spacebar :spacebar]
+       {:des "vim-mode"
+         :rules [:space-mode
+                 [:l :right_arrow]
+                 [:h :left_arrow]
+                 [:j :down_arrow]
+                 [:k :up_arrow]
+                 [:e :!Oright_arrow]
+                 [:b :!Oleft_arrow]
                 ]}
        {:des "exo"
           :rules [:z-mode
