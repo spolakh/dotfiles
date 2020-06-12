@@ -81,9 +81,11 @@
          }
 
 :simlayers {
-            :x-mode {:key :x} ; TODO: maybe if I copy it and add S, vS= will work? 
+            :x-mode {:key :x} ; TODO: maybe if I copy it and add S, xS= will work? 
             :c-mode {:key :c}
             :z-mode {:key :z}
+            :v-mode {:key :v}
+            :q-mode {:key :q}
             :space-mode {:key :spacebar} 
             }
 
@@ -148,11 +150,23 @@
                  [:k :up_arrow]
                  [:e :!Oright_arrow]
                  [:b :!Oleft_arrow]
+                 [:0 :!Cleft_arrow]
+                 [:4 :!Cright_arrow]
                 ]}
        {:des "exo"
           :rules [:z-mode
                   [:equal_sign [:focus_desktop 14]]
                   [:!Sequal_sign [:send_to_desktop 14]]
+                ]}
+       {:des "code editor"
+          :rules [:v-mode
+                  [:equal_sign [:focus_desktop 13]]
+                  [:!Sequal_sign [:send_to_desktop 13]]
+                ]}
+       {:des "chats"
+          :rules [:q-mode
+                  [:equal_sign [:focus_desktop 12]]
+                  [:!Sequal_sign [:send_to_desktop 12]]
                 ]}
        {:des "terminal"
           :rules [:x-mode
