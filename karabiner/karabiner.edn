@@ -141,6 +141,7 @@
         :rules [
                 [:##grave_accent_and_tilde :hyphen :apple]
                 [:##left_control :left_control :apple {:alone :grave_accent_and_tilde} ]
+                [:##hyphen :vk_none :apple]
         ]}
        {:des "vim-mode"
          :rules [:space-mode
