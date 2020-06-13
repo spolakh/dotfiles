@@ -55,9 +55,14 @@
 
 (setq org-roam-directory "~/Dropbox/org")
 
-(setq org-todo-keywords
-  '((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE")))
+; NAVIGATION:
 
+(map!
+ (:map evil-motion-state-map
+  "<s-]>" #'better-jumper-jump-forward
+  "s-]" #'better-jumper-jump-forward
+  "<s-[>" #'better-jumper-jump-backward
+  "s-[" #'better-jumper-jump-backward))
 
 (map!
  (:map general-override-mode-map
@@ -70,6 +75,11 @@
   "s-J" #'evil-window-move-very-bottom
   "s-K" #'evil-window-move-very-top))
 
+; ORG-MODE:
+
+(setq org-todo-keywords
+  '((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE")))
+
 (map!
  (:map evil-normal-state-map
   "<s-return>" nil))
@@ -79,14 +89,3 @@
  (:map org-mode-map
   "<s-return>" #'org-todo)))
 
-(map!
- (:map evil-motion-state-map
-  "C-o" nil
-  "C-i" nil))
-
-(map!
- (:map evil-motion-state-map
-  "<C-o>" #'better-jumper-jump-forward
-  "C-o" #'better-jumper-jump-forward
-  "<C-i>" #'better-jumper-jump-backward
-  "C-i" #'better-jumper-jump-backward))
