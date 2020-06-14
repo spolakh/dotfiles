@@ -153,6 +153,8 @@
                  [:b :!Oleft_arrow]
                  [:0 :!Cleft_arrow]
                  [:4 :!Cright_arrow]
+                 [:u :page_up]
+                 [:d :page_down]
                 ]}
        {:des "exo"
           :rules [:z-mode

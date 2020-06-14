@@ -21,16 +21,6 @@
 ;; font string. You generally only need these two:
 (setq doom-font (font-spec :family "monospace" :size 14))
 
-;; There are two ways to load a theme. Both assume the theme is installed and
-;; available. You can either set `doom-theme' or manually load a theme with the
-;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-gruvbox)
-; Favs: doom-gruvbox, doom-nord, tomorrow-day/night, spacegrey
-
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
-
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type `visual)
@@ -53,7 +43,34 @@
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
 
-(setq org-roam-directory "~/Dropbox/org")
+; THEMES:
+
+(setq doom-theme 'doom-gruvbox)
+(after! heaven-and-hell
+  (setq heaven-and-hell-themes
+        '((light . doom-solarized-light)
+          (dark . doom-gruvbox)))
+  ;; Optionall, load themes without asking for confirmation.
+  (setq heaven-and-hell-load-theme-no-confirm t)
+  (map!
+   :leader "-" 'heaven-and-hell-toggle-theme))
+(add-hook 'after-init-hook 'heaven-and-hell-init-hook)
+
+; Other Favs:
+;   - Light:
+;(load-theme 'doom-one-light 'NO-CONFIRM)
+;(load-theme 'doom-tomorrow-day 'NO-CONFIRM)
+;(load-theme 'doom-nord-light 'NO-CONFIRM)
+;(load-theme 'dichromacy 'NO-CONFIRM)
+;(load-theme 'spacemacs-light 'NO-CONFIRM)
+;(load-theme 'doom-solarized-light 'NO-CONFIRM)
+;   - Dark:
+;(load-theme 'doom-gruvbox 'NO-CONFIRM)
+;(load-theme 'doom-one 'NO-CONFIRM)
+;(load-theme 'doom-vibrant 'NO-CONFIRM)
+;(load-theme 'doom-spacegrey 'NO-CONFIRM)
+;(load-theme 'doom-tomorrow-night 'NO-CONFIRM)
+;(load-theme 'doom-nord 'NO-CONFIRM)
 
 ; NAVIGATION:
 
@@ -77,15 +94,34 @@
 
 ; ORG-MODE:
 
-(setq org-todo-keywords
-  '((sequence "TODO" "IN-PROGRESS" "WAITING" "DONE")))
+(after! org
+  (map!
+   (:map evil-normal-state-map
+    "<s-return>" nil)
+   (:map org-mode-map
+    "<s-return>" #'org-todo))
 
-(map!
- (:map evil-normal-state-map
-  "<s-return>" nil))
+  (setq
+   org-todo-keywords '((sequence "Idea:" "Project:" "Task:" "ACTIVE" "WAITING" "|" "DONE" "PASS"))
+   org-directory "~/Dropbox/org")
+   ; org-todo-keyword-faces
+)
+; ORG-ROAM:
 
-(map!
- (:after org
- (:map org-mode-map
-  "<s-return>" #'org-todo)))
+(setq org-roam-directory "~/Dropbox/org")
+(setq org-roam-link-title-format "[[%s]]")
+(setq org-roam-index-file "index.org")
+(setq org-roam-capture-templates
+    '(("d" "default" plain (function org-roam--capture-get-point)
+     "%?"
+     :file-name "${slug}"
+     :head "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n"
+     :unnarrowed t)))
 
+
+;(map! :map org-roam-mode-map
+;      :leader
+;      (:prefix ("z" . "org-roam")
+;       :desc "Open Index" "i" 'org-roam-jump-to-index
+;       :desc "Insert a link to a Note" "l" 'org-roam-insert
+;       ))
