@@ -92,6 +92,9 @@
   "s-J" #'evil-window-move-very-bottom
   "s-K" #'evil-window-move-very-top))
 
+(setq ivy-re-builders-alist
+      '((t . ivy--regex-fuzzy)))
+
 ; ORG-MODE:
 
 (after! org
@@ -102,7 +105,9 @@
     "<s-return>" #'org-todo))
 
   (setq
-   org-todo-keywords '((sequence "Idea:" "Project:" "Task:" "ACTIVE" "WAITING" "|" "DONE" "PASS"))
+   org-todo-keywords '(
+    (sequence "Idea:" "Project:" "Task:" "ACTIVE" "WAITING" "|" "DONE" "PASS")
+    (sequence "[NOTE.STUB]" "[NOTE.INKLING]" "[NOTE.BOOK.INPROGRESS]" "|" "[NOTE.DAILY]" "[NOTE.EVERGREEN]" "[NOTE.OUTLINE(§)]" "[NOTE.BOOK.DONE]" "[NOTE.PERSON]"))
    org-directory "~/Dropbox/org")
    ; org-todo-keyword-faces
 )
@@ -110,18 +115,23 @@
 
 (setq org-roam-directory "~/Dropbox/org")
 (setq org-roam-link-title-format "[[%s]]")
-(setq org-roam-index-file "index.org")
+(setq org-roam-index-file "~/Dropbox/org/index.org")
 (setq org-roam-capture-templates
     '(("d" "default" plain (function org-roam--capture-get-point)
      "%?"
      :file-name "${slug}"
-     :head "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n"
+     :head "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* [NOTE.STUB]\n"
      :unnarrowed t)))
 
 
-;(map! :map org-roam-mode-map
-;      :leader
-;      (:prefix ("z" . "org-roam")
-;       :desc "Open Index" "i" 'org-roam-jump-to-index
-;       :desc "Insert a link to a Note" "l" 'org-roam-insert
-;       ))
+(map! :map org-roam-mode-map
+      :leader
+      (:prefix ("n" . "notes")
+       (:prefix ("r" . "roam")
+        :desc "Open Index" "i" 'org-roam-jump-to-index
+        :desc "Insert a link to a Note" "l" 'org-roam-insert
+       )))
+
+(map!
+   (:map global-map
+    "M-z" "Ω"))
