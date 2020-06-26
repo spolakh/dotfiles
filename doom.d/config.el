@@ -48,7 +48,7 @@
 (setq doom-theme 'doom-gruvbox)
 (after! heaven-and-hell
   (setq heaven-and-hell-themes
-        '((light . doom-solarized-light)
+        '((light . modus-operandi)
           (dark . doom-gruvbox)))
   ;; Optionall, load themes without asking for confirmation.
   (setq heaven-and-hell-load-theme-no-confirm t)
@@ -58,12 +58,12 @@
 
 ; Other Favs:
 ;   - Light:
+;(load-theme 'doom-solarized-light 'NO-CONFIRM)
 ;(load-theme 'doom-one-light 'NO-CONFIRM)
 ;(load-theme 'doom-tomorrow-day 'NO-CONFIRM)
 ;(load-theme 'doom-nord-light 'NO-CONFIRM)
 ;(load-theme 'dichromacy 'NO-CONFIRM)
 ;(load-theme 'spacemacs-light 'NO-CONFIRM)
-;(load-theme 'doom-solarized-light 'NO-CONFIRM)
 ;   - Dark:
 ;(load-theme 'doom-gruvbox 'NO-CONFIRM)
 ;(load-theme 'doom-one 'NO-CONFIRM)
@@ -106,11 +106,60 @@
 
   (setq
    org-todo-keywords '(
-    (sequence "Idea:" "Project:" "Task:" "ACTIVE" "WAITING" "|" "DONE" "PASS")
-    (sequence "[NOTE.STUB]" "[NOTE.INKLING]" "[NOTE.BOOK.INPROGRESS]" "|" "[NOTE.DAILY]" "[NOTE.EVERGREEN]" "[NOTE.OUTLINE(§)]" "[NOTE.BOOK.DONE]" "[NOTE.PERSON]"))
+    (sequence "TODO" "WAITING" "|" "DONE" "PASS")
+    (sequence "[NOTE.STUB]" "[NOTE.BOOK.INPROGRESS]" "|" "[NOTE.DAILY]" "[NOTE.EVERGREEN]" "[NOTE.OUTLINE(§)]" "[NOTE.BOOK.DONE]" "[NOTE.PERSON]"))
    org-directory "~/Dropbox/org")
-   ; org-todo-keyword-faces
+  (require 'find-lisp)
+  (setq spolakh/org-agenda-directory "~/Dropbox/org/private/gtd/")
+  (setq org-agenda-files
+        (find-lisp-find-files spolakh/org-agenda-directory "\.org$"))
+  ;org-todo-keyword-faces
 )
+
+(use-package! org-agenda
+  :init
+  (map! :map org-mode-map :leader
+        (:prefix ("n" . "notes")
+         :desc "Agenda" "a" #'spolakh/switch-to-agenda))
+  (setq org-agenda-block-separator nil
+        org-agenda-start-with-log-mode t)
+  (defun spolakh/switch-to-agenda ()
+    (interactive)
+    (org-agenda nil " "))
+  (defun spolakh/org-current-is-todo ()
+    (string= "TODO" (org-get-todo-state)))
+  (defun spolakh/org-agenda-skip-all-siblings-but-first ()
+  "Skip all but the first non-done entry."
+  (let (should-skip-entry)
+    (unless (spolakh/org-current-is-todo)
+      (setq should-skip-entry t))
+    (save-excursion
+      (while (and (not should-skip-entry) (org-goto-sibling t))
+        (when (spolakh/org-current-is-todo)
+          (setq should-skip-entry t))))
+    (when should-skip-entry
+      (or (outline-next-heading)
+          (goto-char (point-max))))))
+  :config
+  (setq org-columns-default-format "%40ITEM(Task) %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
+  (setq org-agenda-custom-commands `((" " "Agenda"
+  ((agenda ""
+            ((org-agenda-span 'week)
+            (org-deadline-warning-days 14)))
+    (todo "TODO"
+          ((org-agenda-overriding-header "To Refile")
+          (org-agenda-files '(,(concat spolakh/org-agenda-directory "inbox.org")))))
+    (todo "TODO"
+          ((org-agenda-overriding-header "Projects")
+          (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))
+          (org-agenda-skip-function #'spolakh/org-agenda-skip-all-siblings-but-first)
+          ))
+    (todo "TODO"
+          ((org-agenda-overriding-header "One-off Tasks (under 1 Pomodoro)")
+          (org-agenda-files '(,(concat spolakh/org-agenda-directory "oneoff.org")))
+          (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled)))))))))
+
+
 ; ORG-ROAM:
 
 (setq org-roam-directory "~/Dropbox/org")

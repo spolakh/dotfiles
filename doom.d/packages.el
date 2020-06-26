@@ -48,3 +48,4 @@
 
 (package! heaven-and-hell)
 (package! spacemacs-theme)
+(package! modus-operandi-theme)
