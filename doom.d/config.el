@@ -106,7 +106,7 @@
 
   (setq
    org-todo-keywords '(
-    (sequence "TODO" "WAITING" "|" "DONE" "PASS")
+    (sequence "Idea:" "Project:" "TODO" "WAITING" "|" "DONE" "PASS")
     (sequence "[NOTE.STUB]" "[NOTE.BOOK.INPROGRESS]" "|" "[NOTE.DAILY]" "[NOTE.EVERGREEN]" "[NOTE.OUTLINE(§)]" "[NOTE.BOOK.DONE]" "[NOTE.PERSON]"))
    org-directory "~/Dropbox/org")
   (require 'find-lisp)
@@ -239,25 +239,27 @@
   (defun spolakh/org-current-is-first-level-headline ()
     (= 1 (org-current-level)))
   (defun spolakh/org-current-is-todo ()
-    (string= "TODO" (org-get-todo-state)))
+    (or (string= "TODO" (org-get-todo-state))
+        (string= "Project:" (org-get-todo-state))
+        (string= "Idea:" (org-get-todo-state))))
   ; org-with-limited-levels?
   ; org-current-level
   (defun spolakh/org-agenda-leave-only-heading-and-three-children ()
-  "Returns each 1st level heading and at most 3 of it's subheadings"
+  "Returns each 1st level heading and at most 3 of it's TODO subheadings"
   (let (should-skip-entry)
     (unless (spolakh/org-current-is-todo)
       (setq should-skip-entry t))
-    (when (> 2 (org-current-level))
-      (setq should-skip-entry t))
     (save-excursion
       (let ((nth-task 1))
-      (while (org-goto-sibling t)
+      (while (and (<= nth-task 3) (org-goto-sibling t))
         (when (spolakh/org-current-is-todo)
           (setq nth-task (+ nth-task 1))))
       (when (> nth-task 3)
         (setq should-skip-entry t))))
     (when (spolakh/org-current-is-first-level-headline)
-      (setq should-skip-entry f))
+      (setq should-skip-entry nil))
+    (when (> (org-current-level) 2)
+      (setq should-skip-entry t))
     (when should-skip-entry
       (or (outline-next-heading)
           (goto-char (point-max))))))
@@ -267,10 +269,10 @@
   ((agenda ""
             ((org-agenda-span 'week)
             (org-deadline-warning-days 14)))
-    (todo "TODO"
+    (todo "Idea:|TODO"
           ((org-agenda-overriding-header "To Refile")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "inbox.org")))))
-    (todo nil
+    (todo "TODO|Idea:|Project:"
           ((org-agenda-overriding-header "Projects")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))
           (org-agenda-skip-function #'spolakh/org-agenda-leave-only-heading-and-three-children)
@@ -278,7 +280,7 @@
     ;; (spolakh/org-agenda-projects-and-tasks "+PROJECT"
     ;;  ((org-agenda-max-entries 3)
     ;;   (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))))
-    (todo "TODO"
+    (todo "Idea:|TODO"
           ((org-agenda-overriding-header "One-off Tasks (under 1 Pomodoro)")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "oneoff.org")))
           (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled)))))))))
