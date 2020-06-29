@@ -46,15 +46,8 @@
 ; THEMES:
 
 (setq doom-theme 'doom-gruvbox)
-(after! heaven-and-hell
-  (setq heaven-and-hell-themes
-        '((light . modus-operandi)
-          (dark . doom-gruvbox)))
-  ;; Optionall, load themes without asking for confirmation.
-  (setq heaven-and-hell-load-theme-no-confirm t)
-  (map!
-   :leader "-" 'heaven-and-hell-toggle-theme))
-(add-hook 'after-init-hook 'heaven-and-hell-init-hook)
+(add-to-list 'load-path "~/.doom.d/vendor/auto-dark-emacs/")
+(require 'auto-dark-emacs)
 
 ; Other Favs:
 ;   - Light:
@@ -103,6 +96,11 @@
     "<s-return>" nil)
    (:map org-mode-map
     "<s-return>" #'org-todo))
+  (map! :map org-mode-map
+      :leader
+      (:prefix ("n" . "notes")
+       :desc "Refile" "R" 'org-refile
+       :desc "Capture to Inbox" "i" (lambda () (interactive) (org-capture nil "i"))))
 
   (setq
    org-todo-keywords '(
@@ -115,6 +113,15 @@
         (find-lisp-find-files spolakh/org-agenda-directory "\.org$"))
   ;org-todo-keyword-faces
 )
+
+(setq org-refile-targets '(("later.org" :maxlevel . 1)
+                           ("oneoff.org" :level . 0)
+                           ("projects.org" :maxlevel . 1)))
+
+(setq org-capture-templates
+        `(("i" "inbox" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
+           "* Idea: %?")))
+
 
 (use-package! org-agenda
   :init
@@ -277,6 +284,8 @@
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))
           (org-agenda-skip-function #'spolakh/org-agenda-leave-only-heading-and-three-children)
           ))
+    (todo "WAITING"
+          ((org-agenda-overriding-header "Blocked")))
     ;; (spolakh/org-agenda-projects-and-tasks "+PROJECT"
     ;;  ((org-agenda-max-entries 3)
     ;;   (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))))
