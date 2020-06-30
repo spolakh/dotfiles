@@ -111,17 +111,15 @@
   (setq spolakh/org-agenda-directory "~/Dropbox/org/private/gtd/")
   (setq org-agenda-files
         (find-lisp-find-files spolakh/org-agenda-directory "\.org$"))
+  (setq org-capture-templates
+        `(("i" "inbox" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
+           "* TODO %?")))
   ;org-todo-keyword-faces
 )
 
 (setq org-refile-targets '(("later.org" :maxlevel . 1)
                            ("oneoff.org" :level . 0)
                            ("projects.org" :maxlevel . 1)))
-
-(setq org-capture-templates
-        `(("i" "inbox" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
-           "* TODO %?")))
-
 
 (use-package! org-agenda
   :init
@@ -274,7 +272,7 @@
         (todo . "  ")
         (tags . "  ")
         (search . "  ")))
-  (setq org-columns-default-format "%40ITEM(Task) %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
+  (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
   (setq org-agenda-custom-commands `((" " "Agenda"
   ((agenda ""
             ((org-agenda-span 'week)
@@ -296,7 +294,36 @@
     (todo "TODO"
           ((org-agenda-overriding-header "One-off Tasks (under 1 Pomodoro)")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "oneoff.org")))
-          (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled)))))))))
+          (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))))))
+
+  (defun spolakh/org-agenda-process-inbox-item ()
+    "Process a single item in the org-agenda."
+    (interactive)
+    (org-with-wide-buffer
+     ; TODO: Make prompts in interactive mode more explicit
+    (org-agenda-set-tags)
+    (org-agenda-set-effort)
+    (org-agenda-refile nil nil t)))
+;  (setq org-agenda-bulk-custom-functions `((,spolakh/org-agenda-process-inbox-item)))
+ 
+  (map! :map evil-org-agenda-mode-map
+;      "i" #'org-agenda-clock-in
+;      "i" #'jethro/org-inbox-capture
+;      "P" #'jethro/org-process-inbox
+      "a" #'org-agenda-add-note
+      "d" #'org-agenda-deadline
+      "s" #'org-agenda-schedule
+      "A" #'org-agenda-archive-default-with-confirmation
+      "p" #'spolakh/org-agenda-process-inbox-item
+      "R" #'org-agenda-refile
+      "<s-return>" #'org-agenda-todo
+      :m "d" nil
+      :m "s" nil
+      :m "A" nil
+      :m "p" nil
+      :m "R" nil
+      )
+  )
 
 
 ; ORG-ROAM:
