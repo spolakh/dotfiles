@@ -124,13 +124,24 @@
 (use-package! org-agenda
   :init
   (map! :map org-mode-map :leader
-        (:prefix ("n" . "notes")
-         :desc "Agenda" "a" #'spolakh/switch-to-agenda))
+        (:prefix ("n" . "Notes") "a" nil)
+        (:prefix ("a" . "Agenda")
+         :desc "Agenda" "a" #'spolakh/switch-to-agenda
+         :desc "Work Agenda" "w" #'spolakh/switch-to-work-agenda))
   (setq org-agenda-block-separator nil
         org-agenda-start-with-log-mode t)
+  (setq org-agenda-time-grid
+      '((daily today require-timed)
+        (0800 1000 1200 1400 1600 1800 2000)
+        "      " "················"))
+  (setq org-agenda-use-time-grid t)
+  (setq org-agenda-todo-list-sublevels t)
   (defun spolakh/switch-to-agenda ()
     (interactive)
-    (org-agenda nil " "))
+    (org-agenda nil "a"))
+  (defun spolakh/switch-to-work-agenda ()
+    (interactive)
+    (org-agenda nil "w"))
   ; This is heavily adopted from Sacha Chua's https://sachachua.com/blog/2013/01/emacs-org-display-projects-with-a-few-subtasks-in-the-agenda-view/
   ;; (defun spolakh/org-agenda-project-agenda ()
   ;;   "Return the project headline and up to `org-agenda-max-entries' tasks."
@@ -245,6 +256,7 @@
     (= 1 (org-current-level)))
   (defun spolakh/org-current-is-todo ()
     (or (string= "TODO" (org-get-todo-state))))
+
   ; org-with-limited-levels?
   ; org-current-level
   (defun spolakh/org-agenda-leave-only-heading-and-three-children ()
@@ -267,34 +279,37 @@
       (or (outline-next-heading)
           (goto-char (point-max))))))
   :config
-  (setq org-agenda-prefix-format
-        '((agenda . " %i %-12:c%?-12t% s")
-        (todo . "  ")
-        (tags . "  ")
-        (search . "  ")))
-  (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
-  (setq org-agenda-custom-commands `((" " "Agenda"
-  ((agenda ""
+  (defun spolakh/agenda-for-filter (filter)
+    `((agenda ""
             ((org-agenda-span 'week)
             (org-deadline-warning-days 14)))
     (todo "TODO"
           ((org-agenda-overriding-header "To Refile")
            (org-agenda-files '(,(concat spolakh/org-agenda-directory "inbox.org")))
            (org-agenda-max-entries 10)))
-    (todo "TODO"
+    (tags-todo ,(concat "TODO=\"TODO\"" filter)
           ((org-agenda-overriding-header "Projects")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))
           (org-agenda-skip-function #'spolakh/org-agenda-leave-only-heading-and-three-children)
           ))
-    (todo "WAITING"
+    (tags-todo ,(concat "TODO=\"WAITING\"" filter)
           ((org-agenda-overriding-header "Blocked")))
     ;; (spolakh/org-agenda-projects-and-tasks "+PROJECT"
     ;;  ((org-agenda-max-entries 3)
     ;;   (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))))
-    (todo "TODO"
+    (tags-todo ,(concat "TODO=\"TODO\"" filter)
           ((org-agenda-overriding-header "One-off Tasks (under 1 Pomodoro)")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "oneoff.org")))
-          (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))))))
+          (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))))
+  (setq org-agenda-prefix-format
+        '((agenda . " %i %-12:c%?-12t% s")
+        (todo . "  ")
+        (tags . "  ")
+        (search . "  ")))
+  (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
+  (setq org-agenda-custom-commands `(
+                                     ("a" "Agenda" ,(spolakh/agenda-for-filter "-@work"))
+                                     ("w" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))))
 
   (defun spolakh/org-agenda-process-inbox-item ()
     "Process a single item in the org-agenda."
@@ -307,6 +322,9 @@
 ;  (setq org-agenda-bulk-custom-functions `((,spolakh/org-agenda-process-inbox-item)))
  
   (map! :map evil-org-agenda-mode-map
+        ; org-agenda-keymap
+        ; org-agenda-mode-map
+        ; evil-org-agenda-mode-map
 ;      "i" #'org-agenda-clock-in
 ;      "i" #'jethro/org-inbox-capture
 ;      "P" #'jethro/org-process-inbox
@@ -315,6 +333,7 @@
       "s" #'org-agenda-schedule
       "A" #'org-agenda-archive-default-with-confirmation
       "p" #'spolakh/org-agenda-process-inbox-item
+      :m "t" #'org-agenda-set-tags
       "R" #'org-agenda-refile
       "<s-return>" #'org-agenda-todo
       :m "d" nil
@@ -322,6 +341,7 @@
       :m "A" nil
       :m "p" nil
       :m "R" nil
+      :m "<s-return>" nil
       )
   )
 
