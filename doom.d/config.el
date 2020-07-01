@@ -136,6 +136,30 @@
         "      " "················"))
   (setq org-agenda-use-time-grid t)
   (setq org-agenda-todo-list-sublevels t)
+  ; TODO: make these not refresh agenda (esp tags and todo state) - it looks like it breaks tags-todo search
+  (map! :after evil-org-agenda
+        :map (evil-org-agenda-mode-map org-agenda-mode-map)
+        ; org-agenda-keymap
+        ; org-agenda-mode-map
+        ; evil-org-agenda-mode-map
+;      "i" #'org-agenda-clock-in
+;      "i" #'jethro/org-inbox-capture
+;      "P" #'jethro/org-process-inbox
+      "a" #'org-agenda-add-note
+      "d" #'org-agenda-deadline
+      "s" #'org-agenda-schedule
+      "A" #'org-agenda-archive-default-with-confirmation
+      "p" #'spolakh/org-agenda-process-inbox-item
+      :m "t" #'org-agenda-set-tags
+      "R" #'org-agenda-refile
+      "<s-return>" #'org-agenda-todo
+      :m "d" nil
+      :m "s" nil
+      :m "A" nil
+      :m "p" nil
+      :m "R" nil
+      :m "<s-return>" nil
+      )
   (defun spolakh/switch-to-agenda ()
     (interactive)
     (org-agenda nil "a"))
@@ -318,31 +342,10 @@
      ; TODO: Make prompts in interactive mode more explicit
     (org-agenda-set-tags)
     (org-agenda-set-effort)
-    (org-agenda-refile nil nil t)))
+    (org-agenda-refile nil nil nil)))
 ;  (setq org-agenda-bulk-custom-functions `((,spolakh/org-agenda-process-inbox-item)))
  
-  (map! :map evil-org-agenda-mode-map
-        ; org-agenda-keymap
-        ; org-agenda-mode-map
-        ; evil-org-agenda-mode-map
-;      "i" #'org-agenda-clock-in
-;      "i" #'jethro/org-inbox-capture
-;      "P" #'jethro/org-process-inbox
-      "a" #'org-agenda-add-note
-      "d" #'org-agenda-deadline
-      "s" #'org-agenda-schedule
-      "A" #'org-agenda-archive-default-with-confirmation
-      "p" #'spolakh/org-agenda-process-inbox-item
-      :m "t" #'org-agenda-set-tags
-      "R" #'org-agenda-refile
-      "<s-return>" #'org-agenda-todo
-      :m "d" nil
-      :m "s" nil
-      :m "A" nil
-      :m "p" nil
-      :m "R" nil
-      :m "<s-return>" nil
-      )
+
   )
 
 
