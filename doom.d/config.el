@@ -129,7 +129,7 @@
   (map! :map org-mode-map :leader
         (:prefix ("n" . "Notes") "a" nil)
         (:prefix ("a" . "Agenda")
-         :desc "Agenda" "a" #'spolakh/switch-to-agenda
+         :desc "Agenda" "m" #'spolakh/switch-to-agenda
          :desc "Work Agenda" "w" #'spolakh/switch-to-work-agenda))
   (setq org-agenda-block-separator nil
         org-agenda-start-with-log-mode t)
@@ -180,7 +180,7 @@
     (org-agenda-todo "PASS"))
   (defun spolakh/switch-to-agenda ()
     (interactive)
-    (org-agenda nil "a"))
+    (org-agenda nil "m"))
   (defun spolakh/switch-to-work-agenda ()
     (interactive)
     (org-agenda nil "w"))
@@ -327,7 +327,8 @@
             (org-deadline-warning-days 14)))
     (todo "TODO"
           ((org-agenda-overriding-header "To Refile")
-           (org-agenda-files '(,(concat spolakh/org-agenda-directory "inbox.org")))
+           (org-agenda-files '(,(concat spolakh/org-agenda-directory "inbox.org")
+                               "phone.org"))
            (org-agenda-max-entries 10)))
     (tags-todo ,(concat "TODO=\"TODO\"" filter)
           ((org-agenda-overriding-header "Projects")
@@ -357,7 +358,7 @@
   (add-to-list 'org-global-properties
          '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00"))
   (setq org-agenda-custom-commands `(
-                                     ("a" "Agenda" ,(spolakh/agenda-for-filter "+@mine"))
+                                     ("m" "Agenda" ,(spolakh/agenda-for-filter "+@mine"))
                                      ("w" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))))
   (defun spolakh/org-agenda-process-inbox-item ()
     "Process a single item in the org-agenda."
