@@ -300,7 +300,7 @@
 
   ; org-with-limited-levels?
   ; org-current-level
-  (defun spolakh/org-agenda-leave-only-heading-and-three-children ()
+  (defun spolakh/org-agenda-leave-only-first-three-children ()
   "Returns each 1st level heading and at most 3 of it's TODO subheadings"
   (let (should-skip-entry)
     (unless (spolakh/org-current-is-todo)
@@ -313,7 +313,7 @@
       (when (> nth-task 3)
         (setq should-skip-entry t))))
     (when (spolakh/org-current-is-first-level-headline)
-      (setq should-skip-entry nil))
+      (setq should-skip-entry t))
     (when (> (org-current-level) 2)
       (setq should-skip-entry t))
     (when should-skip-entry
@@ -328,24 +328,24 @@
           ((org-agenda-overriding-header "To Refile")
            (org-agenda-files '(,(concat spolakh/org-agenda-directory "inbox.org")))
            (org-agenda-max-entries 10)))
-    (tags-todo ,(concat "TODO=\"TODO\"" filter)
+    (tags-todo ,(concat "TODO=\"TODO\"+" filter)
           ((org-agenda-overriding-header "Projects")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))
-          (org-agenda-skip-function #'spolakh/org-agenda-leave-only-heading-and-three-children)
-         ; (org-agenda-hide-tags-regexp (concat org-agenda-hide-tags-regexp "\\|" filter))
+          (org-agenda-skip-function #'spolakh/org-agenda-leave-only-first-three-children)
+          (org-agenda-hide-tags-regexp ,filter)
           ))
-    (tags-todo ,(concat "TODO=\"WAITING\"" filter)
+    (tags-todo ,(concat "TODO=\"WAITING\"+" filter)
           ((org-agenda-overriding-header "Blocked")
-         ; (org-agenda-hide-tags-regexp (concat org-agenda-hide-tags-regexp "\\|" filter))
+          (org-agenda-hide-tags-regexp ,filter)
           ))
     ;; (spolakh/org-agenda-projects-and-tasks "+PROJECT"
     ;;  ((org-agenda-max-entries 3)
     ;;   (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))))
-    (tags-todo ,(concat "TODO=\"TODO\"" filter)
+    (tags-todo ,(concat "TODO=\"TODO\"+" filter)
           ((org-agenda-overriding-header "One-off Tasks (under 1 Pomodoro)")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "oneoff.org")))
           (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))
-         ; (org-agenda-hide-tags-regexp (concat org-agenda-hide-tags-regexp "\\|" filter))
+          (org-agenda-hide-tags-regexp ,filter)
           ))))
   (setq org-agenda-prefix-format
         '((agenda . " %i %-12:c%?-12t% s%b")
@@ -356,8 +356,8 @@
   (add-to-list 'org-global-properties
          '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00"))
   (setq org-agenda-custom-commands `(
-                                     ("a" "Agenda" ,(spolakh/agenda-for-filter "+@mine"))
-                                     ("w" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))))
+                                     ("a" "Agenda" ,(spolakh/agenda-for-filter "@mine"))
+                                     ("w" "Work Agenda" ,(spolakh/agenda-for-filter "@work"))))
   (defun spolakh/org-agenda-process-inbox-item ()
     "Process a single item in the org-agenda."
     (interactive)
