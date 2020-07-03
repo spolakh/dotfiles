@@ -349,9 +349,9 @@
           ))))
   (setq org-agenda-prefix-format
         '((agenda . " %i %-12:c%?-12t% s%b")
-        (todo . "[%-4e] %?-18b")
-        (tags . "[%-4e] %?-18b")
-        (search . "[%-4e] %?-18b")))
+        (todo . "[%-4e] %?-17b")
+        (tags . "[%-4e] %-17(org-format-outline-path (org-get-outline-path))")
+        (search . "[%-4e] %?-17b")))
   (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
   (add-to-list 'org-global-properties
          '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00"))
