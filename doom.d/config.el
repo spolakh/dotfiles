@@ -102,7 +102,8 @@
        :desc "Refile" "R" 'org-refile
        :desc "Capture to Inbox" "i" (lambda () (interactive) (org-capture nil "i"))))
   (require 'find-lisp)
-  (setq spolakh/org-agenda-directory "~/Dropbox/org/private/gtd/")
+  (setq spolakh/org-agenda-directory "~/Dropbox/org/private/gtd/"
+        spolakh/org-directory "~/Dropbox/org/")
   (setq org-agenda-files
         (find-lisp-find-files spolakh/org-agenda-directory "\.org$"))
   (setq org-capture-templates
@@ -114,7 +115,7 @@
     (sequence "TODO" "|" "DONE")
     (sequence "WAITING(w@/!)" "|""PASS(p@/!)")
     (sequence "[NOTE.STUB]" "[NOTE.BOOK.INPROGRESS]" "|" "[NOTE.DAILY]" "[NOTE.EVERGREEN]" "[NOTE.OUTLINE(§)]" "[NOTE.BOOK.DONE]" "[NOTE.PERSON]"))
-   org-directory "~/Dropbox/org")
+   org-directory spolakh/org-directory)
   (setq org-tag-alist (quote (("@work" . ?w)
                             ("@mine" . ?m)
                             )))
@@ -328,7 +329,7 @@
     (todo "TODO"
           ((org-agenda-overriding-header "To Refile")
            (org-agenda-files '(,(concat spolakh/org-agenda-directory "inbox.org")
-                               "phone.org"))
+                               ,(concat spolakh/org-directory "phone.org")))
            (org-agenda-max-entries 10)))
     (tags-todo ,(concat "TODO=\"TODO\"" filter)
           ((org-agenda-overriding-header "Projects")
