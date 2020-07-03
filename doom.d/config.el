@@ -101,12 +101,6 @@
       (:prefix ("n" . "notes")
        :desc "Refile" "R" 'org-refile
        :desc "Capture to Inbox" "i" (lambda () (interactive) (org-capture nil "i"))))
-
-  (setq
-   org-todo-keywords '(
-    (sequence "TODO" "WAITING" "|" "DONE" "PASS")
-    (sequence "[NOTE.STUB]" "[NOTE.BOOK.INPROGRESS]" "|" "[NOTE.DAILY]" "[NOTE.EVERGREEN]" "[NOTE.OUTLINE(§)]" "[NOTE.BOOK.DONE]" "[NOTE.PERSON]"))
-   org-directory "~/Dropbox/org")
   (require 'find-lisp)
   (setq spolakh/org-agenda-directory "~/Dropbox/org/private/gtd/")
   (setq org-agenda-files
@@ -114,12 +108,21 @@
   (setq org-capture-templates
         `(("i" "inbox" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
            "* TODO %?")))
-  ;org-todo-keyword-faces
-)
-
-(setq org-refile-targets '(("later.org" :maxlevel . 1)
+  (setq
+   org-use-fast-todo-selection nil
+   org-todo-keywords '(
+    (sequence "TODO" "|" "DONE")
+    (sequence "WAITING(w@/!)" "|""PASS(p@/!)")
+    (sequence "[NOTE.STUB]" "[NOTE.BOOK.INPROGRESS]" "|" "[NOTE.DAILY]" "[NOTE.EVERGREEN]" "[NOTE.OUTLINE(§)]" "[NOTE.BOOK.DONE]" "[NOTE.PERSON]"))
+   org-directory "~/Dropbox/org")
+  (setq org-tag-alist (quote (("@work" . ?w)
+                            ("@mine" . ?m)
+                            )))
+  (setq org-fast-tag-selection-single-key t)
+  (setq org-refile-targets '(("later.org" :maxlevel . 1)
                            ("oneoff.org" :level . 0)
                            ("projects.org" :maxlevel . 1)))
+)
 
 (use-package! org-agenda
   :init
@@ -136,7 +139,6 @@
         "      " "················"))
   (setq org-agenda-use-time-grid t)
   (setq org-agenda-todo-list-sublevels t)
-  ; TODO: make these not refresh agenda (esp tags and todo state) - it looks like it breaks tags-todo search
   (map! :after evil-org-agenda
         :map (evil-org-agenda-mode-map org-agenda-mode-map)
         ; org-agenda-keymap
@@ -145,21 +147,36 @@
 ;      "i" #'org-agenda-clock-in
 ;      "i" #'jethro/org-inbox-capture
 ;      "P" #'jethro/org-process-inbox
-      "a" #'org-agenda-add-note
+      ;"a" #'org-agenda-add-note ; we always link notes in the default item processing flow
       "d" #'org-agenda-deadline
       "s" #'org-agenda-schedule
-      "A" #'org-agenda-archive-default-with-confirmation
+      "a" #'org-agenda-archive-default-with-confirmation
       "p" #'spolakh/org-agenda-process-inbox-item
-      :m "t" #'org-agenda-set-tags
+      ;:m "t" #'org-agenda-set-tags ; we always add tags in the default item processing flow
       "R" #'org-agenda-refile
       "<s-return>" #'org-agenda-todo
+      "<s-S-return>" #'spolakh/set-todo-done
+      "S" #'spolakh/set-todo-waiting
+      "D" #'spolakh/set-todo-pass
       :m "d" nil
       :m "s" nil
-      :m "A" nil
+      :m "a" nil
       :m "p" nil
       :m "R" nil
+      :m "S" nil
+      :m "D" nil
       :m "<s-return>" nil
+      :m "<s-S-return>" nil
       )
+  (defun spolakh/set-todo-waiting ()
+    (interactive)
+    (org-agenda-todo "WAITING"))
+  (defun spolakh/set-todo-done ()
+    (interactive)
+    (org-agenda-todo "DONE"))
+  (defun spolakh/set-todo-pass ()
+    (interactive)
+    (org-agenda-todo "PASS"))
   (defun spolakh/switch-to-agenda ()
     (interactive)
     (org-agenda nil "a"))
@@ -315,26 +332,32 @@
           ((org-agenda-overriding-header "Projects")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))
           (org-agenda-skip-function #'spolakh/org-agenda-leave-only-heading-and-three-children)
+         ; (org-agenda-hide-tags-regexp (concat org-agenda-hide-tags-regexp "\\|" filter))
           ))
     (tags-todo ,(concat "TODO=\"WAITING\"" filter)
-          ((org-agenda-overriding-header "Blocked")))
+          ((org-agenda-overriding-header "Blocked")
+         ; (org-agenda-hide-tags-regexp (concat org-agenda-hide-tags-regexp "\\|" filter))
+          ))
     ;; (spolakh/org-agenda-projects-and-tasks "+PROJECT"
     ;;  ((org-agenda-max-entries 3)
     ;;   (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))))
     (tags-todo ,(concat "TODO=\"TODO\"" filter)
           ((org-agenda-overriding-header "One-off Tasks (under 1 Pomodoro)")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "oneoff.org")))
-          (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))))
+          (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))
+         ; (org-agenda-hide-tags-regexp (concat org-agenda-hide-tags-regexp "\\|" filter))
+          ))))
   (setq org-agenda-prefix-format
-        '((agenda . " %i %-12:c%?-12t% s")
-        (todo . "  ")
-        (tags . "  ")
-        (search . "  ")))
+        '((agenda . " %i %-12:c%?-12t% s%b")
+        (todo . "[%e] %?-12b")
+        (tags . "[%e] %?-12b")
+        (search . "[%e] %?-12b")))
   (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
+  (add-to-list 'org-global-properties
+         '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00"))
   (setq org-agenda-custom-commands `(
-                                     ("a" "Agenda" ,(spolakh/agenda-for-filter "-@work"))
+                                     ("a" "Agenda" ,(spolakh/agenda-for-filter "+@mine"))
                                      ("w" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))))
-
   (defun spolakh/org-agenda-process-inbox-item ()
     "Process a single item in the org-agenda."
     (interactive)
@@ -342,6 +365,7 @@
      ; TODO: Make prompts in interactive mode more explicit
     (org-agenda-set-tags)
     (org-agenda-set-effort)
+    (org-agenda-add-note)
     (org-agenda-refile nil nil nil)))
 ;  (setq org-agenda-bulk-custom-functions `((,spolakh/org-agenda-process-inbox-item)))
  
