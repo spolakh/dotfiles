@@ -152,7 +152,7 @@
       "s" #'org-agenda-schedule
       "a" #'org-agenda-archive-default-with-confirmation
       "p" #'spolakh/org-agenda-process-inbox-item
-      ;:m "t" #'org-agenda-set-tags ; we always add tags in the default item processing flow
+      :m "t"  #'org-agenda-columns
       "R" #'org-agenda-refile
       "<s-return>" #'org-agenda-todo
       "<s-S-return>" #'spolakh/set-todo-done
