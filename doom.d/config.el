@@ -149,6 +149,7 @@
 ;      "P" #'jethro/org-process-inbox
       ;"a" #'org-agenda-add-note ; we always link notes in the default item processing flow
       "d" #'org-agenda-deadline
+      :m "e" #'org-agenda-set-effort
       "s" #'org-agenda-schedule
       "a" #'org-agenda-archive-default-with-confirmation
       "p" #'spolakh/org-agenda-process-inbox-item
