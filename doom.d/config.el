@@ -108,7 +108,10 @@
         (find-lisp-find-files spolakh/org-agenda-directory "\.org$"))
   (setq org-capture-templates
         `(("i" "inbox" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
-           "* TODO %?")))
+           "* TODO %?")
+          ("a" "org-protocol-capture from Alfred" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
+            "* TODO %i"
+            :immediate-finish t)))
   (setq
    org-use-fast-todo-selection nil
    org-todo-keywords '(
@@ -371,7 +374,19 @@
     (org-agenda-add-note)
     (org-agenda-refile nil nil nil)))
 ;  (setq org-agenda-bulk-custom-functions `((,spolakh/org-agenda-process-inbox-item)))
- 
+
+  ; This makes org-agenda integration w/ mobile capture (Orgzly) work without conflicts
+  ; (in tandem with adding ((nil . ((eval . (auto-revert-mode 1))))) into .dir-locals.el in gtd directory)
+  (setq auto-save-timeout 1
+      auto-save-default t
+      auto-save-visited-file-name t
+      auto-revert-use-notify nil
+      auto-revert-interval 1)
+  (defun spolakh/org-agenda-redo ()
+    (interactive)
+    (with-current-buffer "*Org Agenda*"
+      (org-agenda-maybe-redo)))
+  (add-hook 'after-revert-hook #'spolakh/org-agenda-redo)
 
   )
 
