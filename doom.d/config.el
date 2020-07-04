@@ -105,7 +105,8 @@
   (setq spolakh/org-agenda-directory "~/Dropbox/org/private/gtd/"
         spolakh/org-directory "~/Dropbox/org/")
   (setq org-agenda-files
-        (find-lisp-find-files spolakh/org-agenda-directory "\.org$"))
+        (cons (concat spolakh/org-directory "phone.org")
+              (find-lisp-find-files spolakh/org-agenda-directory "\.org$")))
   (setq org-capture-templates
         `(("i" "inbox" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
            "* TODO %?")
