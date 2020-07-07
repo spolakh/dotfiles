@@ -96,17 +96,21 @@
     "<s-return>" nil)
    (:map org-mode-map
     "<s-return>" #'org-todo))
-  (map! :map org-mode-map
-      :leader
-      (:prefix ("n" . "notes")
-       :desc "Refile" "R" 'org-refile
-       :desc "Capture to Inbox" "i" (lambda () (interactive) (org-capture nil "i"))))
   (require 'find-lisp)
   (setq spolakh/org-agenda-directory "~/Dropbox/org/private/gtd/"
         spolakh/org-directory "~/Dropbox/org/")
   (setq org-agenda-files
         (cons (concat spolakh/org-directory "phone.org")
               (find-lisp-find-files spolakh/org-agenda-directory "\.org$")))
+  (defun spolakh/open-projects-in-other-window ()
+    (interactive)
+    (find-file-other-window (concat spolakh/org-agenda-directory "projects.org")))
+  (map! :map org-mode-map
+      :leader
+      (:prefix ("n" . "notes")
+       :desc "Refile" "R" 'org-refile
+       :desc "Projects" "p" 'spolakh/open-projects-in-other-window
+       :desc "Capture to Inbox" "i" (lambda () (interactive) (org-capture nil "i"))))
   (setq org-capture-templates
         `(("i" "inbox" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
            "* TODO %?")
@@ -120,10 +124,20 @@
     (sequence "WAITING(w@/!)" "|""PASS(p@/!)")
     (sequence "[NOTE.STUB]" "[NOTE.BOOK.INPROGRESS]" "|" "[NOTE.DAILY]" "[NOTE.EVERGREEN]" "[NOTE.OUTLINE(§)]" "[NOTE.BOOK.DONE]" "[NOTE.PERSON]"))
    org-directory spolakh/org-directory)
-  (setq org-tag-alist (quote (("@work" . ?w)
+  (setq org-tag-alist (quote (
+                            ;(:startgrouptag)
+                            ;("work/mine")
+                            ;(:grouptags)
+                            ("@work" . ?w)
                             ("@mine" . ?m)
+                            ;(:endgrouptag)
+                            ;(:startgrouptag)
+                            ;("People")
+                            ;(:grouptags)
+                            ("Lily" . ?l)
+                            ;(:endgrouptag)
                             )))
-  (setq org-fast-tag-selection-single-key t)
+  (setq org-fast-tag-selection-single-key nil)
   (setq org-refile-targets `((,(concat spolakh/org-agenda-directory "later.org") :maxlevel . 1)
                               (,(concat spolakh/org-agenda-directory "oneoff.org") :level . 0)
                               (,(concat spolakh/org-agenda-directory "projects.org") :maxlevel . 1)))
@@ -164,6 +178,7 @@
       "<s-S-return>" #'spolakh/set-todo-done
       "S" #'spolakh/set-todo-waiting
       "D" #'spolakh/set-todo-pass
+      "s-1" #'spolakh/org-agenda-parent-to-top
       :m "1" #'spolakh/org-agenda-item-to-top
       :m "d" nil
       :m "s" nil
@@ -174,7 +189,29 @@
       :m "D" nil
       :m "<s-return>" nil
       :m "<s-S-return>" nil
+      :m "P" #'spolakh/test-org-agenda
       )
+  (defun spolakh/test-org-agenda (&optional arg)
+    "Add a time-stamped note to the entry at point."
+    (interactive "P")
+    (org-agenda-check-no-diary)
+    (let* ((marker (or (org-get-at-bol 'org-marker)
+          (org-agenda-error)))
+    (buffer (marker-buffer marker))
+    (pos (marker-position marker))
+    (hdmarker (org-get-at-bol 'org-hd-marker))
+    (inhibit-read-only t))
+      (with-current-buffer buffer
+        (widen)
+        (goto-char pos)
+        (org-show-context 'agenda)
+        (org-narrow-to-subtree)
+        (save-excursion
+          (org-next-visible-heading 1)
+          (narrow-to-region (point-min) (point)))
+        (org-add-note)
+        ))
+    )
   (defun spolakh/set-todo-waiting ()
     (interactive)
     (org-agenda-todo "WAITING"))
@@ -366,75 +403,7 @@
   (setq org-agenda-custom-commands `(
                                      ("m" "Agenda" ,(spolakh/agenda-for-filter "+@mine"))
                                      ("w" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))))
-  (defun spolakh/org-agenda-process-inbox-item ()
-    "Process a single item in the org-agenda."
-    (interactive)
-    (org-with-wide-buffer
-     ; TODO: Make prompts in interactive mode more explicit
-    (org-agenda-set-tags)
-    (spolakh/org-fast-effort-selection)
-    (org-agenda-add-note)
-    (org-agenda-refile nil nil nil)))
-;  (setq org-agenda-bulk-custom-functions `((,spolakh/org-agenda-process-inbox-item)))
-
-  ; This makes org-agenda integration w/ mobile capture (Orgzly) work without conflicts
-  ; (in tandem with adding ((nil . ((eval . (auto-revert-mode 1))))) into .dir-locals.el in gtd directory)
-  (setq auto-save-timeout 1
-      auto-save-default t
-      auto-save-visited-file-name t
-      auto-revert-use-notify nil
-      auto-revert-interval 1)
-  (defun spolakh/org-agenda-redo ()
-    (interactive)
-    (with-current-buffer "*Org Agenda*"
-      (org-agenda-maybe-redo)))
-  (add-hook 'after-revert-hook #'spolakh/org-agenda-redo)
-
-  ; http://pragmaticemacs.com/emacs/reorder-todo-items-in-your-org-mode-agenda/
-  (defun spolakh/org-headline-to-top ()
-  "Move the current org headline to the top of its section"
-  (interactive)
-  ;; check if we are at the top level
-  (let ((lvl (org-current-level)))
-    (cond
-     ;; above all headlines so nothing to do
-     ((not lvl)
-      (message "No headline to move"))
-     ((= lvl 1)
-      ;; if at top level move current tree to go above first headline
-      (org-cut-subtree)
-      (beginning-of-buffer)
-      ;; test if point is now at the first headline and if not then
-      ;; move to the first headline
-      (unless (looking-at-p "*")
-        (org-next-visible-heading 1))
-      (org-paste-subtree))
-     ((> lvl 1)
-      ;; if not at top level then get position of headline level above
-      ;; current section and refile to that position. Inspired by
-      ;; https://gist.github.com/alphapapa/2cd1f1fc6accff01fec06946844ef5a5
-      (let* ((org-reverse-note-order t)
-             (pos (save-excursion
-                    (outline-up-heading 1)
-                    (point)))
-             (filename (buffer-file-name))
-             (rfloc (list nil filename nil pos)))
-        (org-refile nil nil rfloc))))))
-    (defun spolakh/org-agenda-item-to-top ()
-    "Move the current agenda item to the top of the subtree in its file"
-      (interactive)
-      ;; save buffers to preserve agenda
-      (org-save-all-org-buffers)
-      ;; switch to buffer for current agenda item
-      (org-agenda-switch-to)
-      ;; move item to top
-      (spolakh/org-headline-to-top)
-      ;; go back to agenda view
-      (switch-to-buffer "*Org Agenda*")
-      ;; refresh agenda
-      (org-agenda-redo)
-    )
-    (defun spolakh/org-fast-effort-selection ()
+  (defun spolakh/org-fast-effort-selection ()
     "Modification of `org-fast-todo-selection' for use with org-set-effert. Select an effort value with single keys.
       Returns the new effort value, or nil if no state change should occur.
       Motivated by https://emacs.stackexchange.com/questions/59424/org-set-effort-fast-effort-selection"
@@ -489,6 +458,85 @@
                   tg (car e))
             tg)
           (t (setq quit-flag t)))))))
+  (defun spolakh/org-agenda-process-inbox-item ()
+    "Process a single item in the org-agenda."
+    (interactive)
+    (org-with-wide-buffer
+     (org-agenda-set-tags)
+     (spolakh/org-fast-effort-selection)
+     (org-agenda-add-note)
+     (org-agenda-refile nil nil nil)
+    ))
+;  (setq org-agenda-bulk-custom-functions `((,spolakh/org-agenda-process-inbox-item)))
+
+  ; This makes org-agenda integration w/ mobile capture (Orgzly) work without conflicts
+  ; (in tandem with adding ((nil . ((eval . (auto-revert-mode 1))))) into .dir-locals.el in gtd directory)
+  (setq auto-save-timeout 1
+      auto-save-default t
+      auto-save-visited-file-name t
+      auto-revert-use-notify nil
+      auto-revert-interval 1)
+  (defun spolakh/org-agenda-redo ()
+    (interactive)
+    (with-current-buffer "*Org Agenda*"
+      (org-agenda-maybe-redo)))
+  (add-hook 'after-revert-hook #'spolakh/org-agenda-redo)
+
+  ; http://pragmaticemacs.com/emacs/reorder-todo-items-in-your-org-mode-agenda/
+  (defun spolakh/org-headline-to-top ()
+  "Move the current org headline to the top of its section"
+  (interactive)
+  ;; check if we are at the top level
+  (let ((lvl (org-current-level)))
+    (cond
+     ;; above all headlines so nothing to do
+     ((not lvl)
+      (message "No headline to move"))
+     ((= lvl 1)
+      ;; if at top level move current tree to go above first headline
+      (org-cut-subtree)
+      (beginning-of-buffer)
+      ;; test if point is now at the first headline and if not then
+      ;; move to the first headline
+      (unless (looking-at-p "*")
+        (org-next-visible-heading 1))
+      (org-paste-subtree))
+     ((> lvl 1)
+      ;; if not at top level then get position of headline level above
+      ;; current section and refile to that position. Inspired by
+      ;; https://gist.github.com/alphapapa/2cd1f1fc6accff01fec06946844ef5a5
+      (let* ((org-reverse-note-order t)
+             (pos (save-excursion
+                    (outline-up-heading 1)
+                    (point)))
+             (filename (buffer-file-name))
+             (rfloc (list nil filename nil pos)))
+        (org-refile nil nil rfloc))))))
+    (defun spolakh/org-agenda-parent-to-top ()
+      "Same as 'spolakh/org-agenda-item-to-top but for the parent of the current item"
+      (interactive)
+      (org-save-all-org-buffers)
+      (org-agenda-switch-to)
+      (outline-up-heading 1)
+      (spolakh/org-headline-to-top)
+      (switch-to-buffer "*Org Agenda*")
+      (org-agenda-redo)
+    )
+    (defun spolakh/org-agenda-item-to-top ()
+    "Move the current agenda item to the top of the subtree in its file"
+      (interactive)
+      ;; save buffers to preserve agenda
+      (org-save-all-org-buffers)
+      ;; switch to buffer for current agenda item
+      (org-agenda-switch-to)
+      ;; move item to top
+      (spolakh/org-headline-to-top)
+      ;; go back to agenda view
+      (switch-to-buffer "*Org Agenda*")
+      ;; refresh agenda
+      (org-agenda-redo)
+    )
+
 
   )
 
