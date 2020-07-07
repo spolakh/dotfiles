@@ -168,7 +168,7 @@
 ;      "P" #'jethro/org-process-inbox
       ;"a" #'org-agenda-add-note ; we always link notes in the default item processing flow
       "d" #'org-agenda-deadline
-      :m "e" #'org-agenda-set-effort
+      :m "e" #'spolakh/invoke-fast-effort-selection
       "s" #'org-agenda-schedule
       "a" #'org-agenda-archive-default-with-confirmation
       "p" #'spolakh/org-agenda-process-inbox-item
@@ -458,12 +458,44 @@
                   tg (car e))
             tg)
           (t (setq quit-flag t)))))))
+  (defun spolakh/invoke-fast-effort-selection ()
+    (interactive)
+    ; TODO: excursions switch windows while waiting for input. =org-agenda-set-tags= doesn't do it somehow
+    (save-excursion
+      (save-window-excursion
+      (org-agenda-switch-to)
+      (org-set-effort nil (spolakh/org-fast-effort-selection))
+                    ))
+      (org-agenda-redo)
+    )
+  (defun spolakh/org-agenda-add-note ()
+    "Add a time-stamped note to the entry at point."
+    (interactive)
+    (save-excursion
+      (save-window-excursion
+        (org-agenda-check-no-diary)
+        (let* ((marker (or (org-get-at-bol 'org-marker)
+              (org-agenda-error)))
+        (buffer (marker-buffer marker))
+        (pos (marker-position marker))
+        (hdmarker (org-get-at-bol 'org-hd-marker))
+        (inhibit-read-only t))
+          (with-current-buffer buffer
+            (widen)
+            (goto-char pos)
+            (org-show-context 'agenda)
+            (move-marker org-log-note-marker (point))
+            (setq org-log-note-purpose 'note
+              org-log-note-effective-time (org-current-effective-time))
+            (org-add-log-note)
+            ))
+    )))
   (defun spolakh/org-agenda-process-inbox-item ()
     "Process a single item in the org-agenda."
     (interactive)
     (org-with-wide-buffer
      (org-agenda-set-tags)
-     (spolakh/org-fast-effort-selection)
+     (spolakh/invoke-fast-effort-selection)
      (org-agenda-add-note)
      (org-agenda-refile nil nil nil)
     ))
