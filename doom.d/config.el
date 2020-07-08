@@ -110,10 +110,13 @@
       (:prefix ("n" . "notes")
        :desc "Refile" "R" 'org-refile
        :desc "Projects" "p" 'spolakh/open-projects-in-other-window
-       :desc "Capture to Inbox" "i" (lambda () (interactive) (org-capture nil "i"))))
+       :desc "Capture Task to Inbox" "i" (lambda () (interactive) (org-capture nil "i"))
+       :desc "Capture Idea to Inbox" "I" (lambda () (interactive) (org-capture nil "I"))))
   (setq org-capture-templates
-        `(("i" "inbox" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
+        `(("i" "inbox as Task" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
            "* TODO %?")
+          ("I" "inbox as Idea" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
+           "* Idea %?")
           ("a" "org-protocol-capture from Alfred" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
             "* TODO %i"
             :immediate-finish t)))
@@ -121,8 +124,11 @@
    org-use-fast-todo-selection nil
    org-todo-keywords '(
     (sequence "TODO" "|" "DONE")
+    (sequence "Idea" "[NOTE.STUB]" "|" "[NOTE.EVERGREEN]")
     (sequence "WAITING(w@/!)" "|""PASS(p@/!)")
-    (sequence "[NOTE.STUB]" "[NOTE.BOOK.INPROGRESS]" "|" "[NOTE.DAILY]" "[NOTE.EVERGREEN]" "[NOTE.OUTLINE(§)]" "[NOTE.BOOK.DONE]" "[NOTE.PERSON]"))
+    (sequence "[BIB.INPROGRESS]" "|" "[BIB.DONE]") ; Articles / Books / Videos / ... - for quotations
+    (sequence "[NOTE.DAILY]" "[NOTE.OUTLINE(§)]" "[NOTE.PERSON]") ; Special kinds that never advance
+    )
    org-directory spolakh/org-directory)
   (setq org-tag-alist (quote (
                             ;(:startgrouptag)
@@ -368,10 +374,12 @@
     `((agenda ""
             ((org-agenda-span 'week)
             (org-deadline-warning-days 14)))
-    (todo "TODO"
+    (todo "TODO|Idea"
           ((org-agenda-overriding-header "To Refile")
            (org-agenda-files '(,(concat spolakh/org-agenda-directory "inbox.org")
-                               ,(concat spolakh/org-directory "phone.org")))
+                               ,(concat spolakh/org-directory "phone.org")
+                               ,(concat spolakh/org-directory "ipad.org")
+                               ))
            (org-agenda-max-entries 10)))
     (tags-todo ,(concat "TODO=\"TODO\"" filter)
           ((org-agenda-overriding-header "Projects")
