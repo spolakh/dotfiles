@@ -127,7 +127,7 @@
     (sequence "Idea" "[NOTE.STUB]" "|" "[NOTE.EVERGREEN]")
     (sequence "WAITING(w@/!)" "|""PASS(p@/!)")
     (sequence "[BIB.INPROGRESS]" "|" "[BIB.DONE]") ; Articles / Books / Videos / ... - for quotations
-    (sequence "[NOTE.DAILY]" "[NOTE.OUTLINE(§)]" "[NOTE.PERSON]") ; Special kinds that never advance
+    (sequence "[NOTE.DAILY]" "[NOTE.INDEX]" "[NOTE.PERSON]") ; Special kinds that never advance
     )
    org-directory spolakh/org-directory)
   (setq org-tag-alist (quote (
@@ -604,4 +604,6 @@
 
 (map!
    (:map global-map
-    "M-z" "Ω"))
+    "M-z" "Ω"
+    "M-6" "§"
+    ))
