@@ -129,6 +129,13 @@
     (sequence "[BIB.INPROGRESS]" "|" "[BIB.DONE]") ; Articles / Books / Videos / ... - for quotations
     (sequence "[NOTE.DAILY]" "[NOTE.INDEX]" "[NOTE.PERSON]") ; Special kinds that never advance
     )
+   org-todo-keyword-faces
+       '(
+         ("Idea" . (:foreground "#5F9EA0"))
+         ("WAITING" . (:background "firebrick" :weight bold :foreground "gold"))
+         ("[NOTE.EVERGREEN]" . (:foreground "olivedrab" :weight bold))
+         ("[NOTE.STUB]" . (:foreground "mediumpurple" :weight bold))
+         )
    org-directory spolakh/org-directory)
   (setq org-tag-alist (quote (
                             ;(:startgrouptag)
