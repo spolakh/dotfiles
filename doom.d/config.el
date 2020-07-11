@@ -88,6 +88,14 @@
 (setq ivy-re-builders-alist
       '((t . ivy--regex-fuzzy)))
 
+(after! ivy
+(map!
+ (:map ivy-minibuffer-map
+ "S-SPC" nil
+ "M-SPC" #'ivy-restrict-to-matches)
+ )
+)
+
 ; ORG-MODE:
 
 (after! org
@@ -593,13 +601,13 @@
 ; ORG-ROAM:
 
 (setq org-roam-directory "~/Dropbox/org")
-(setq org-roam-link-title-format "[[%s]]")
+(setq org-roam-link-title-format "N:%s")
 (setq org-roam-index-file "~/Dropbox/org/index.org")
 (setq org-roam-capture-templates
     '(("d" "default" plain (function org-roam--capture-get-point)
      "%?"
      :file-name "${slug}"
-     :head "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* [NOTE.STUB]\n* "
+     :head "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+INDEXES: \n\n* [NOTE.STUB]\n* "
      :unnarrowed t)))
 
 
