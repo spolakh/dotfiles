@@ -163,6 +163,7 @@
                   ; Ω
                   [:x :!Oz]
                   [:c :!O6]
+                  [:v :!O5]
                 ]}
        {:des "code editor"
           :rules [:v-mode

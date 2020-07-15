@@ -132,17 +132,16 @@
    org-use-fast-todo-selection nil
    org-todo-keywords '(
     (sequence "TODO" "|" "DONE")
-    (sequence "Idea" "[NOTE.STUB]" "|" "[NOTE.EVERGREEN]")
+    (sequence "Idea" "[NOTE.Inkling]" "|" "[NOTE.EVERGREEN]") ; Use Stub to filter for Notes that we need expanding on. Once ok - move to Evergreen
     (sequence "WAITING(w@/!)" "|""PASS(p@/!)")
-    (sequence "[BIB.INPROGRESS]" "|" "[BIB.DONE]") ; Articles / Books / Videos / ... - for quotations
-    (sequence "[NOTE.DAILY]" "[NOTE.INDEX]" "[NOTE.PERSON]") ; Special kinds that never advance
+    (sequence "[BIB.INPROGRESS]" "|" "[BIB.DONE]") ; Resources(Articles / Books / Videos / ...) for quotations
     )
    org-todo-keyword-faces
        '(
          ("Idea" . (:foreground "#5F9EA0"))
          ("WAITING" . (:background "firebrick" :weight bold :foreground "gold"))
          ("[NOTE.EVERGREEN]" . (:foreground "olivedrab" :weight bold))
-         ("[NOTE.STUB]" . (:foreground "mediumpurple" :weight bold))
+         ("[NOTE.Inkling]" . (:foreground "mediumpurple" :weight bold))
          )
    org-directory spolakh/org-directory)
   (setq org-tag-alist (quote (
@@ -170,6 +169,7 @@
         (:prefix ("n" . "Notes") "a" nil)
         (:prefix ("a" . "Agenda")
          :desc "Agenda" "m" #'spolakh/switch-to-agenda
+         :desc "Lily" "l" #'spolakh/switch-to-lily-agenda
          :desc "Work Agenda" "w" #'spolakh/switch-to-work-agenda))
   (setq org-agenda-block-separator nil
         org-agenda-start-with-log-mode t)
@@ -245,6 +245,9 @@
   (defun spolakh/switch-to-agenda ()
     (interactive)
     (org-agenda nil "m"))
+  (defun spolakh/switch-to-lily-agenda ()
+    (interactive)
+    (org-agenda nil "l"))
   (defun spolakh/switch-to-work-agenda ()
     (interactive)
     (org-agenda nil "w"))
@@ -427,7 +430,9 @@
          '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00"))
   (setq org-agenda-custom-commands `(
                                      ("m" "Agenda" ,(spolakh/agenda-for-filter "+@mine"))
-                                     ("w" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))))
+                                     ("w" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))
+                                     ("l" "Lily" ,(spolakh/agenda-for-filter "+Lily"))
+                                     ))
   (defun spolakh/org-fast-effort-selection ()
     "Modification of `org-fast-todo-selection' for use with org-set-effert. Select an effort value with single keys.
       Returns the new effort value, or nil if no state change should occur.
@@ -601,13 +606,13 @@
 ; ORG-ROAM:
 
 (setq org-roam-directory "~/Dropbox/org")
-(setq org-roam-link-title-format "N:%s")
+(setq org-roam-link-title-format "[[%s]]")
 (setq org-roam-index-file "~/Dropbox/org/index.org")
 (setq org-roam-capture-templates
     '(("d" "default" plain (function org-roam--capture-get-point)
      "%?"
      :file-name "${slug}"
-     :head "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n#+INDEXES: \n\n* [NOTE.STUB]\n* "
+     :head "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n\n* Indexes\n* "
      :unnarrowed t)))
 
 
@@ -623,4 +628,5 @@
    (:map global-map
     "M-z" "Ω"
     "M-6" "§"
+    "M-5" "∞"
     ))
