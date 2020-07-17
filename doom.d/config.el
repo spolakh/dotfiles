@@ -394,13 +394,20 @@
              (org-agenda-start-day "-1d")
              (org-agenda-start-on-weekday nil)
              (org-deadline-warning-days 14)))
-    (todo "TODO|Idea"
+    (todo "TODO"
           ((org-agenda-overriding-header "📤 To Refile")
            (org-agenda-files '(,(concat spolakh/org-agenda-directory "inbox.org")
                                ,(concat spolakh/org-directory "phone.org")
                                ,(concat spolakh/org-directory "ipad.org")
                                ))
            (org-agenda-max-entries 10)))
+    (todo "Idea"
+          ((org-agenda-overriding-header "🔖 to Finalize into Permanent Notes")
+           (org-agenda-files '(,(concat spolakh/org-agenda-directory "inbox.org")
+                               ,(concat spolakh/org-directory "phone.org")
+                               ,(concat spolakh/org-directory "ipad.org")
+                               ))
+           (org-agenda-max-entries 5)))
     (tags-todo ,(concat "TODO=\"TODO\"" filter)
           ((org-agenda-overriding-header "🚀 Projects")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))
@@ -427,7 +434,7 @@
         (search . "[%-4e] %?-17b")))
   (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
   (add-to-list 'org-global-properties
-         '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00"))
+         '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00 100:00"))
   (setq org-agenda-custom-commands `(
                                      ("m" "Agenda" ,(spolakh/agenda-for-filter "+@mine"))
                                      ("w" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))
@@ -490,45 +497,39 @@
           (t (setq quit-flag t)))))))
   (defun spolakh/invoke-fast-effort-selection ()
     (interactive)
-    ; TODO: excursions switch windows while waiting for input. =org-agenda-set-tags= doesn't do it somehow
-    (save-excursion
-      (save-window-excursion
-      (org-agenda-switch-to)
-      (org-set-effort nil (spolakh/org-fast-effort-selection))
-                    ))
-      (org-agenda-redo)
-    )
-  (defun spolakh/org-agenda-add-note ()
-    "Add a time-stamped note to the entry at point."
-    (interactive)
-    (save-excursion
-      (save-window-excursion
-        (org-agenda-check-no-diary)
-        (let* ((marker (or (org-get-at-bol 'org-marker)
-              (org-agenda-error)))
-        (buffer (marker-buffer marker))
-        (pos (marker-position marker))
-        (hdmarker (org-get-at-bol 'org-hd-marker))
-        (inhibit-read-only t))
-          (with-current-buffer buffer
-            (widen)
-            (goto-char pos)
-            (org-show-context 'agenda)
-            (move-marker org-log-note-marker (point))
-            (setq org-log-note-purpose 'note
-              org-log-note-effective-time (org-current-effective-time))
-            (org-add-log-note)
-            ))
-    )))
+      (let* ((hdmarker (or (org-get-at-bol 'org-hd-marker)
+        (org-agenda-error)))
+      (buffer (marker-buffer hdmarker))
+      (pos (marker-position hdmarker))
+      (inhibit-read-only t)
+      newhead)
+      (org-with-remote-undo buffer
+        (with-current-buffer buffer
+    (widen)
+    (goto-char pos)
+    (org-show-context 'agenda)
+    (org-set-effort nil (spolakh/org-fast-effort-selection))
+    (end-of-line 1)
+    (setq newhead (org-get-heading)))
+        (org-agenda-change-all-lines newhead hdmarker)))
+  )
+  (defvar spolakh/org-agenda-process-inbox-item-returnto (make-marker))
+  (defun spolakh/org-agenda-refile ()
+     (advice-remove 'org-store-log-note #'spolakh/org-agenda-refile)
+     (goto-char spolakh/org-agenda-process-inbox-item-returnto)
+     (org-agenda-refile nil nil nil))
   (defun spolakh/org-agenda-process-inbox-item ()
-    "Process a single item in the org-agenda."
+    "process a single item in the org-agenda."
     (interactive)
     (org-with-wide-buffer
-     (org-agenda-set-tags)
-     (spolakh/invoke-fast-effort-selection)
-     (org-agenda-add-note)
-     (org-agenda-refile nil nil nil)
-    ))
+      (move-marker spolakh/org-agenda-process-inbox-item-returnto (point-marker))
+      (org-agenda-set-tags)
+      (spolakh/invoke-fast-effort-selection)
+      (org-agenda-add-note)
+      (advice-add 'org-store-log-note :after #'spolakh/org-agenda-refile)
+      (message "here")
+     )
+  )
 ;  (setq org-agenda-bulk-custom-functions `((,spolakh/org-agenda-process-inbox-item)))
 
   ; This makes org-agenda integration w/ mobile capture (Orgzly) work without conflicts
@@ -612,7 +613,7 @@
     '(("d" "default" plain (function org-roam--capture-get-point)
      "%?"
      :file-name "${slug}"
-     :head "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n\n* Indexes\n* "
+     :head "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* Indexes\n* "
      :unnarrowed t)))
 
 
