@@ -434,7 +434,7 @@
         (search . "[%-4e] %?-17b")))
   (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
   (add-to-list 'org-global-properties
-         '("Effort_ALL". "0:05 0:15 0:30 1:00 2:00 100:00"))
+         '("Effort_ALL". "100:00 0:05 0:15 0:30 1:00 2:00"))
   (setq org-agenda-custom-commands `(
                                      ("m" "Agenda" ,(spolakh/agenda-for-filter "+@mine"))
                                      ("w" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))
@@ -504,18 +504,19 @@
       (inhibit-read-only t)
       newhead)
       (org-with-remote-undo buffer
-        (with-current-buffer buffer
-    (widen)
-    (goto-char pos)
-    (org-show-context 'agenda)
-    (org-set-effort nil (spolakh/org-fast-effort-selection))
-    (end-of-line 1)
-    (setq newhead (org-get-heading)))
+       (with-current-buffer buffer
+        (widen)
+        (goto-char pos)
+        (org-show-context 'agenda)
+        (org-set-effort nil (spolakh/org-fast-effort-selection))
+        (end-of-line 1)
+        (setq newhead (org-get-heading)))
         (org-agenda-change-all-lines newhead hdmarker)))
   )
   (defvar spolakh/org-agenda-process-inbox-item-returnto (make-marker))
   (defun spolakh/org-agenda-refile ()
      (advice-remove 'org-store-log-note #'spolakh/org-agenda-refile)
+     (switch-to-buffer "*Org Agenda*")
      (goto-char spolakh/org-agenda-process-inbox-item-returnto)
      (org-agenda-refile nil nil nil))
   (defun spolakh/org-agenda-process-inbox-item ()
