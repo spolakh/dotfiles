@@ -130,6 +130,8 @@
             :immediate-finish t)))
   (setq
    org-use-fast-todo-selection nil
+   org-startup-with-inline-images t
+   org-image-actual-width 400
    org-todo-keywords '(
     (sequence "TODO" "|" "DONE")
     (sequence "Idea" "[NOTE.Inkling]" "|" "[NOTE.EVERGREEN]") ; Use Stub to filter for Notes that we need expanding on. Once ok - move to Evergreen
@@ -161,6 +163,18 @@
   (setq org-refile-targets `((,(concat spolakh/org-agenda-directory "later.org") :maxlevel . 1)
                               (,(concat spolakh/org-agenda-directory "oneoff.org") :level . 0)
                               (,(concat spolakh/org-agenda-directory "projects.org") :maxlevel . 1)))
+  (defun spolakh/shift-dwim-at-point ()
+    (interactive)
+    (let ((org-link-frame-setup (quote
+                               ((vm . vm-visit-folder-other-window)
+                                (gnus . gnus)
+                                (file . find-file-other-window)
+                                (wl . wl)))
+                              ))
+    (+org/dwim-at-point)))
+  (map! (:map org-mode-map
+         "<S-return>" #'spolakh/shift-dwim-at-point
+         ))
 )
 
 (use-package! org-agenda
