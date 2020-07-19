@@ -189,7 +189,7 @@
   (setq org-agenda-block-separator nil
         org-agenda-start-with-log-mode t)
   (setq org-agenda-time-grid
-      '((daily today require-timed)
+      '((daily today)
         (1200 1400 1600 1800 2000 2200 0000 0200)
         "    " "- - - - - - - - - - - - - - - - - - - - - - - - - - -"))
   (setq org-agenda-use-time-grid t)
