@@ -616,9 +616,25 @@
       ;; refresh agenda
       (org-agenda-redo)
     )
+)
 
+(use-package! org-gcal
+  :init
+  ;; Storing my creds in a secret file so I don't commit them here.
+  (require 'json)
+  (defun get-gcal-config-value (key)
+    "Return the value of the json file gcal_secret for key"
+    (cdr (assoc key (json-read-file "~/Dropbox/code/credentials/gcal.json")))
+    )
 
-  )
+  (setq org-gcal-client-id (get-gcal-config-value 'org-gcal-client-id)
+        org-gcal-client-secret (get-gcal-config-value 'org-gcal-client-secret)
+        org-gcal-file-alist `(
+                              ("gliderok@gmail.com" .  ,(concat spolakh/org-agenda-directory "gcal.org"))
+                            ))
+  :config
+  ;(add-hook 'org-agenda-mode-hook 'org-gcal-fetch)
+)
 
 
 ; ORG-ROAM:

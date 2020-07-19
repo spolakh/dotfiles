@@ -48,3 +48,4 @@
 
 (package! spacemacs-theme)
 (package! modus-operandi-theme)
+(package! org-gcal)
