@@ -132,6 +132,7 @@
    org-use-fast-todo-selection nil
    org-startup-with-inline-images t
    org-image-actual-width 400
+   org-log-done 'time
    org-todo-keywords '(
     (sequence "TODO" "|" "DONE")
     (sequence "Idea" "[NOTE.Inkling]" "|" "[NOTE.EVERGREEN]") ; Use Stub to filter for Notes that we need expanding on. Once ok - move to Evergreen
