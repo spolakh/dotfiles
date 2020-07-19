@@ -190,9 +190,10 @@
         org-agenda-start-with-log-mode t)
   (setq org-agenda-time-grid
       '((daily today require-timed)
-        (1200 1300 1400 1500 1600 1700 1800 1900)
-        "      " "················"))
+        (1200 1400 1600 1800 2000 2200 0000 0200)
+        "    " "- - - - - - - - - - - - - - - - - - - - - - - - - - -"))
   (setq org-agenda-use-time-grid t)
+  (setq org-extend-today-until 2)
   (setq org-agenda-todo-list-sublevels t)
   (map! :after evil-org-agenda
         :map (evil-org-agenda-mode-map org-agenda-mode-map)
