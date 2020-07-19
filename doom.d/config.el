@@ -406,8 +406,8 @@
   :config
   (defun spolakh/agenda-for-filter (filter)
     `((agenda ""
-            ((org-agenda-span 3)
-             (org-agenda-start-day "-1d")
+            ((org-agenda-span 2)
+             (org-agenda-start-day "today")
              (org-agenda-start-on-weekday nil)
              (org-deadline-warning-days 14)))
     (todo "TODO"
