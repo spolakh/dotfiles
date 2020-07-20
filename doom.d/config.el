@@ -138,6 +138,7 @@
     (sequence "Idea" "[NOTE.Inkling]" "|" "[NOTE.EVERGREEN]") ; Use Stub to filter for Notes that we need expanding on. Once ok - move to Evergreen
     (sequence "WAITING(w@/!)" "|""PASS(p@/!)")
     (sequence "[BIB.INPROGRESS]" "|" "[BIB.DONE]") ; Resources(Articles / Books / Videos / ...) for quotations
+    (sequence "CANCELLED")
     )
    org-todo-keyword-faces
        '(
@@ -630,10 +631,35 @@
   (setq org-gcal-client-id (get-gcal-config-value 'org-gcal-client-id)
         org-gcal-client-secret (get-gcal-config-value 'org-gcal-client-secret)
         org-gcal-file-alist `(
-                              ("gliderok@gmail.com" .  ,(concat spolakh/org-agenda-directory "gcal.org"))
-                            ))
+                              (,(get-gcal-config-value 'calendar-id) .  ,(concat spolakh/org-agenda-directory "gcal.org"))
+                              (,(get-gcal-config-value 'work-calendar-id) .  ,(concat spolakh/org-agenda-directory "gcal-grail.org"))
+                              )
+        org-gcal-remove-api-cancelled-events t
+        org-gcal-update-cancelled-events-with-todo nil
+        org-gcal-remove-events-with-cancelled-todo t
+        org-gcal-up-days 7
+        org-gcal-down-days 7
+        org-gcal-notify-p nil
+        )
   :config
-  ;(add-hook 'org-agenda-mode-hook 'org-gcal-fetch)
+    ;; org-gcal exclude declined events
+    (defun cce/filter-gcal-event-declined (event)
+      "Function for [org-gcal-fetch-event-filters]."
+      (let* ((case-fold-search t)
+            (attendees (plist-get event :attendees))
+            (my-response (when attendees
+                            (cl-reduce (lambda (last next)
+                                      (if (plist-get next :self) next last))
+                                    attendees
+                                    :initial-value nil))))
+        (cond ((string-match "office hour" (plist-get event :summary))
+              nil)
+              ((string-equal (plist-get my-response :responseStatus) "declined")
+              nil)
+              (t t))))
+
+    (add-to-list 'org-gcal-fetch-event-filters 'cce/filter-gcal-event-declined)
+    (add-hook 'org-agenda-mode-hook 'org-gcal-fetch)
 )
 
 
