@@ -207,7 +207,7 @@
       :m "e" #'spolakh/invoke-fast-effort-selection
       "s" #'org-agenda-schedule
       "a" #'org-agenda-archive-default-with-confirmation
-      "p" #'spolakh/org-agenda-process-inbox-item
+      "p" #'spolakh/org-agenda-process-single-inbox-item
       :m "P" #'spolakh/org-agenda-bulk-process-inbox
       :m "t"  #'org-agenda-columns
       "R" #'org-agenda-refile
@@ -525,47 +525,42 @@
     (re-search-backward ">$" nil 1)
     (let ((current-prefix-arg '(4))) (call-interactively 'recenter-top-bottom))
     )
-  (defvar spolakh/org-agenda-process-inbox-item-returnto (make-marker))
+  (defvar spolakh/org-agenda-process-inbox-do-bulk nil)
   (defun spolakh/org-agenda-refile ()
      (advice-remove 'org-store-log-note #'spolakh/org-agenda-refile)
      (switch-to-buffer "*Org Agenda*")
-     (goto-char spolakh/org-agenda-process-inbox-item-returnto)
-     (org-agenda-refile nil nil nil))
+     (org-agenda-refile nil nil nil)
+     (if (looking-at ".*>$") (setq spolakh/org-agenda-process-inbox-do-bulk nil))
+     (if spolakh/org-agenda-process-inbox-do-bulk (spolakh/org-agenda-process-inbox-item))
+     )
   (defun spolakh/org-agenda-process-inbox-item ()
-    "process a single item in the org-agenda."
+    ;; "process a single item in the org-agenda."
     (interactive)
-    (org-with-wide-buffer
-      (move-marker spolakh/org-agenda-process-inbox-item-returnto (point-marker))
-      (org-agenda-set-tags)
-      (spolakh/invoke-fast-effort-selection)
-      (org-agenda-add-note)
-      (advice-add 'org-store-log-note :after #'spolakh/org-agenda-refile)
+     (org-with-wide-buffer
+       (beginning-of-line)
+       (advice-add 'org-store-log-note :after #'spolakh/org-agenda-refile)
+       (org-agenda-set-tags)
+       (spolakh/invoke-fast-effort-selection)
+       (org-agenda-add-note)
+       (org-add-log-note)
      )
   )
-  (defun spolakh/org-agenda-bulk-process-entries ())
+  (defun spolakh/org-agenda-process-single-inbox-item ()
+    (interactive)
+    (setq spolakh/org-agenda-process-inbox-do-bulk nil)
+    (spolakh/org-agenda-process-inbox-item))
   (defun spolakh/org-agenda-find-beginning-of-inbox ()
     (beginning-of-buffer)
     (spolakh/org-agenda-next-section)
     (next-line)
     (point)
     )
-  (defun spolakh/org-agenda-find-end-of-inbox ()
-    (spolakh/org-agenda-find-beginning-of-inbox)
-    (spolakh/org-agenda-next-section)
-    (previous-line)
-    (point)
-    )
   (defun spolakh/org-agenda-bulk-process-inbox ()
     (interactive)
-    (setq bulk-from (spolakh/org-agenda-find-beginning-of-inbox))
-    (setq bulk-to (spolakh/org-agenda-find-end-of-inbox))
-    (push-mark bulk-from t t)
-    (goto-char bulk-to)
-    (call-interactively #'org-agenda-bulk-mark)
-    ;(spolakh/org-agenda-bulk-process-entries)
-    (pop-mark)
+    (spolakh/org-agenda-find-beginning-of-inbox)
+    (setq spolakh/org-agenda-process-inbox-do-bulk t)
+    (spolakh/org-agenda-process-inbox-item)
      )
-;  (setq org-agenda-bulk-custom-functions `((,spolakh/org-agenda-process-inbox-item)))
 
   ; This makes org-agenda integration w/ mobile capture (Orgzly) work without conflicts
   ; (in tandem with adding ((nil . ((eval . (auto-revert-mode 1))))) into .dir-locals.el in gtd directory)
