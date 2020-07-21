@@ -202,14 +202,13 @@
         ; org-agenda-mode-map
         ; evil-org-agenda-mode-map
 ;      "i" #'org-agenda-clock-in
-;      "i" #'jethro/org-inbox-capture
-;      "P" #'jethro/org-process-inbox
       ;"a" #'org-agenda-add-note ; we always link notes in the default item processing flow
       "d" #'org-agenda-deadline
       :m "e" #'spolakh/invoke-fast-effort-selection
       "s" #'org-agenda-schedule
       "a" #'org-agenda-archive-default-with-confirmation
       "p" #'spolakh/org-agenda-process-inbox-item
+      :m "P" #'spolakh/org-agenda-bulk-process-inbox
       :m "t"  #'org-agenda-columns
       "R" #'org-agenda-refile
       "<s-return>" #'org-agenda-todo
@@ -217,6 +216,8 @@
       "S" #'spolakh/set-todo-waiting
       "D" #'spolakh/set-todo-pass
       "s-1" #'spolakh/org-agenda-parent-to-top
+      :m "J" #'spolakh/org-agenda-next-section
+      :m "K" #'spolakh/org-agenda-previous-section
       :m "1" #'spolakh/org-agenda-item-to-top
       :m "d" nil
       :m "s" nil
@@ -227,29 +228,7 @@
       :m "D" nil
       :m "<s-return>" nil
       :m "<s-S-return>" nil
-      :m "P" #'spolakh/test-org-agenda
       )
-  (defun spolakh/test-org-agenda (&optional arg)
-    "Add a time-stamped note to the entry at point."
-    (interactive "P")
-    (org-agenda-check-no-diary)
-    (let* ((marker (or (org-get-at-bol 'org-marker)
-          (org-agenda-error)))
-    (buffer (marker-buffer marker))
-    (pos (marker-position marker))
-    (hdmarker (org-get-at-bol 'org-hd-marker))
-    (inhibit-read-only t))
-      (with-current-buffer buffer
-        (widen)
-        (goto-char pos)
-        (org-show-context 'agenda)
-        (org-narrow-to-subtree)
-        (save-excursion
-          (org-next-visible-heading 1)
-          (narrow-to-region (point-min) (point)))
-        (org-add-note)
-        ))
-    )
   (defun spolakh/set-todo-waiting ()
     (interactive)
     (org-agenda-todo "WAITING"))
@@ -261,13 +240,19 @@
     (org-agenda-todo "PASS"))
   (defun spolakh/switch-to-agenda ()
     (interactive)
-    (org-agenda nil "m"))
+    (org-agenda nil "m")
+    (spolakh/org-agenda-find-beginning-of-inbox)
+    )
   (defun spolakh/switch-to-lily-agenda ()
     (interactive)
-    (org-agenda nil "l"))
+    (org-agenda nil "l")
+    (spolakh/org-agenda-find-beginning-of-inbox)
+    )
   (defun spolakh/switch-to-work-agenda ()
     (interactive)
-    (org-agenda nil "w"))
+    (org-agenda nil "w")
+    (spolakh/org-agenda-find-beginning-of-inbox)
+    )
   ; This is heavily adopted from Sacha Chua's https://sachachua.com/blog/2013/01/emacs-org-display-projects-with-a-few-subtasks-in-the-agenda-view/
   ;; (defun spolakh/org-agenda-project-agenda ()
   ;;   "Return the project headline and up to `org-agenda-max-entries' tasks."
@@ -412,34 +397,34 @@
              (org-agenda-start-on-weekday nil)
              (org-deadline-warning-days 14)))
     (todo "TODO"
-          ((org-agenda-overriding-header "📤 To Refile")
+          ((org-agenda-overriding-header "📤 To Refile >")
            (org-agenda-files '(,(concat spolakh/org-agenda-directory "inbox.org")
                                ,(concat spolakh/org-directory "phone.org")
                                ,(concat spolakh/org-directory "ipad.org")
                                ))
            (org-agenda-max-entries 10)))
     (todo "Idea"
-          ((org-agenda-overriding-header "🔖 to Finalize into Permanent Notes")
+          ((org-agenda-overriding-header "🔖 to Finalize into Permanent Notes >")
            (org-agenda-files '(,(concat spolakh/org-agenda-directory "inbox.org")
                                ,(concat spolakh/org-directory "phone.org")
                                ,(concat spolakh/org-directory "ipad.org")
                                ))
            (org-agenda-max-entries 5)))
     (tags-todo ,(concat "TODO=\"TODO\"" filter)
-          ((org-agenda-overriding-header "🚀 Projects")
+          ((org-agenda-overriding-header "🚀 Projects >")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))
           (org-agenda-skip-function #'spolakh/org-agenda-leave-only-first-three-children)
           (org-agenda-hide-tags-regexp "")
           ))
     (tags-todo ,(concat "TODO=\"WAITING\"" filter)
-          ((org-agenda-overriding-header "🌒 Waiting")
+          ((org-agenda-overriding-header "🌒 Waiting >")
           (org-agenda-hide-tags-regexp "")
           ))
     ;; (spolakh/org-agenda-projects-and-tasks "+PROJECT"
     ;;  ((org-agenda-max-entries 3)
     ;;   (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))))
     (tags-todo ,(concat "TODO=\"TODO\"" filter)
-          ((org-agenda-overriding-header "👾 One-off Tasks (under 1 Pomodoro)")
+          ((org-agenda-overriding-header "👾 One-off Tasks (under 1 Pomodoro) >")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "oneoff.org")))
           (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))
           (org-agenda-hide-tags-regexp "")
@@ -530,6 +515,16 @@
         (setq newhead (org-get-heading)))
         (org-agenda-change-all-lines newhead hdmarker)))
   )
+  (defun spolakh/org-agenda-next-section ()
+    (interactive)
+    (re-search-forward ">$" nil 1)
+    (let ((current-prefix-arg '(4))) (call-interactively 'recenter-top-bottom))
+    )
+  (defun spolakh/org-agenda-previous-section ()
+    (interactive)
+    (re-search-backward ">$" nil 1)
+    (let ((current-prefix-arg '(4))) (call-interactively 'recenter-top-bottom))
+    )
   (defvar spolakh/org-agenda-process-inbox-item-returnto (make-marker))
   (defun spolakh/org-agenda-refile ()
      (advice-remove 'org-store-log-note #'spolakh/org-agenda-refile)
@@ -545,9 +540,31 @@
       (spolakh/invoke-fast-effort-selection)
       (org-agenda-add-note)
       (advice-add 'org-store-log-note :after #'spolakh/org-agenda-refile)
-      (message "here")
      )
   )
+  (defun spolakh/org-agenda-bulk-process-entries ())
+  (defun spolakh/org-agenda-find-beginning-of-inbox ()
+    (beginning-of-buffer)
+    (spolakh/org-agenda-next-section)
+    (next-line)
+    (point)
+    )
+  (defun spolakh/org-agenda-find-end-of-inbox ()
+    (spolakh/org-agenda-find-beginning-of-inbox)
+    (spolakh/org-agenda-next-section)
+    (previous-line)
+    (point)
+    )
+  (defun spolakh/org-agenda-bulk-process-inbox ()
+    (interactive)
+    (setq bulk-from (spolakh/org-agenda-find-beginning-of-inbox))
+    (setq bulk-to (spolakh/org-agenda-find-end-of-inbox))
+    (push-mark bulk-from t t)
+    (goto-char bulk-to)
+    (call-interactively #'org-agenda-bulk-mark)
+    ;(spolakh/org-agenda-bulk-process-entries)
+    (pop-mark)
+     )
 ;  (setq org-agenda-bulk-custom-functions `((,spolakh/org-agenda-process-inbox-item)))
 
   ; This makes org-agenda integration w/ mobile capture (Orgzly) work without conflicts
@@ -640,6 +657,8 @@
         org-gcal-up-days 7
         org-gcal-down-days 7
         org-gcal-notify-p nil
+        org-gcal-auto-archive nil
+
         )
   :config
     ;; org-gcal exclude declined events
