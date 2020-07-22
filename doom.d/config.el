@@ -201,7 +201,9 @@
         ; org-agenda-keymap
         ; org-agenda-mode-map
         ; evil-org-agenda-mode-map
-;      "i" #'org-agenda-clock-in
+      :m "i" #'org-agenda-clock-in
+      "o" #'org-agenda-clock-out
+      :m "I" #'spolakh/set-todo-idea
       ;"a" #'org-agenda-add-note ; we always link notes in the default item processing flow
       "d" #'org-agenda-deadline
       :m "e" #'spolakh/invoke-fast-effort-selection
@@ -232,6 +234,9 @@
   (defun spolakh/set-todo-waiting ()
     (interactive)
     (org-agenda-todo "WAITING"))
+  (defun spolakh/set-todo-idea ()
+    (interactive)
+    (org-agenda-todo "Idea"))
   (defun spolakh/set-todo-done ()
     (interactive)
     (org-agenda-todo "DONE"))
@@ -538,6 +543,8 @@
     (interactive)
      (org-with-wide-buffer
        (beginning-of-line)
+       (if spolakh/org-agenda-process-inbox-do-bulk
+           (let ((current-prefix-arg 0)) (call-interactively 'recenter-top-bottom)))
        (advice-add 'org-store-log-note :after #'spolakh/org-agenda-refile)
        (org-agenda-set-tags)
        (spolakh/invoke-fast-effort-selection)
