@@ -188,7 +188,9 @@
          :desc "Lily" "l" #'spolakh/switch-to-lily-agenda
          :desc "Work Agenda" "w" #'spolakh/switch-to-work-agenda))
   (setq org-agenda-block-separator nil
-        org-agenda-start-with-log-mode t)
+        org-agenda-start-with-log-mode t
+        org-agenda-log-mode-items '(closed clock state))
+  (add-hook 'evil-org-agenda-mode-hook #'display-line-numbers-mode)
   (setq org-agenda-time-grid
       '((daily today)
         (1200 1400 1600 1800 2000 2200 0000 0200)
@@ -681,12 +683,14 @@
 
     (add-to-list 'org-gcal-fetch-event-filters 'cce/filter-gcal-event-declined)
     (defun spolakh/wipe-work-gcal-and-refetch ()
+      (interactive)
       (with-current-buffer
           (find-file-noselect (concat spolakh/org-agenda-directory "gcal-grail.org"))
-          (erase-buffer))
-      (org-gcal-fetch)
+        (erase-buffer)
+        (save-buffer))
+      (call-interactively #'org-gcal-fetch)
       (message "org-gcal-fetch finished"))
-    (run-with-idle-timer 300 t 'spolakh/wipe-work-gcal-and-refetch)
+    (run-with-idle-timer 60 t 'spolakh/wipe-work-gcal-and-refetch)
 )
 
 
