@@ -441,7 +441,7 @@
         (search . "[%-4e] %?-17b")))
   (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
   (add-to-list 'org-global-properties
-         '("Effort_ALL". "100:00 0:05 0:15 0:30 1:00 2:00"))
+         '("Effort_ALL". "100:00 0:15 0:30 1:00 2:00"))
   (setq org-agenda-custom-commands `(
                                      ("m" "Agenda" ,(spolakh/agenda-for-filter "+@mine"))
                                      ("w" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))
@@ -658,7 +658,7 @@
         org-gcal-remove-events-with-cancelled-todo t
         org-gcal-up-days 7
         org-gcal-down-days 7
-        org-gcal-notify-p nil
+        ;org-gcal-notify-p nil
         org-gcal-auto-archive nil
 
         )
@@ -680,7 +680,13 @@
               (t t))))
 
     (add-to-list 'org-gcal-fetch-event-filters 'cce/filter-gcal-event-declined)
-    (add-hook 'org-agenda-mode-hook 'org-gcal-fetch)
+    (defun spolakh/wipe-work-gcal-and-refetch ()
+      (with-current-buffer
+          (find-file-noselect (concat spolakh/org-agenda-directory "gcal-grail.org"))
+          (erase-buffer))
+      (org-gcal-fetch)
+      (message "org-gcal-fetch finished"))
+    (run-with-idle-timer 300 t 'spolakh/wipe-work-gcal-and-refetch)
 )
 
 
