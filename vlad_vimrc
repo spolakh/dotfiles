@@ -23,6 +23,7 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'janko/vim-test'
 Plugin 'relastle/bluewery.vim'
 Plugin 'junk-e/identity.vim'
+Plugin 'morhetz/gruvbox'
 Plugin 'tpope/vim-sensible'
 Plugin 'xolox/vim-colorscheme-switcher'
 " dependency of vim-colorscheme-switcher
@@ -63,5 +64,12 @@ set t_Co=256
 syntax on
 set termguicolors
 "colorscheme bluewery
-"colorscheme gruvbox
-colorscheme identity
+"colorscheme identity
+" https://github.com/morhetz/gruvbox/wiki/Configuration
+" https://vimawesome.com/plugin/gruvbox
+set background=light "/dark
+let g:gruvbox_italic = '1'
+let g:gruvbox_bold = '1'
+let g:gruvbox_contrast_dark = 'medium'
+let g:gruvbox_contrast_light = 'medium'
+colorscheme gruvbox
