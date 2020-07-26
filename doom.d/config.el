@@ -18,8 +18,13 @@
 ;;   presentations or streaming.
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
-;; font string. You generally only need these two:
-(setq doom-font (font-spec :family "monospace" :size 14))
+;; font string.
+;;
+;(setq doom-font (font-spec :family "monospace" :size 14))
+; spolakh/FAVS:
+  (setq doom-font "Anonymous Pro-13")
+;  (setq doom-font "Fira Code-12")
+;  (setq doom-font "Ubuntu Mono-14")
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
