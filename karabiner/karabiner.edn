@@ -182,7 +182,7 @@
                   [:i [:app "Slack"]]
                   [:o [:app "Discord"]]
                   [:p [:app "Skype"]]
-                  [:!Sequal_sign [:send_to_desktop 12]]
+                  ;[:!Sequal_sign [:send_to_desktop 12]]
                 ]}
        {:des "terminal"
           :rules [:x-mode
