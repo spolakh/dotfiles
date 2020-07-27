@@ -90,6 +90,7 @@
             }
 
  :templates {
+             :app "/usr/bin/open -a \"%s\""
              :focus_desktop "/usr/local/bin/yabai -m space --focus %d"
              :send_to_desktop "/usr/local/bin/yabai -m window --space %d"
              ;; https://github.com/koekeishiya/yabai/issues/83
@@ -161,32 +162,39 @@
                 ]}
        {:des "exo"
           :rules [:z-mode
-                  [:equal_sign [:focus_desktop 14]]
+                  [:equal_sign [:app "Emacs"]]
                   [:!Sequal_sign [:send_to_desktop 14]]
                   ; Ω
                   [:x :!Oz]
+                  ; §
                   [:c :!O6]
+                  ; ∞
                   [:v :!O5]
                 ]}
        {:des "code editor"
           :rules [:v-mode
-                  [:equal_sign [:focus_desktop 13]]
+                  [:equal_sign [:app "GoLand"]]
                   [:!Sequal_sign [:send_to_desktop 13]]
                 ]}
        {:des "chats"
           :rules [:q-mode
-                  [:equal_sign [:focus_desktop 12]]
+                  [:u [:app "Telegram"]]
+                  [:i [:app "Slack"]]
+                  [:o [:app "Discord"]]
+                  [:p [:app "Skype"]]
                   [:!Sequal_sign [:send_to_desktop 12]]
                 ]}
        {:des "terminal"
           :rules [:x-mode
-                  [:equal_sign [:focus_desktop 15]]
+                  [:equal_sign [:app "kitty"]]
                   [:!Sequal_sign [:send_to_desktop 15]]
                 ]}
        {:des "domains (chrome)"
           :rules [:c-mode
-                  [:equal_sign [:focus_desktop 16]]
-                  [:!Sequal_sign [:send_to_desktop 16]]
+                  [:equal_sign [:app "Google Chrome"]]
+                  ; TODO: figure out how to find Chrome's desktop & how to bind it to Shift-c-=) 
+                  ; [:!Sequal_sign [:send_to_desktop 16]]
+
                   ; rest (quit)
                   ;[:1 [:focus_desktop 12]]
                   ;[:!S1 [:send_to_desktop 12]]
