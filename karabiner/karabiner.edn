@@ -90,7 +90,8 @@
             }
 
  :templates {
-             :app "/usr/bin/open -a \"%s\""
+             :app "APP=\"%s\"; /usr/local/bin/yabai -m space --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq \"[.[] | select(.app | contains(\\\"${APP}\\\")) | .space][0]\"); /usr/bin/open -a \"${APP}\""
+             ;:app "/usr/bin/open -a \"%s\""
              :focus_desktop "/usr/local/bin/yabai -m space --focus %d"
              :send_to_desktop "/usr/local/bin/yabai -m window --space %d"
              ;; https://github.com/koekeishiya/yabai/issues/83
