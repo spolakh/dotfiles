@@ -83,6 +83,7 @@
 :simlayers {
             :x-mode {:key :x} ; TODO: maybe if I copy it and add S, xS= will work? 
             :c-mode {:key :c}
+            :s-mode {:key :s}
             :z-mode {:key :z}
             :v-mode {:key :v}
             :q-mode {:key :q}
@@ -189,6 +190,11 @@
           :rules [:x-mode
                   [:equal_sign [:app "kitty"]]
                   [:!Sequal_sign [:send_to_desktop 15]]
+                ]}
+       {:des "spotify"
+          :rules [:s-mode
+                  [:equal_sign [:app "Spotify"]]
+                  [:!Sequal_sign [:send_to_desktop 11]]
                 ]}
        {:des "domains (chrome)"
           :rules [:c-mode
