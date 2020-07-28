@@ -91,7 +91,7 @@
             }
 
  :templates {
-             :app "APP=\"%s\"; /usr/local/bin/yabai -m space --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq \"[.[] | select(.app | contains(\\\"${APP}\\\")) | .space][0]\"); /usr/bin/open -a \"${APP}\""
+             :app "APP=\"%s\"; TITLE=\"%s\"; /usr/local/bin/yabai -m space --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq \"[.[] | select(.app | contains(\\\"${APP}\\\")) | .space][0]\"); /usr/bin/open -a \"${APP}\"; /usr/local/bin/yabai -m window --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq \"[.[] | select(.app | contains(\\\"${APP}\\\")) | select(.title | contains(\\\"${TITLE}\\\")) | .id][0]\")" 
              ;:app "/usr/bin/open -a \"%s\""
              :focus_desktop "/usr/local/bin/yabai -m space --focus %d"
              :send_to_desktop "/usr/local/bin/yabai -m window --space %d"
@@ -164,8 +164,8 @@
                 ]}
        {:des "exo"
           :rules [:z-mode
-                  [:equal_sign [:app "Emacs"]]
-                  [:!Sequal_sign [:send_to_desktop 14]]
+                  [:u [:app "Emacs"]]
+                  ;[:!Sequal_sign [:send_to_desktop 14]]
                   ; Ω
                   [:x :!Oz]
                   ; §
@@ -175,8 +175,8 @@
                 ]}
        {:des "code editor"
           :rules [:v-mode
-                  [:equal_sign [:app "GoLand"]]
-                  [:!Sequal_sign [:send_to_desktop 13]]
+                  [:u [:app "GoLand"]]
+                  ;[:!Sequal_sign [:send_to_desktop 13]]
                 ]}
        {:des "chats"
           :rules [:q-mode
@@ -188,17 +188,18 @@
                 ]}
        {:des "terminal"
           :rules [:x-mode
-                  [:equal_sign [:app "kitty"]]
-                  [:!Sequal_sign [:send_to_desktop 15]]
+                  [:u [:app "kitty"]]
+                  ;[:!Sequal_sign [:send_to_desktop 15]]
                 ]}
        {:des "spotify"
           :rules [:s-mode
-                  [:equal_sign [:app "Spotify"]]
+                  ;[:u [:app "Spotify"]]
                   [:!Sequal_sign [:send_to_desktop 11]]
                 ]}
        {:des "domains (chrome)"
           :rules [:c-mode
-                  [:equal_sign [:app "Google Chrome"]]
+                  [:u [:app "Google Chrome" "Vladislav"]]
+                  [:i [:app "Google Chrome" "grail"]]
                   ; TODO: figure out how to find Chrome's desktop & how to bind it to Shift-c-=) 
                   ; [:!Sequal_sign [:send_to_desktop 16]]
 

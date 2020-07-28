@@ -665,7 +665,7 @@
         org-gcal-remove-events-with-cancelled-todo t
         org-gcal-up-days 7
         org-gcal-down-days 7
-        ;org-gcal-notify-p nil
+        org-gcal-notify-p nil
         org-gcal-auto-archive nil
 
         )
