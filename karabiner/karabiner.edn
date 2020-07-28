@@ -91,7 +91,8 @@
             }
 
  :templates {
-             :app "APP=\"%s\"; TITLE=\"%s\"; /usr/local/bin/yabai -m space --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq \"[.[] | select(.app | contains(\\\"${APP}\\\")) | .space][0]\"); /usr/bin/open -a \"${APP}\"; /usr/local/bin/yabai -m window --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq \"[.[] | select(.app | contains(\\\"${APP}\\\")) | select(.title | contains(\\\"${TITLE}\\\")) | .id][0]\")" 
+             ; first focus space then focus window so that it doesn't show workspace switching animatio
+             :app "APP=\"%s\"; TITLE=\"%s\"; /usr/local/bin/yabai -m space --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq \"[.[] | select(.app | contains(\\\"${APP}\\\")) | select(.title | contains(\\\"${TITLE}\\\")) | .space][0]\"); /usr/bin/open -a \"${APP}\"; /usr/local/bin/yabai -m window --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq \"[.[] | select(.app | contains(\\\"${APP}\\\")) | select(.title | contains(\\\"${TITLE}\\\")) | .id][0]\")" 
              ;:app "/usr/bin/open -a \"%s\""
              :focus_desktop "/usr/local/bin/yabai -m space --focus %d"
              :send_to_desktop "/usr/local/bin/yabai -m window --space %d"
