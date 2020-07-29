@@ -165,6 +165,7 @@
                 ]}
        {:des "exo"
           :rules [:z-mode
+                  [:i [:app "Emacs"]]
                   [:u [:app "Emacs"]]
                   ;[:!Sequal_sign [:send_to_desktop 14]]
                   ; Ω
@@ -181,26 +182,28 @@
                 ]}
        {:des "chats"
           :rules [:q-mode
-                  [:u [:app "Telegram"]]
-                  [:i [:app "Slack"]]
+                  [:i [:app "Telegram"]]
+                  [:u [:app "Slack"]]
                   [:o [:app "Discord"]]
                   [:p [:app "Skype"]]
                   ;[:!Sequal_sign [:send_to_desktop 12]]
                 ]}
        {:des "terminal"
           :rules [:x-mode
+                  [:i [:app "kitty"]]
                   [:u [:app "kitty"]]
                   ;[:!Sequal_sign [:send_to_desktop 15]]
                 ]}
        {:des "spotify"
           :rules [:s-mode
-                  ;[:u [:app "Spotify"]]
-                  [:!Sequal_sign [:send_to_desktop 11]]
+                  [:i [:app "Spotify"]]
+                  [:u [:app "Spotify"]]
+                  ;[:!Sequal_sign [:send_to_desktop 11]]
                 ]}
        {:des "domains (chrome)"
           :rules [:c-mode
-                  [:u [:app "Google Chrome" "Vladislav"]]
-                  [:i [:app "Google Chrome" "grail"]]
+                  [:i [:app "Google Chrome" "Vladislav"]]
+                  [:u [:app "Google Chrome" "grail"]]
                   ; TODO: figure out how to find Chrome's desktop & how to bind it to Shift-c-=) 
                   ; [:!Sequal_sign [:send_to_desktop 16]]
 

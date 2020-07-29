@@ -12,6 +12,8 @@ alias gcm="git commit -m"
 alias gca="git commit --amend"
 alias watch='watch '
 alias tg='curl -s -X POST https://api.telegram.org/bot1129105247:AAFMF7Cu0D6ioLUA0_UdAqpdvvxBDYY-mUk/sendMessage -d chat_id=84046805 -d text="Im done!"'
+alias cdd="cd ~/dotfiles"
+alias cdo="cd ~/Dropbox/org"
 
 # Aliases.k8s
 alias s='stern --kubeconfig=kubeconfig'

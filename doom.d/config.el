@@ -111,6 +111,7 @@
     "<s-return>" #'org-todo))
   (require 'find-lisp)
   (setq spolakh/org-agenda-directory "~/Dropbox/org/private/gtd/"
+        spolakh/org-dailies-directory "~/Dropbox/org/private/dailies/"
         spolakh/org-directory "~/Dropbox/org/")
   (setq org-agenda-files
         (cons (concat spolakh/org-directory "phone.org")
@@ -126,10 +127,8 @@
        :desc "Capture Task to Inbox" "i" (lambda () (interactive) (org-capture nil "i"))
        :desc "Capture Idea to Inbox" "I" (lambda () (interactive) (org-capture nil "I"))))
   (setq org-capture-templates
-        `(("i" "inbox as Task" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
+        `(("i" "inbox TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
            "* TODO %?")
-          ("I" "inbox as Idea" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
-           "* Idea %?")
           ("a" "org-protocol-capture from Alfred" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
             "* TODO %i"
             :immediate-finish t)))
@@ -417,9 +416,13 @@
            (org-agenda-max-entries 10)))
     (todo "Idea"
           ((org-agenda-overriding-header "🔖 to Finalize into Permanent Notes >")
-           (org-agenda-files '(,(concat spolakh/org-agenda-directory "inbox.org")
-                               ,(concat spolakh/org-directory "phone.org")
-                               ,(concat spolakh/org-directory "ipad.org")
+           (org-agenda-files (append
+                              (find-lisp-find-files spolakh/org-dailies-directory "\.org$")
+                              '(
+                                ,(concat spolakh/org-agenda-directory "inbox.org")
+                                ,(concat spolakh/org-directory "phone.org")
+                                ,(concat spolakh/org-directory "ipad.org")
+                                )
                                ))
            (org-agenda-max-entries 5)))
     (tags-todo ,(concat "TODO=\"TODO\"" filter)
@@ -701,28 +704,35 @@
 
 ; ORG-ROAM:
 
-(setq org-roam-directory "~/Dropbox/org")
-(setq org-roam-link-title-format "[[%s]]")
-(setq org-roam-index-file "~/Dropbox/org/index.org")
-(setq org-roam-capture-templates
-    '(("d" "default" plain (function org-roam--capture-get-point)
-     "%?"
-     :file-name "${slug}"
-     :head "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* Indexes\n* "
-     :unnarrowed t)))
-
-
-(map! :map org-roam-mode-map
-      :leader
-      (:prefix ("n" . "notes")
-       (:prefix ("r" . "roam")
-        :desc "Open Index" "i" 'org-roam-jump-to-index
-        :desc "Insert a link to a Note" "l" 'org-roam-insert
-       )))
-
-(map!
+(use-package! org-roam
+  :init
+  (setq org-roam-directory "~/Dropbox/org")
+  (setq org-roam-link-title-format "[[%s]]")
+  (setq org-roam-index-file "~/Dropbox/org/index.org")
+  (setq org-roam-capture-templates
+        '(("d" "default" plain (function org-roam--capture-get-point)
+           "%?"
+           :file-name "${slug}"
+           :head "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* Indexes\n* "
+           :unnarrowed t)))
+  (setq org-roam-dailies-capture-templates
+        '(("d" "daily" plain (function org-roam-capture--get-point)
+           ""
+           :immediate-finish t
+           :file-name "private/dailies/%<%Y-%m-%d>"
+           :head "#+title: %<%Y-%m-%d>"))
+        )
+  (map! :map org-roam-mode-map
+        :leader
+        (:prefix ("n" . "notes")
+         (:prefix ("r" . "roam")
+          :desc "Open Index" "i" 'org-roam-jump-to-index
+          :desc "Insert a link to a Note" "l" 'org-roam-insert
+          )))
+  (map!
    (:map global-map
     "M-z" "Ω"
     "M-6" "§"
     "M-5" "∞"
     ))
+  )

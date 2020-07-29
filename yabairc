@@ -32,6 +32,7 @@ yabai -m config window_gap                   06
 yabai -m rule --add app!="^(Google Chrome|Spotify|Emacs|Slack|Skype|Telegram|Discord|kitty|GoLand)$" space=2
 
 yabai -m rule --add app=Emacs manage=on
+yabai -m rule --add app=Alfred sticky=on
 
 echo "yabai configuration loaded.."
 
