@@ -87,6 +87,7 @@
             :z-mode {:key :z}
             :v-mode {:key :v}
             :q-mode {:key :q}
+            :d-mode {:key :d}
             :space-mode {:key :spacebar} 
             }
 
@@ -178,6 +179,11 @@
        {:des "code editor"
           :rules [:v-mode
                   [:u [:app "GoLand"]]
+                  ;[:!Sequal_sign [:send_to_desktop 13]]
+                ]}
+       {:des "database"
+          :rules [:d-mode
+                  [:u [:app "MySQLWorkbench"]]
                   ;[:!Sequal_sign [:send_to_desktop 13]]
                 ]}
        {:des "chats"
