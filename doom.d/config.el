@@ -141,7 +141,7 @@
     (sequence "TODO" "|" "DONE")
     (sequence "Idea" "[NOTE.Inkling]" "|" "[NOTE.EVERGREEN]") ; Use Stub to filter for Notes that we need expanding on. Once ok - move to Evergreen
     (sequence "WAITING(w@/!)" "|""PASS(p@/!)")
-    (sequence "[BIB.INPROGRESS]" "|" "[BIB.DONE]") ; Resources(Articles / Books / Videos / ...) for quotations
+    (sequence "TODIGEST" "|" "DIGESTED") ; Nibbles(Articles / Books / Videos / ...) for quotations
     (sequence "CANCELLED")
     )
    org-todo-keyword-faces
@@ -168,6 +168,7 @@
   (setq org-fast-tag-selection-single-key nil)
   (setq org-refile-targets `((,(concat spolakh/org-agenda-directory "later.org") :maxlevel . 1)
                               (,(concat spolakh/org-agenda-directory "oneoff.org") :level . 0)
+                              (,(concat spolakh/org-agenda-directory "repeaters.org") :level . 0)
                               (,(concat spolakh/org-agenda-directory "projects.org") :maxlevel . 1)))
   (defun spolakh/shift-dwim-at-point ()
     (interactive)
@@ -185,12 +186,6 @@
 
 (use-package! org-agenda
   :init
-  (map! :map org-mode-map :leader
-        (:prefix ("n" . "Notes") "a" nil)
-        (:prefix ("a" . "Agenda")
-         :desc "Agenda" "m" #'spolakh/switch-to-agenda
-         :desc "Lily" "l" #'spolakh/switch-to-lily-agenda
-         :desc "Work Agenda" "w" #'spolakh/switch-to-work-agenda))
   (setq org-agenda-block-separator nil
         org-agenda-start-with-log-mode t
         org-agenda-log-mode-items '(closed clock state))
@@ -249,21 +244,6 @@
   (defun spolakh/set-todo-pass ()
     (interactive)
     (org-agenda-todo "PASS"))
-  (defun spolakh/switch-to-agenda ()
-    (interactive)
-    (org-agenda nil "m")
-    (spolakh/org-agenda-find-beginning-of-inbox)
-    )
-  (defun spolakh/switch-to-lily-agenda ()
-    (interactive)
-    (org-agenda nil "l")
-    (spolakh/org-agenda-find-beginning-of-inbox)
-    )
-  (defun spolakh/switch-to-work-agenda ()
-    (interactive)
-    (org-agenda nil "w")
-    (spolakh/org-agenda-find-beginning-of-inbox)
-    )
   ; This is heavily adopted from Sacha Chua's https://sachachua.com/blog/2013/01/emacs-org-display-projects-with-a-few-subtasks-in-the-agenda-view/
   ;; (defun spolakh/org-agenda-project-agenda ()
   ;;   "Return the project headline and up to `org-agenda-max-entries' tasks."
@@ -456,7 +436,44 @@
                                      ("m" "Agenda" ,(spolakh/agenda-for-filter "+@mine"))
                                      ("w" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))
                                      ("l" "Lily" ,(spolakh/agenda-for-filter "+Lily"))
+                                     ("i" "Ideas (full list)" (
+                                    (todo "Idea"
+                                          ((org-agenda-overriding-header "🔖 to Finalize into Permanent Notes >")
+                                          (org-agenda-files (append
+                                                              (find-lisp-find-files spolakh/org-dailies-directory "\.org$")
+                                                              '(
+                                                                ,(concat spolakh/org-agenda-directory "inbox.org")
+                                                                ,(concat spolakh/org-directory "phone.org")
+                                                                ,(concat spolakh/org-directory "ipad.org")
+                                                                )))))))
                                      ))
+  (defun spolakh/switch-to-agenda ()
+    (interactive)
+    (org-agenda nil "m")
+    (spolakh/org-agenda-find-beginning-of-inbox)
+    )
+  (defun spolakh/switch-to-lily-agenda ()
+    (interactive)
+    (org-agenda nil "l")
+    (spolakh/org-agenda-find-beginning-of-inbox)
+    )
+  (defun spolakh/switch-to-work-agenda ()
+    (interactive)
+    (org-agenda nil "w")
+    (spolakh/org-agenda-find-beginning-of-inbox)
+    )
+  (defun spolakh/switch-to-ideas-agenda ()
+    (interactive)
+    (org-agenda nil "i")
+    (spolakh/org-agenda-find-beginning-of-inbox)
+    )
+  (map! :map org-mode-map :leader
+        (:prefix ("n" . "Notes") "a" nil)
+        (:prefix ("a" . "Agenda")
+         :desc "Agenda" "m" #'spolakh/switch-to-agenda
+         :desc "Lily" "l" #'spolakh/switch-to-lily-agenda
+         :desc "Ideas" "i" #'spolakh/switch-to-ideas-agenda
+         :desc "Work Agenda" "w" #'spolakh/switch-to-work-agenda))
   (defun spolakh/org-fast-effort-selection ()
     "Modification of `org-fast-todo-selection' for use with org-set-effert. Select an effort value with single keys.
       Returns the new effort value, or nil if no state change should occur.
@@ -726,7 +743,7 @@
         :leader
         (:prefix ("n" . "notes")
          (:prefix ("r" . "roam")
-          :desc "Open Index" "i" 'org-roam-jump-to-index
+          :desc "Entrypoint" "e" 'org-roam-jump-to-index
           :desc "Insert a link to a Note" "l" 'org-roam-insert
           )))
   (map!
