@@ -446,6 +446,14 @@
                                                                 ,(concat spolakh/org-directory "phone.org")
                                                                 ,(concat spolakh/org-directory "ipad.org")
                                                                 )))))))
+                                     ("r" "Repeaters (Non-Scheduled)" (
+                                    (todo "TODO"
+                                          ((org-agenda-overriding-header "Unscheduled Repeaters")
+                                           (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))
+                                          (org-agenda-files
+                                                              '(
+                                                                ,(concat spolakh/org-agenda-directory "repeaters.org")
+                                                                  ))))))
                                      ))
   (defun spolakh/switch-to-agenda ()
     (interactive)
@@ -467,12 +475,18 @@
     (org-agenda nil "i")
     (spolakh/org-agenda-find-beginning-of-inbox)
     )
+  (defun spolakh/switch-to-repeaters-agenda ()
+    (interactive)
+    (org-agenda nil "r")
+    (spolakh/org-agenda-find-beginning-of-inbox)
+    )
   (map! :map org-mode-map :leader
         (:prefix ("n" . "Notes") "a" nil)
         (:prefix ("a" . "Agenda")
          :desc "Agenda" "m" #'spolakh/switch-to-agenda
          :desc "Lily" "l" #'spolakh/switch-to-lily-agenda
          :desc "Ideas" "i" #'spolakh/switch-to-ideas-agenda
+         :desc "Repeaters" "r" #'spolakh/switch-to-repeaters-agenda
          :desc "Work Agenda" "w" #'spolakh/switch-to-work-agenda))
   (defun spolakh/org-fast-effort-selection ()
     "Modification of `org-fast-todo-selection' for use with org-set-effert. Select an effort value with single keys.

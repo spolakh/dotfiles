@@ -12,7 +12,7 @@ alias gcm="git commit -m"
 alias gca="git commit --amend"
 alias watch='watch '
 alias tg='curl -s -X POST https://api.telegram.org/bot1129105247:AAFMF7Cu0D6ioLUA0_UdAqpdvvxBDYY-mUk/sendMessage -d chat_id=84046805 -d text="Im done!"'
-alias cdd="cd ~/dotfiles"
+alias cdd="cd ~/dots"
 alias cdo="cd ~/Dropbox/org"
 
 # Aliases.k8s
@@ -22,10 +22,10 @@ alias kp='cloudkey msk/dev kubectl -n pgopal'
 alias kk='kubectl config use-context '
 
 # Completions
-source ~/.git-completion.bash
+[ -f ~/.git-completion.bash ] && source ~/.git-completion.bash
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
-__git_complete gco _git_checkout
+# __git_complete gco _git_checkout
 
 # History
 HISTCONTROL=ignoreboth
@@ -57,8 +57,7 @@ function parse_git_branch {
   PS_BRANCH="(git ${ref#refs/heads/}) "
 }
 PGB=parse_git_branch
-PROMPT_COMMAND="history -a; history -c; history -r; $PGB"
-#PROMPT_COMMAND="history -a; history -c; history -r; $PGB" # reload history on each command -> share between terminals
+PROMPT_COMMAND='echo -ne "\033]0;${CONTEXT}\007"; history -a; history -c; history -r; $PGB'
 PS_INFO="$RED\u@\h$RESET:$BLUE\w"
 PS_GIT="$YELLOW\$PS_BRANCH"
 PS_TIME="\[\033[\$((COLUMNS-10))G\] $GREEN[\t]"

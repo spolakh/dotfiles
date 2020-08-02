@@ -4,7 +4,7 @@
 find "${TMPDIR}" -type f -perm +111 -name "yabai_${USER}_monocle_mode_*" -delete
 
 # global settings
-yabai -m config mouse_follows_focus          off
+yabai -m config mouse_follows_focus          on
 yabai -m config focus_follows_mouse          autoraise
 yabai -m config window_placement             second_child
 yabai -m config window_topmost               on
@@ -29,7 +29,7 @@ yabai -m config right_padding                12
 yabai -m config window_gap                   06
 
 # specific apps
-yabai -m rule --add app!="^(Google Chrome|Spotify|Emacs|Slack|Skype|Telegram|Discord|kitty|GoLand|MySQLWorkbench)$" space=2
+yabai -m rule --add app!="^(Google Chrome|Spotify|Emacs|Slack|Skype|Telegram|Discord|kitty|GoLand|MySQLWorkbench|League of Legends)$" space=2
 
 yabai -m rule --add app=Emacs manage=on
 yabai -m rule --add app="^Alfred$" sticky=on
