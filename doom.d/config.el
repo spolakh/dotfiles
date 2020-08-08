@@ -380,6 +380,11 @@
     (when should-skip-entry
       (or (outline-next-heading)
           (goto-char (point-max))))))
+  (defun spolakh/org-agenda-leave-first-level-only ()
+    (when (not (spolakh/org-current-is-first-level-headline))
+      (or (outline-next-heading)
+          (goto-char (point-max))))
+    )
   :config
   (defun spolakh/agenda-for-filter (filter)
     `((agenda ""
@@ -446,13 +451,21 @@
                                                                 ,(concat spolakh/org-directory "phone.org")
                                                                 ,(concat spolakh/org-directory "ipad.org")
                                                                 )))))))
-                                     ("r" "Repeaters (Non-Scheduled)" (
-                                    (todo "TODO"
+                                    ("r" "Repeaters (Non-Scheduled)" (
+                                      (todo "TODO"
                                           ((org-agenda-overriding-header "Unscheduled Repeaters")
                                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))
                                           (org-agenda-files
                                                               '(
                                                                 ,(concat spolakh/org-agenda-directory "repeaters.org")
+                                                                  ))))))
+                                    ("?" "What feels important now?" (
+                                      (todo "TODO"
+                                          ((org-agenda-overriding-header "Projects")
+                                          (org-agenda-skip-function #'spolakh/org-agenda-leave-first-level-only)
+                                          (org-agenda-files
+                                                              '(
+                                                                ,(concat spolakh/org-agenda-directory "projects.org")
                                                                   ))))))
                                      ))
   (defun spolakh/switch-to-agenda ()
@@ -480,13 +493,19 @@
     (org-agenda nil "r")
     (spolakh/org-agenda-find-beginning-of-inbox)
     )
+  (defun spolakh/switch-to-weekly-agenda ()
+    (interactive)
+    (org-agenda nil "?")
+    (spolakh/org-agenda-find-beginning-of-inbox)
+    )
   (map! :map org-mode-map :leader
         (:prefix ("n" . "Notes") "a" nil)
         (:prefix ("a" . "Agenda")
          :desc "Agenda" "m" #'spolakh/switch-to-agenda
          :desc "Lily" "l" #'spolakh/switch-to-lily-agenda
          :desc "Ideas" "i" #'spolakh/switch-to-ideas-agenda
-         :desc "Repeaters" "r" #'spolakh/switch-to-repeaters-agenda
+         :desc "Repeaters (Non-Scheduled)" "r" #'spolakh/switch-to-repeaters-agenda
+         :desc "What feels important now?" "?" #'spolakh/switch-to-weekly-agenda
          :desc "Work Agenda" "w" #'spolakh/switch-to-work-agenda))
   (defun spolakh/org-fast-effort-selection ()
     "Modification of `org-fast-todo-selection' for use with org-set-effert. Select an effort value with single keys.
