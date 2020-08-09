@@ -386,6 +386,18 @@
           (goto-char (point-max))))
     )
   :config
+(defun spolakh/project-agenda-section-for-filter (filter)
+    `(tags-todo ,(concat "TODO=\"TODO\"" filter)
+                                          ((org-agenda-overriding-header ,(concat "🚀 Projects (" filter ") >"))
+                                          (org-agenda-hide-tags-regexp "")
+                                          (org-agenda-prefix-format
+                                           '((tags . "")))
+                                          (org-agenda-skip-function #'spolakh/org-agenda-leave-first-level-only)
+                                          (org-agenda-files
+                                                              '(
+                                                                ,(concat spolakh/org-agenda-directory "projects.org")
+                                                                  ))))
+    )
   (defun spolakh/agenda-for-filter (filter)
     `((agenda ""
             ((org-agenda-span 2)
@@ -460,13 +472,10 @@
                                                                 ,(concat spolakh/org-agenda-directory "repeaters.org")
                                                                   ))))))
                                     ("?" "What feels important now?" (
-                                      (todo "TODO"
-                                          ((org-agenda-overriding-header "Projects")
-                                          (org-agenda-skip-function #'spolakh/org-agenda-leave-first-level-only)
-                                          (org-agenda-files
-                                                              '(
-                                                                ,(concat spolakh/org-agenda-directory "projects.org")
-                                                                  ))))))
+                                                                       ,(spolakh/project-agenda-section-for-filter "+@mine")
+                                                                       ,(spolakh/project-agenda-section-for-filter "+@work")
+                                                                       ,(spolakh/project-agenda-section-for-filter "+Lily")
+                                                                       ))
                                      ))
   (defun spolakh/switch-to-agenda ()
     (interactive)
