@@ -358,6 +358,9 @@
     (= 1 (org-current-level)))
   (defun spolakh/org-current-is-todo ()
     (or (string= "TODO" (org-get-todo-state))))
+  (defun spolakh/org-current-is-scheduled ()
+	      (re-search-forward org-scheduled-time-regexp (line-end-position 2) t)
+    )
 
   ; org-with-limited-levels?
   ; org-current-level
@@ -366,6 +369,8 @@
   (let (should-skip-entry)
     (unless (spolakh/org-current-is-todo)
       (setq should-skip-entry t))
+    (if (spolakh/org-current-is-scheduled)
+        (setq should-skip-entry t))
     (save-excursion
       (let ((nth-task 1))
       (while (and (<= nth-task 3) (org-goto-sibling t))
@@ -475,6 +480,7 @@
                                                                        ,(spolakh/project-agenda-section-for-filter "+@mine")
                                                                        ,(spolakh/project-agenda-section-for-filter "+@work")
                                                                        ,(spolakh/project-agenda-section-for-filter "+Lily")
+                                                                       ,(spolakh/project-agenda-section-for-filter "-Lily-@work-@mine")
                                                                        ))
                                      ))
   (defun spolakh/switch-to-agenda ()
