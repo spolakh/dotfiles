@@ -53,13 +53,15 @@
 (setq doom-theme 'doom-gruvbox)
 (add-to-list 'load-path "~/.doom.d/vendor/auto-dark-emacs/")
 (require 'auto-dark-emacs)
+(setq auto-dark-emacs/dark-theme 'doom-nova)
+(setq auto-dark-emacs/light-theme 'doom-solarized-light)
+
 
 ; Other Favs:
 ;   - Light:
 ;(load-theme 'doom-solarized-light 'NO-CONFIRM)
 ;(load-theme 'doom-one-light 'NO-CONFIRM)
 ;(load-theme 'doom-tomorrow-day 'NO-CONFIRM)
-;(load-theme 'doom-nord-light 'NO-CONFIRM)
 ;(load-theme 'dichromacy 'NO-CONFIRM)
 ;(load-theme 'spacemacs-light 'NO-CONFIRM)
 ;   - Dark:
@@ -69,6 +71,7 @@
 ;(load-theme 'doom-spacegrey 'NO-CONFIRM)
 ;(load-theme 'doom-tomorrow-night 'NO-CONFIRM)
 ;(load-theme 'doom-nord 'NO-CONFIRM)
+;(load-theme 'doom-nova 'NO-CONFIRM)
 
 ; NAVIGATION:
 
@@ -393,7 +396,7 @@
   :config
 (defun spolakh/project-agenda-section-for-filter (filter)
     `(tags-todo ,(concat "TODO=\"TODO\"" filter)
-                                          ((org-agenda-overriding-header ,(concat "🚀 Projects (" filter ") >"))
+                                          ((org-agenda-overriding-header ,(concat "🚀 Projects (" filter "): MAX 4 >"))
                                           (org-agenda-hide-tags-regexp "")
                                           (org-agenda-prefix-format
                                            '((tags . "")))

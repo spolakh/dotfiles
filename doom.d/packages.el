@@ -51,3 +51,4 @@
 (package! org-gcal)
 (package! cl)
 (package! cl-lib)
+(package! nova-theme)
