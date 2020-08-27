@@ -188,7 +188,35 @@
 )
 
 (use-package! org-habit)
+; From https://emacs.stackexchange.com/questions/13360/org-habit-graph-on-todo-list-agenda-view
+(defvar my/org-habit-show-graphs-everywhere t
+  "If non-nil, show habit graphs in all types of agenda buffers.")
 
+(defun my/org-agenda-mark-habits ()
+  "Mark all habits in current agenda for graph display.
+
+This function enforces `my/org-habit-show-graphs-everywhere' by
+marking all habits in the current agenda as such.  When run just
+before `org-agenda-finalize' (such as by advice; unfortunately,
+`org-agenda-finalize-hook' is run too late), this has the effect
+of displaying consistency graphs for these habits.
+
+When `my/org-habit-show-graphs-everywhere' is nil, this function
+has no effect."
+  (when (and my/org-habit-show-graphs-everywhere
+         (not (get-text-property (point) 'org-series)))
+    (let ((cursor (point))
+          item data)
+      (while (setq cursor (next-single-property-change cursor 'org-marker))
+        (setq item (get-text-property cursor 'org-marker))
+        (when (and item (org-is-habit-p item))
+          (with-current-buffer (marker-buffer item)
+            (setq data (org-habit-parse-todo item)))
+          (put-text-property cursor
+                             (next-single-property-change cursor 'org-marker)
+                             'org-habit-p data))))))
+
+(advice-add #'org-agenda-finalize :before #'my/org-agenda-mark-habits)
 
 
 (use-package! org-agenda
@@ -287,6 +315,12 @@
       (or (outline-next-heading)
           (goto-char (point-max))))
     )
+(defun air-org-skip-subtree-if-habit ()
+  "Skip an agenda entry if it has a STYLE property equal to \"habit\"."
+  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+    (if (string= (org-entry-get nil "STYLE") "habit")
+        subtree-end
+      nil)))
   :config
 (defun spolakh/project-agenda-section-for-filter (filter)
     `(tags-todo ,(concat "TODO=\"TODO\"" filter)
@@ -306,7 +340,16 @@
              (org-agenda-start-day "today")
              (org-agenda-start-on-weekday nil)
              (org-deadline-warning-days 14)
+             (org-agenda-skip-function '(or (air-org-skip-subtree-if-habit)))
              ))
+    (tags-todo ,(concat "STYLE=\"habit\"" filter)
+        ((org-agenda-overriding-header "👘 Repeaters >")
+         (org-agenda-prefix-format
+            '((tags . "[%-4e] ")))
+         (org-agenda-files
+           '(
+            ,(concat spolakh/org-agenda-directory "repeaters.org")
+           ))))
     (todo "TODO"
           ((org-agenda-overriding-header "📤 To Refile >")
            (org-agenda-files '(,(concat spolakh/org-agenda-directory "inbox.org")
