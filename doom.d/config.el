@@ -223,7 +223,7 @@ has no effect."
   :init
   (setq org-agenda-block-separator nil
         org-habit-show-habits t
-        org-habit-show-all-today t
+        org-habit-show-all-today nil
         org-agenda-start-with-log-mode t
         org-agenda-log-mode-items '(closed clock state))
   (add-hook 'evil-org-agenda-mode-hook #'display-line-numbers-mode)
@@ -320,10 +320,27 @@ has no effect."
        (and scheduled-day
             (> (org-time-stamp-to-now (org-entry-get nil "SCHEDULED")) 0)
             subtree-end))))
+(defun spolakh/was-done-today ()
+  (let* ((end (save-excursion (org-end-of-subtree t)))
+         (last-done-timestamp (org-entry-get nil "LAST_REPEAT"))
+         (last-done (and last-done-timestamp (decode-time (org-time-string-to-time last-done-timestamp))))
+        )
+    (message "ldt: %s" last-done-timestamp)
+    (message "ld: %s" last-done)
+    (message "oacd: %s" org-agenda-current-date)
+    (and last-done
+         (= (nth 0 org-agenda-current-date) (nth 4 last-done))
+         (= (nth 1 org-agenda-current-date) (nth 3 last-done))
+         (= (nth 2 org-agenda-current-date) (nth 5 last-done))
+         ))
+  )
 (defun air-org-skip-subtree-if-habit ()
   "Skip an agenda entry if it has a STYLE property equal to \"habit\"."
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
-    (if (string= (org-entry-get nil "STYLE") "habit")
+    (if
+        (and
+         (string= (org-entry-get nil "STYLE") "habit")
+         (not (spolakh/was-done-today)))
         subtree-end
       nil)))
   :config
@@ -341,7 +358,7 @@ has no effect."
     )
   (defun spolakh/agenda-for-filter (filter)
     `((agenda ""
-            ((org-agenda-span 2)
+            ((org-agenda-span 1)
              (org-agenda-start-day "today")
              (org-agenda-start-on-weekday nil)
              (org-deadline-warning-days 14)
@@ -414,10 +431,9 @@ has no effect."
                                                                 ,(concat spolakh/org-directory "phone.org")
                                                                 ,(concat spolakh/org-directory "ipad.org")
                                                                 )))))))
-                                    ("r" "Repeaters (Non-Scheduled)" (
+                                    ("r" "Repeaters (All)" (
                                       (todo "TODO"
-                                          ((org-agenda-overriding-header "Unscheduled Repeaters")
-                                           (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))
+                                          ((org-agenda-overriding-header "👘 Repeaters >")
                                           (org-agenda-files
                                                               '(
                                                                 ,(concat spolakh/org-agenda-directory "repeaters.org")
