@@ -225,6 +225,7 @@ has no effect."
         org-habit-show-habits t
         org-habit-show-all-today nil
         org-agenda-start-with-log-mode t
+        org-agenda-skip-scheduled-if-done t
         org-agenda-log-mode-items '(closed clock state))
   (add-hook 'evil-org-agenda-mode-hook #'display-line-numbers-mode)
   (setq org-agenda-time-grid
@@ -325,9 +326,6 @@ has no effect."
          (last-done-timestamp (org-entry-get nil "LAST_REPEAT"))
          (last-done (and last-done-timestamp (decode-time (org-time-string-to-time last-done-timestamp))))
         )
-    (message "ldt: %s" last-done-timestamp)
-    (message "ld: %s" last-done)
-    (message "oacd: %s" org-agenda-current-date)
     (and last-done
          (= (nth 0 org-agenda-current-date) (nth 4 last-done))
          (= (nth 1 org-agenda-current-date) (nth 3 last-done))
