@@ -285,17 +285,11 @@ has no effect."
     (= 1 (org-current-level)))
   (defun spolakh/org-current-is-todo ()
     (or (string= "TODO" (org-get-todo-state))))
-  (defun spolakh/org-current-is-scheduled ()
-	      (re-search-forward org-scheduled-time-regexp (line-end-position 2) t)
-    )
-
   (defun spolakh/org-agenda-leave-only-first-three-children ()
   "Returns each 1st level heading and at most 3 of it's TODO subheadings"
   (let (should-skip-entry)
     (unless (spolakh/org-current-is-todo)
       (setq should-skip-entry t))
-    (if (spolakh/org-current-is-scheduled)
-        (setq should-skip-entry t))
     (save-excursion
       (let ((nth-task 1))
       (while (and (<= nth-task 3) (org-goto-sibling t))
@@ -315,6 +309,17 @@ has no effect."
       (or (outline-next-heading)
           (goto-char (point-max))))
     )
+(defun org-agenda-skip-if-scheduled-for-later ()
+  (ignore-errors
+    (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+          (scheduled-day
+            (time-to-days
+              (org-time-string-to-time
+                (org-entry-get nil "SCHEDULED"))))
+          (now (time-to-days (current-time))))
+       (and scheduled-day
+            (> (org-time-stamp-to-now (org-entry-get nil "SCHEDULED")) 0)
+            subtree-end))))
 (defun air-org-skip-subtree-if-habit ()
   "Skip an agenda entry if it has a STYLE property equal to \"habit\"."
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
@@ -346,6 +351,7 @@ has no effect."
         ((org-agenda-overriding-header "👘 Repeaters >")
          (org-agenda-prefix-format
             '((tags . "[%-4e] ")))
+         (org-agenda-skip-function #'org-agenda-skip-if-scheduled-for-later)
          (org-agenda-files
            '(
             ,(concat spolakh/org-agenda-directory "repeaters.org")
@@ -371,7 +377,9 @@ has no effect."
     (tags-todo ,(concat "TODO=\"TODO\"" filter)
           ((org-agenda-overriding-header "🚀 Projects >")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))
-          (org-agenda-skip-function #'spolakh/org-agenda-leave-only-first-three-children)
+          (org-agenda-skip-function '(or
+                                      (org-agenda-skip-entry-if 'deadline 'scheduled)
+                                      (spolakh/org-agenda-leave-only-first-three-children)))
           (org-agenda-hide-tags-regexp "")
           ))
     (tags-todo ,(concat "TODO=\"WAITING\"" filter)
