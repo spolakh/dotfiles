@@ -52,3 +52,4 @@
 (package! cl)
 (package! cl-lib)
 (package! nova-theme)
+(package! org-pomodoro)

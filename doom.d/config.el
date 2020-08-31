@@ -242,7 +242,9 @@ has no effect."
         ; evil-org-agenda-mode-map
       :m "i" #'org-agenda-clock-in
       "o" #'org-agenda-clock-out
-      :m "I" #'spolakh/set-todo-idea
+      :m "I" #'org-pomodoro
+      :m "O" #'org-pomodoro
+      :m "s-i" #'spolakh/set-todo-idea
       ;"a" #'org-agenda-add-note ; we always link notes in the default item processing flow
       "d" #'org-agenda-deadline
       :m "e" #'spolakh/invoke-fast-effort-selection
@@ -596,6 +598,7 @@ has no effect."
   (defun spolakh/org-agenda-find-beginning-of-inbox ()
     (beginning-of-buffer)
     (spolakh/org-agenda-next-section)
+    (spolakh/org-agenda-next-section)
     (next-line)
     (point)
     )
@@ -728,6 +731,22 @@ has no effect."
     (run-with-idle-timer 60 t 'spolakh/wipe-work-gcal-and-refetch)
 )
 
+; ORG-POMODORO
+(defun my/org-pomodoro-text-time ()
+  "Return status info about org-pomodoro and if org-pomodoro is not running, try to print info about org-clock.
+    If either org-pomodoro or org-clock aren't active, print \"No Active Task \" "
+  (interactive)
+  (cond ((equal :none org-pomodoro-state)
+         (if (org-clock-is-active)
+             (format "Clock∂%d∂%s"
+                     (org-clock-get-clocked-time) (substring-no-properties org-clock-heading))
+                     "None"))
+        ((equal :pomodoro org-pomodoro-state)
+         (format "Pomodoro∂%d∂%d∂%s"
+                 org-pomodoro-count (org-pomodoro-remaining-seconds) (substring-no-properties org-clock-heading)))
+        ((equal :short-break org-pomodoro-state) "Short")
+        ((equal :long-break org-pomodoro-state)  "Long")))
+
 
 ; ORG-ROAM:
 
@@ -763,3 +782,5 @@ has no effect."
     "M-5" "∞"
     ))
   )
+
+(server-start)

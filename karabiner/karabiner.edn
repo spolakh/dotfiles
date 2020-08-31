@@ -94,9 +94,9 @@
  :templates {
              ; first focus space then focus window so that it doesn't show workspace switching animatio
              ; this periodically hangs for seconds seemingly because of https://github.com/koekeishiya/yabai/issues/599 
-             ;:app "APP=\"%s\"; TITLE=\"%s\"; /usr/local/bin/yabai -m space --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq \"[.[] | select(.app | contains(\\\"${APP}\\\")) | select(.title | contains(\\\"${TITLE}\\\")) | .space][0]\"); /usr/bin/open -a \"${APP}\"; /usr/local/bin/yabai -m window --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq \"[.[] | select(.app | contains(\\\"${APP}\\\")) | select(.title | contains(\\\"${TITLE}\\\")) | .id][0]\")" 
+             :app "APP=\"%s\"; TITLE=\"%s\"; /usr/local/bin/yabai -m space --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq \"[.[] | select(.app | contains(\\\"${APP}\\\")) | select(.title | contains(\\\"${TITLE}\\\")) | .space][0]\"); /usr/bin/open -a \"${APP}\"; /usr/local/bin/yabai -m window --focus $(/usr/local/bin/yabai -m query --windows | /usr/local/bin/jq \"[.[] | select(.app | contains(\\\"${APP}\\\")) | select(.title | contains(\\\"${TITLE}\\\")) | .id][0]\")" 
              ; this triggers MacOS'es default space switching animation if an app is in another desktop but at least never blocks
-             :app "/usr/bin/open -a \"%s\""
+             ;:app "/usr/bin/open -a \"%s\""
              :focus_desktop "/usr/local/bin/yabai -m space --focus %d"
              :send_to_desktop "/usr/local/bin/yabai -m window --space %d"
              ;; https://github.com/koekeishiya/yabai/issues/83
