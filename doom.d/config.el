@@ -481,7 +481,7 @@ has no effect."
          :desc "Agenda" "m" #'spolakh/switch-to-agenda
          :desc "Lily" "l" #'spolakh/switch-to-lily-agenda
          :desc "Ideas" "i" #'spolakh/switch-to-ideas-agenda
-         :desc "Repeaters (Non-Scheduled)" "r" #'spolakh/switch-to-repeaters-agenda
+         :desc "Repeaters (All)" "r" #'spolakh/switch-to-repeaters-agenda
          :desc "What feels important now?" "?" #'spolakh/switch-to-weekly-agenda
          :desc "Work Agenda" "w" #'spolakh/switch-to-work-agenda))
   (defun spolakh/org-fast-effort-selection ()

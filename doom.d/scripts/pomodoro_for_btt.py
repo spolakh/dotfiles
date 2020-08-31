@@ -1,8 +1,18 @@
 import subprocess
 import sys
 
-p = subprocess.check_output(["/usr/local/bin/emacsclient", "-e", "(my/org-pomodoro-text-time)"])
-p = p.decode("UTF-8").strip().strip('"').split("∂")
+p = None
+try:
+    p = subprocess.check_output(["/usr/local/bin/emacsclient", "-e", "(my/org-pomodoro-text-time)"], timeout=0.3)
+    p = p.decode("UTF-8")
+    with open("/tmp/btt-org-pomodoro.tmp", "w") as f:
+        f.write(p)
+except:
+    with open("/tmp/btt-org-pomodoro.tmp", "r") as f:
+        p = f.readline()
+
+
+p = p.strip().strip('"').split("∂")
 if len(p) == 0:
     print("ERROR: EMPTY OUTPUT")
 if p[0] == "Clock":
@@ -15,7 +25,7 @@ elif p[0] == "Pomodoro":
         print("unexpected pomodoro: {}".format(p))
         sys.exit()
     sec, min = int(p[2]) // 60, int(p[2]) % 60
-    print("#{} [{}:{}] {}".format(int(p[1])+1, sec, min, p[3]))
+    print("#{} [{:02d}:{:02d}] {}".format(int(p[1])+1, sec, min, p[3]))
 elif p[0] == "Short":
     print("Short Break:")
 elif p[0] == "Long":
