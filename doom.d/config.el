@@ -738,11 +738,11 @@ has no effect."
   (interactive)
   (cond ((equal :none org-pomodoro-state)
          (if (org-clock-is-active)
-             (format "Clock∂%d∂%s"
+             (format "Clock¥%d¥%s"
                      (org-clock-get-clocked-time) (substring-no-properties org-clock-heading))
                      "None"))
         ((equal :pomodoro org-pomodoro-state)
-         (format "Pomodoro∂%d∂%d∂%s"
+         (format "Pomodoro¥%d¥%d¥%s"
                  org-pomodoro-count (org-pomodoro-remaining-seconds) (substring-no-properties org-clock-heading)))
         ((equal :short-break org-pomodoro-state) "Short")
         ((equal :long-break org-pomodoro-state)  "Long")))
