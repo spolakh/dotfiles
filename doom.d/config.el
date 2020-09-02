@@ -406,7 +406,9 @@ has no effect."
     (tags-todo ,(concat "TODO=\"TODO\"" filter)
           ((org-agenda-overriding-header "👾 One-off Tasks (under 1 Pomodoro) >")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "oneoff.org")))
-          (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))
+          (org-agenda-skip-function '(or
+                                      (org-agenda-skip-entry-if 'deadline 'scheduled)
+                                      (spolakh/org-agenda-leave-first-level-only)))
           (org-agenda-hide-tags-regexp "")
           ))))
   (setq org-agenda-prefix-format
