@@ -722,13 +722,15 @@ has no effect."
               (t t))))
 
     (add-to-list 'org-gcal-fetch-event-filters 'cce/filter-gcal-event-declined)
+    (defun spolakh/org-gcal-sync ()
+      (org-gcal-sync t))
     (defun spolakh/wipe-work-gcal-and-refetch ()
       (interactive)
       ;(with-current-buffer
       ;    (find-file-noselect (concat spolakh/org-agenda-directory "gcal-grail.org"))
       ;  (erase-buffer)
       ;  (save-buffer))
-      (call-interactively #'org-gcal-fetch)
+      (call-interactively #'spolakh/org-gcal-sync)
       (message "org-gcal-fetch finished"))
     (run-with-idle-timer 60 t 'spolakh/wipe-work-gcal-and-refetch)
 )
