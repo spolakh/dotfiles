@@ -128,10 +128,15 @@
        :desc "Refile" "R" 'org-refile
        :desc "Projects" "p" 'spolakh/open-projects
        :desc "Capture Task to Inbox" "i" (lambda () (interactive) (org-capture nil "i"))
-       :desc "Capture Idea to Inbox" "I" (lambda () (interactive) (org-capture nil "I"))))
+       :desc "GoTo active clock" "C" 'org-clock-goto
+       :desc "Toggle last clock" "o" '+org/toggle-last-clock
+       :desc "Capture to Clocked item" "c" (lambda () (interactive) (org-capture nil "c"))))
   (setq org-capture-templates
         `(("i" "inbox TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
            "* TODO %?")
+          ("c" "clocked item" plain (clock)
+           "%T: %?"
+           :unnarrowed t)
           ("a" "org-protocol-capture from Alfred" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
             "* TODO %i"
             :immediate-finish t)))
@@ -256,8 +261,8 @@ has no effect."
       "R" #'org-agenda-refile
       "<s-return>" #'org-agenda-todo
       "<s-S-return>" #'spolakh/set-todo-done
-      "S" #'spolakh/set-todo-waiting
       "D" #'spolakh/set-todo-pass
+      "S" #'spolakh/set-todo-waiting
       "s-1" #'spolakh/org-agenda-parent-to-top
       :m "J" #'spolakh/org-agenda-next-section
       :m "K" #'spolakh/org-agenda-previous-section
@@ -571,11 +576,24 @@ has no effect."
     (re-search-backward ">$" nil 1)
     (let ((current-prefix-arg '(4))) (call-interactively 'recenter-top-bottom))
     )
+  (defun spolakh/refile-to-later ()
+   (org-agenda-refile nil (list "" (concat spolakh/org-agenda-directory "later.org") nil nil)))
+  (after! hydra
+    (defhydra hydra-schedule (:color blue)
+      "Remind about this in:"
+      ("d" (lambda () (interactive) (progn (org-agenda-schedule nil "+1d") (spolakh/refile-to-later))) "1 day")
+      ("w" (lambda () (interactive) (progn (org-agenda-schedule nil "+1w") (spolakh/refile-to-later))) "1 week")
+      ("m" (lambda () (interactive) (progn (org-agenda-schedule nil "+1m") (spolakh/refile-to-later))) "1 month")
+      ("y" (lambda () (interactive) (progn (org-agenda-schedule nil "+1y") (spolakh/refile-to-later))) "1 year")
+      ("0" (lambda () (interactive) (let ((current-prefix-arg '(4))) (progn (call-interactively 'org-agenda-schedule) (org-agenda-refile nil nil nil)))) "subtask - don't remind me")
+      )
+    )
   (defvar spolakh/org-agenda-process-inbox-do-bulk nil)
   (defun spolakh/org-agenda-refile ()
      (advice-remove 'org-store-log-note #'spolakh/org-agenda-refile)
      (switch-to-buffer "*Org Agenda*")
-     (org-agenda-refile nil nil nil)
+     (hydra-schedule/body)
+
      (if (looking-at ".*>$") (setq spolakh/org-agenda-process-inbox-do-bulk nil))
      (if spolakh/org-agenda-process-inbox-do-bulk (spolakh/org-agenda-process-inbox-item))
      )
@@ -723,6 +741,7 @@ has no effect."
 
     (add-to-list 'org-gcal-fetch-event-filters 'cce/filter-gcal-event-declined)
     (defun spolakh/org-gcal-sync ()
+      (interactive)
       (org-gcal-sync t))
     (defun spolakh/wipe-work-gcal-and-refetch ()
       (interactive)
@@ -759,6 +778,7 @@ has no effect."
   (setq org-roam-directory "~/Dropbox/org")
   (setq org-roam-link-title-format "[[%s]]")
   (setq org-roam-index-file "~/Dropbox/org/index.org")
+  (setq org-roam-db-location "~/org-roam.db")
   (setq org-roam-capture-templates
         '(("d" "default" plain (function org-roam--capture-get-point)
            "%?"
@@ -786,5 +806,12 @@ has no effect."
     "M-5" "∞"
     ))
   )
+
+(use-package! hydra)
+(use-package! org-fc
+  :custom (org-fc-directories '("~/Dropbox/org/private/gtd/"))
+  :config
+  (require 'org-fc-hydra))
+
 
 (server-start)
