@@ -380,10 +380,15 @@ has no effect."
            ))))
     (todo "TODO"
           ((org-agenda-overriding-header "📤 To Refile >")
-           (org-agenda-files '(,(concat spolakh/org-agenda-directory "inbox.org")
+           (org-agenda-files '(
+                               ,(concat spolakh/org-agenda-directory "inbox.org")
                                ,(concat spolakh/org-directory "phone.org")
+                               ,(concat spolakh/org-agenda-directory "later.org")
                                ,(concat spolakh/org-directory "ipad.org")
                                ))
+           (org-agenda-skip-function '(or
+                                       (org-agenda-skip-if-scheduled-for-later)
+                                       (spolakh/org-agenda-leave-first-level-only)))
            (org-agenda-max-entries 10)))
     (todo "Idea"
           ((org-agenda-overriding-header "🔖 to Finalize into Permanent Notes >")
@@ -605,8 +610,8 @@ has no effect."
        (if spolakh/org-agenda-process-inbox-do-bulk
            (let ((current-prefix-arg 0)) (call-interactively 'recenter-top-bottom)))
        (advice-add 'org-store-log-note :after #'spolakh/org-agenda-refile)
-       (org-agenda-set-tags)
-       (spolakh/invoke-fast-effort-selection)
+       (if (= 0 (length (org-get-at-bol 'tags))) (org-agenda-set-tags))
+       (unless (org-entry-get (org-get-at-bol 'org-hd-marker) "Effort") (spolakh/invoke-fast-effort-selection))
        (org-agenda-add-note)
        (org-add-log-note)
      )
