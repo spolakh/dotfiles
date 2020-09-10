@@ -341,6 +341,14 @@ has no effect."
          (= (nth 2 org-agenda-current-date) (nth 5 last-done))
          ))
   )
+
+(defun spolakh/skip-subtree-if-later ()
+  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+    (if
+        (string= (org-get-category) "later")
+        subtree-end
+      nil)))
+
 (defun air-org-skip-subtree-if-habit ()
   "Skip an agenda entry if it has a STYLE property equal to \"habit\"."
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
@@ -369,7 +377,7 @@ has no effect."
              (org-agenda-start-day "today")
              (org-agenda-start-on-weekday nil)
              (org-deadline-warning-days 14)
-             (org-agenda-skip-function '(or (air-org-skip-subtree-if-habit)))
+             (org-agenda-skip-function '(or (air-org-skip-subtree-if-habit) (spolakh/skip-subtree-if-later)))
              ))
     (tags-todo ,(concat "STYLE=\"habit\"" filter)
         ((org-agenda-overriding-header "👘 Repeaters >")
