@@ -127,13 +127,15 @@
       (:prefix ("n" . "notes")
        :desc "Refile" "R" 'org-refile
        :desc "Projects" "p" 'spolakh/open-projects
-       :desc "Capture Task to Inbox" "i" (lambda () (interactive) (org-capture nil "i"))
+       :desc "Capture" "c" 'org-capture
        :desc "GoTo active clock" "C" 'org-clock-goto
-       :desc "Toggle last clock" "o" '+org/toggle-last-clock
-       :desc "Capture to Clocked item" "c" (lambda () (interactive) (org-capture nil "c"))))
+       :desc "Clock in" "i" 'org-clock-in
+       :desc "Toggle last clock" "o" '+org/toggle-last-clock))
   (setq org-capture-templates
         `(("i" "inbox TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
            "* TODO %?")
+          ("t" "TODO for today" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
+           "* TODO %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"\"))")
           ("c" "clocked item" plain (clock)
            "%T: %?"
            :unnarrowed t)
@@ -586,11 +588,16 @@ has no effect."
   (after! hydra
     (defhydra hydra-schedule (:color blue)
       "Remind about this in:"
-      ("d" (lambda () (interactive) (progn (org-agenda-schedule nil "+1d") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 day")
-      ("w" (lambda () (interactive) (progn (org-agenda-schedule nil "+1w") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 week")
-      ("m" (lambda () (interactive) (progn (org-agenda-schedule nil "+1m") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 month")
-      ("y" (lambda () (interactive) (progn (org-agenda-schedule nil "+1y") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 year")
-      ("0" (lambda () (interactive) (let ((current-prefix-arg '(4))) (progn (call-interactively 'org-agenda-schedule) (org-agenda-refile nil nil nil) (spolakh/advance-inbox-processing )))) "subtask - don't remind me")
+      ("j" (lambda () (interactive) (progn (org-agenda-schedule nil "+1d") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 day")
+      ("k" (lambda () (interactive) (progn (org-agenda-schedule nil "+1w") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 week")
+      ("l" (lambda () (interactive) (progn (org-agenda-schedule nil "+1m") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 month")
+      (";" (lambda () (interactive) (progn (org-agenda-schedule nil "+1y") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 year")
+      ("h" (lambda () (interactive) ;(let ((current-prefix-arg '(4)))
+             (progn
+               ;(call-interactively 'org-agenda-schedule)
+               (org-agenda-refile nil nil nil) (spolakh/advance-inbox-processing )))
+        ;)
+       "subtask - don't remind me")
       )
     )
   (defvar spolakh/org-agenda-process-inbox-do-bulk nil)
