@@ -599,7 +599,8 @@ has no effect."
       ("j" (lambda () (interactive) (progn (org-agenda-schedule nil "+1d") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 day")
       ("k" (lambda () (interactive) (progn (org-agenda-schedule nil "+1w") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 week")
       ("l" (lambda () (interactive) (progn (org-agenda-schedule nil "+1m") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 month")
-      (";" (lambda () (interactive) (progn (org-agenda-schedule nil "+1y") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 year")
+      (";" (lambda () (interactive) (progn (org-agenda-schedule nil "+3m") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 quarter")
+      ("'" (lambda () (interactive) (progn (org-agenda-schedule nil "+1y") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 year")
       ("h" (lambda () (interactive) ;(let ((current-prefix-arg '(4)))
              (progn
                ;(call-interactively 'org-agenda-schedule)
