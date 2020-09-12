@@ -399,14 +399,14 @@ has no effect."
             ,(concat spolakh/org-agenda-directory "repeaters.org")
            ))))
     (tags-todo ,(concat "TODO=\"WAITING\"" filter)
-          ((org-agenda-overriding-header "🌒 Waiting (ticklers for today) >")
+          ((org-agenda-overriding-header "🌒 Waiting (want to do if not blocked, else postpone) >")
           (org-agenda-skip-function '(or
                                        (org-agenda-skip-if-scheduled-for-later)
                                        ))
           (org-agenda-hide-tags-regexp "")
           ))
     (todo "TODO"
-          ((org-agenda-overriding-header "📤 To Refile >")
+          ((org-agenda-overriding-header "📤 To Activate/Snooze (decide if now is a good time to do these) >")
            (org-agenda-files '(
                                ,(concat spolakh/org-agenda-directory "inbox.org")
                                ,(concat spolakh/org-directory "phone.org")
@@ -429,7 +429,7 @@ has no effect."
                                ))
            (org-agenda-max-entries 3)))
     (tags-todo ,(concat "TODO=\"TODO\"" filter)
-          ((org-agenda-overriding-header "🚀 Projects >")
+          ((org-agenda-overriding-header "🚀 Projects (things that feel interesting now in addition to Repeaters) >")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))
           (org-agenda-skip-function '(or
                                       (org-agenda-skip-entry-if 'deadline 'scheduled)
