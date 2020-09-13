@@ -104,6 +104,16 @@
  )
 )
 
+(after! avy
+  (map!
+   (:map evil-motion-state-map
+        (:prefix ("g" . "Go")
+        (:prefix ("s" . "Snipe-ish")
+          "SPC" #'avy-goto-char-2))
+    )
+   )
+  )
+
 ; ORG-MODE:
 
 (after! org
@@ -813,6 +823,7 @@ has no effect."
   :init
   (setq org-roam-directory "~/Dropbox/org")
   (setq org-roam-link-title-format "[[%s]]")
+  (setq org-roam-encrypt-files t)
   (setq org-roam-index-file "~/Dropbox/org/index.org")
   (setq org-roam-db-location "~/org-roam.db")
   (setq org-roam-capture-templates
