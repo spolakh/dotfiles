@@ -125,13 +125,14 @@
   (require 'find-lisp)
   (setq spolakh/org-agenda-directory "~/Dropbox/org/private/gtd/"
         spolakh/org-dailies-directory "~/Dropbox/org/private/dailies/"
+        spolakh/org-phone-directory "~/Dropbox/org/private/phone/"
         spolakh/org-directory "~/Dropbox/org/")
   (setq org-agenda-files
-        (cons (concat spolakh/org-directory "phone.org")
-              (find-lisp-find-files spolakh/org-agenda-directory "\.org$")))
+        (cons (concat spolakh/org-phone-directory "phone.org.gpg")
+              (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")))
   (defun spolakh/open-projects ()
     (interactive)
-    (find-file (concat spolakh/org-agenda-directory "projects.org")))
+    (find-file (concat spolakh/org-agenda-directory "projects.org.gpg")))
   (map! :map org-mode-map
       :leader
       (:prefix ("n" . "notes")
@@ -142,14 +143,14 @@
        :desc "Clock in" "i" 'org-clock-in
        :desc "Toggle last clock" "o" '+org/toggle-last-clock))
   (setq org-capture-templates
-        `(("i" "inbox TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
+        `(("i" "inbox TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
            "* TODO %?")
-          ("t" "TODO for today" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
+          ("t" "TODO for today" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
            "* TODO %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"\"))")
           ("c" "clocked item" plain (clock)
            "%T: %?"
            :unnarrowed t)
-          ("a" "org-protocol-capture from Alfred" entry (file ,(concat spolakh/org-agenda-directory "inbox.org"))
+          ("a" "org-protocol-capture from Alfred" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
             "* TODO %i"
             :immediate-finish t)))
   (setq
@@ -186,10 +187,10 @@
                             ;(:endgrouptag)
                             )))
   (setq org-fast-tag-selection-single-key nil)
-  (setq org-refile-targets `((,(concat spolakh/org-agenda-directory "later.org") :maxlevel . 1)
-                              (,(concat spolakh/org-agenda-directory "oneoff.org") :level . 0)
-                              (,(concat spolakh/org-agenda-directory "repeaters.org") :level . 0)
-                              (,(concat spolakh/org-agenda-directory "projects.org") :maxlevel . 1)))
+  (setq org-refile-targets `((,(concat spolakh/org-agenda-directory "later.org.gpg") :maxlevel . 1)
+                              (,(concat spolakh/org-agenda-directory "oneoff.org.gpg") :level . 0)
+                              (,(concat spolakh/org-agenda-directory "repeaters.org.gpg") :level . 0)
+                              (,(concat spolakh/org-agenda-directory "projects.org.gpg") :maxlevel . 1)))
   (defun spolakh/shift-dwim-at-point ()
     (interactive)
     (let ((org-link-frame-setup (quote
@@ -385,7 +386,7 @@ has no effect."
                                           (org-agenda-skip-function #'spolakh/org-agenda-leave-first-level-only)
                                           (org-agenda-files
                                                               '(
-                                                                ,(concat spolakh/org-agenda-directory "projects.org")
+                                                                ,(concat spolakh/org-agenda-directory "projects.org.gpg")
                                                                   ))))
     )
   (defun spolakh/agenda-for-filter (filter)
@@ -406,7 +407,7 @@ has no effect."
          (org-agenda-skip-function #'org-agenda-skip-if-scheduled-for-later)
          (org-agenda-files
            '(
-            ,(concat spolakh/org-agenda-directory "repeaters.org")
+            ,(concat spolakh/org-agenda-directory "repeaters.org.gpg")
            ))))
     (tags-todo ,(concat "TODO=\"WAITING\"" filter)
           ((org-agenda-overriding-header "🌒 Waiting (want to do if not blocked, else postpone) >")
@@ -418,10 +419,10 @@ has no effect."
     (todo "TODO"
           ((org-agenda-overriding-header "📤 To Activate/Snooze (decide if now is a good time to do these) >")
            (org-agenda-files '(
-                               ,(concat spolakh/org-agenda-directory "inbox.org")
-                               ,(concat spolakh/org-directory "phone.org")
-                               ,(concat spolakh/org-agenda-directory "later.org")
-                               ,(concat spolakh/org-directory "ipad.org")
+                               ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
+                               ,(concat spolakh/org-phone-directory "phone.org.gpg")
+                               ,(concat spolakh/org-agenda-directory "later.org.gpg")
+                               ,(concat spolakh/org-directory "ipad.org.gpg")
                                ))
            (org-agenda-skip-function '(or
                                        (org-agenda-skip-if-scheduled-for-later)
@@ -430,17 +431,17 @@ has no effect."
     (todo "Idea"
           ((org-agenda-overriding-header "🔖 to Finalize into Permanent Notes >")
            (org-agenda-files (append
-                              (find-lisp-find-files spolakh/org-dailies-directory "\.org$")
+                              (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$")
                               '(
-                                ,(concat spolakh/org-agenda-directory "inbox.org")
-                                ,(concat spolakh/org-directory "phone.org")
-                                ,(concat spolakh/org-directory "ipad.org")
+                                ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
+                                ,(concat spolakh/org-phone-directory "phone.org.gpg")
+                                ,(concat spolakh/org-directory "ipad.org.gpg")
                                 )
                                ))
            (org-agenda-max-entries 3)))
     (tags-todo ,(concat "TODO=\"TODO\"" filter)
           ((org-agenda-overriding-header "🚀 Projects (things that feel interesting now in addition to Repeaters) >")
-          (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org")))
+          (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org.gpg")))
           (org-agenda-skip-function '(or
                                       (org-agenda-skip-entry-if 'deadline 'scheduled)
                                       (spolakh/org-agenda-leave-only-first-three-children)))
@@ -448,7 +449,7 @@ has no effect."
           ))
     (tags-todo ,(concat "TODO=\"TODO\"" filter)
           ((org-agenda-overriding-header "👾 One-off Tasks (under 1 Pomodoro) >")
-          (org-agenda-files '(,(concat spolakh/org-agenda-directory "oneoff.org")))
+          (org-agenda-files '(,(concat spolakh/org-agenda-directory "oneoff.org.gpg")))
           (org-agenda-skip-function '(or
                                       (org-agenda-skip-entry-if 'deadline 'scheduled)
                                       (spolakh/org-agenda-leave-first-level-only)))
@@ -470,18 +471,18 @@ has no effect."
                                     (todo "Idea"
                                           ((org-agenda-overriding-header "🔖 to Finalize into Permanent Notes >")
                                           (org-agenda-files (append
-                                                              (find-lisp-find-files spolakh/org-dailies-directory "\.org$")
+                                                              (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$")
                                                               '(
-                                                                ,(concat spolakh/org-agenda-directory "inbox.org")
-                                                                ,(concat spolakh/org-directory "phone.org")
-                                                                ,(concat spolakh/org-directory "ipad.org")
+                                                                ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
+                                                                ,(concat spolakh/org-phone-directory "phone.org.gpg")
+                                                                ,(concat spolakh/org-directory "ipad.org.gpg")
                                                                 )))))))
                                     ("r" "Repeaters (All)" (
                                       (todo "TODO"
                                           ((org-agenda-overriding-header "👘 Repeaters >")
                                           (org-agenda-files
                                                               '(
-                                                                ,(concat spolakh/org-agenda-directory "repeaters.org")
+                                                                ,(concat spolakh/org-agenda-directory "repeaters.org.gpg")
                                                                   ))))))
                                     ("?" "What feels important now?" (
                                                                        ,(spolakh/project-agenda-section-for-filter "+@mine")
@@ -615,7 +616,7 @@ has no effect."
     (let ((current-prefix-arg '(4))) (call-interactively 'recenter-top-bottom))
     )
   (defun spolakh/refile-to-later ()
-   (org-agenda-refile nil (list "" (concat spolakh/org-agenda-directory "later.org") nil nil)))
+   (org-agenda-refile nil (list "" (concat spolakh/org-agenda-directory "later.org.gpg") nil nil)))
   (after! hydra
     (defhydra hydra-schedule (:color blue)
       "Remind about this in:"
@@ -756,8 +757,8 @@ has no effect."
   (setq org-gcal-client-id (get-gcal-config-value 'org-gcal-client-id)
         org-gcal-client-secret (get-gcal-config-value 'org-gcal-client-secret)
         org-gcal-file-alist `(
-                              (,(get-gcal-config-value 'calendar-id) .  ,(concat spolakh/org-agenda-directory "gcal.org"))
-                              (,(get-gcal-config-value 'work-calendar-id) .  ,(concat spolakh/org-agenda-directory "gcal-grail.org"))
+                              (,(get-gcal-config-value 'calendar-id) .  ,(concat spolakh/org-agenda-directory "gcal.org.gpg"))
+                              (,(get-gcal-config-value 'work-calendar-id) .  ,(concat spolakh/org-agenda-directory "gcal-grail.org.gpg"))
                               )
         org-gcal-remove-api-cancelled-events t
         org-gcal-update-cancelled-events-with-todo nil
@@ -792,7 +793,7 @@ has no effect."
     (defun spolakh/wipe-work-gcal-and-refetch ()
       (interactive)
       ;(with-current-buffer
-      ;    (find-file-noselect (concat spolakh/org-agenda-directory "gcal-grail.org"))
+      ;    (find-file-noselect (concat spolakh/org-agenda-directory "gcal-grail.org.gpg"))
       ;  (erase-buffer)
       ;  (save-buffer))
       (call-interactively #'spolakh/org-gcal-sync)
@@ -825,7 +826,7 @@ has no effect."
   (setq org-roam-link-title-format "[[%s]]")
   (setq org-roam-encrypt-files t)
   (setq epa-file-encrypt-to "onlyusefororg@example.com")
-  (setq org-roam-index-file "~/Dropbox/org/index.org")
+  (setq org-roam-index-file "~/Dropbox/org/index.org.gpg")
   (setq org-roam-db-location "~/org-roam.db")
   (setq org-roam-capture-templates
         '(("d" "default" plain (function org-roam--capture-get-point)
