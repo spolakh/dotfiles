@@ -166,6 +166,7 @@
                  [:4 :!Cright_arrow]
                  [:u :page_up]
                  [:d :page_down]
+                 [:delete_or_backspace :!Odelete_or_backspace]
                 ]}
        {:des "exo"
           :rules [:z-mode
