@@ -396,6 +396,7 @@ has no effect."
              (org-agenda-start-day "today")
              (org-agenda-start-on-weekday nil)
              (org-deadline-warning-days 3)
+             (org-agenda-prefix-format '((agenda . " %i %-16:c%?-16t% s%b")))
              (org-agenda-skip-function '(or
                                          (air-org-skip-subtree-if-habit)
                                          (spolakh/skip-if-waiting)
