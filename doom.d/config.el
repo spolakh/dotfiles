@@ -242,6 +242,7 @@ has no effect."
   (setq org-agenda-block-separator nil
         org-habit-show-habits t
         org-habit-show-all-today nil
+        org-archive-default-command 'org-archive-to-archive-sibling
         org-agenda-start-with-log-mode t
         org-agenda-skip-scheduled-if-done t
         org-agenda-log-mode-items '(closed clock state))
@@ -356,7 +357,7 @@ has no effect."
 (defun spolakh/skip-subtree-if-later ()
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
     (if
-        (string= (org-get-category) "later")
+        (string= (org-get-category) "later.org")
         subtree-end
       nil)))
 
