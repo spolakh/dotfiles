@@ -22,7 +22,8 @@
 ;;
 ;(setq doom-font (font-spec :family "monospace" :size 14))
 ; spolakh/FAVS:
-  (setq doom-font "Anonymous Pro-13")
+(setq doom-font (font-spec :family "Menlo" :size 12))
+;(setq doom-font (font-spec :family "Anonymous Pro" :size 13 :weight 'bold))
 ;  (setq doom-font "Fira Code-12")
 ;  (setq doom-font "Ubuntu Mono-14")
 
@@ -50,11 +51,11 @@
 
 ; THEMES:
 
-(setq doom-theme 'doom-gruvbox)
 (add-to-list 'load-path "~/.doom.d/vendor/auto-dark-emacs/")
 (require 'auto-dark-emacs)
 (setq auto-dark-emacs/dark-theme 'doom-nova)
-(setq auto-dark-emacs/light-theme 'doom-solarized-light)
+;(setq auto-dark-emacs/light-theme 'doom-tomorrow-day)
+(setq auto-dark-emacs/light-theme 'base16-tomorrow)
 
 
 ; Other Favs:
@@ -64,7 +65,13 @@
 ;(load-theme 'doom-tomorrow-day 'NO-CONFIRM)
 ;(load-theme 'dichromacy 'NO-CONFIRM)
 ;(load-theme 'spacemacs-light 'NO-CONFIRM)
+;(load-theme 'base16-grayscale-light 'NO-CONFIRM)
+;(load-theme 'base16-default-light 'NO-CONFIRM)
+;(load-theme 'base16-tomorrow 'NO-CONFIRM)
+;(load-theme 'base16-atelier-savanna-light 'NO-CONFIRM)
+;(load-theme 'base16-atelier-estuary-light 'NO-CONFIRM)
 ;   - Dark:
+;(load-theme 'base16-ashes 'NO-CONFIRM)
 ;(load-theme 'doom-gruvbox 'NO-CONFIRM)
 ;(load-theme 'doom-one 'NO-CONFIRM)
 ;(load-theme 'doom-vibrant 'NO-CONFIRM)
@@ -72,6 +79,26 @@
 ;(load-theme 'doom-tomorrow-night 'NO-CONFIRM)
 ;(load-theme 'doom-nord 'NO-CONFIRM)
 ;(load-theme 'doom-nova 'NO-CONFIRM)
+;(load-theme 'doom-zenburn 'NO-CONFIRM)
+;(load-theme 'base16-ocean 'NO-CONFIRM)
+;(load-theme 'base16-zenburn 'NO-CONFIRM)
+;
+
+
+; run this before cycling themes to make sure all of them are loaded and available for cycle-themes
+;(cl-loop for x in cycle-themes-theme-list
+;  do (progn (if x (load-theme x t t))))
+(use-package! cycle-themes
+  :init
+  (map!
+   "s-o" #'cycle-themes)
+  (defun spolakh/message-next-theme ()
+    (load-theme (cycle-themes-get-next-valid-theme) t t)
+    (message "Loading theme: %s" (cycle-themes-get-next-valid-theme)))
+  (advice-add #'cycle-themes :before #'spolakh/message-next-theme)
+  :config
+  (cycle-themes-mode)
+)
 
 ; NAVIGATION:
 

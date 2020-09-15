@@ -52,5 +52,8 @@
 (package! cl-lib)
 (package! nova-theme)
 (package! org-pomodoro)
+(package! twilight-bright-theme)
+(package! base16-theme)
+(package! cycle-themes)
 (package! org-fc
   :recipe (:type git :repo "https://git.sr.ht/~l3kn/org-fc" :files (:defaults "awk" "demo.org")))
