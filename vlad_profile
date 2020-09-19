@@ -1,6 +1,7 @@
 export PATH=~/.emacs.d/bin:$PATH
 export PATH=/opt/bin:$PATH
 export PATH=~/Library/Python/3.7/bin/:$PATH
+export PATH=~/dots/scripts/:$PATH
 
 # Aliases
 alias gs='git status'
@@ -63,4 +64,16 @@ PS_GIT="$YELLOW\$PS_BRANCH"
 PS_TIME="\[\033[\$((COLUMNS-10))G\] $GREEN[\t]"
 export PS1="\${PS_FILL}\[\033[0G\]${PS_INFO} ${PS_GIT}${PS_TIME}\n${RESET}\$ "
 
-source /Users/sojourner/grail/env.bash
+# automatically change kitty colors based on time of day
+if command -v "sunshine" >/dev/null; then
+  # Replace "@45 15" with your location string, e.g. "#Barcelona"
+  if [[ "$(sunshine -s "@53.9 27.5")" = "day" ]]; then
+    chtheme.sh light
+  else
+    chtheme.sh dark
+  fi
+else 
+  echo "sunshine tool not found - install it from https://github.com/crescentrose/sunshine or autodarkmode won't work"
+fi
+
+source "$HOME/grail/env.bash"
