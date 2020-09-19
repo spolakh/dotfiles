@@ -32,6 +32,7 @@ Plugin 'xolox/vim-misc'
 " dependency of vim-test
 Plugin 'tpope/vim-dispatch'
 Plugin 'hashivim/vim-terraform'
+Plugin 'chriskempson/base16-vim'
 
 " ...
 
@@ -64,8 +65,9 @@ let python_highlight_all=1
 set t_Co=256
 syntax on
 set termguicolors
-"colorscheme bluewery
-"colorscheme identity
+
+" THEMES
+
 " https://github.com/morhetz/gruvbox/wiki/Configuration
 " https://vimawesome.com/plugin/gruvbox
 set background=dark "/dark
@@ -74,4 +76,41 @@ let g:gruvbox_bold = '1'
 let g:gruvbox_contrast_dark = 'medium'
 let g:gruvbox_contrast_light = 'medium'
 " colorscheme gruvbox
-colorscheme nova
+" colorscheme nova
+" colorscheme base16-atelier-sulphurpool-light
+colorscheme base16-atelier-sulphurpool-light
+function! DarkMode()
+  colorscheme nova
+endfunction
+
+function! LightMode()
+  colorscheme base16-atelier-sulphurpool-light
+endfunction
+
+command! DarkMode :call DarkMode()
+command! LightMode :call LightMode()
+
+" Automatic light mode / dark mode switcher
+function! ChangeColorScheme(channel, msg)
+  let time = trim(a:msg)
+  if time ==# "day"
+    call LightMode()
+  else
+    call DarkMode()
+  endif
+endfunction
+
+function! Sunshine(timer)
+  if executable("sunshine")
+    let job = job_start(["sunshine", "-s", "@53.9 27.5"], {"out_cb": "ChangeColorScheme"})
+  else
+    call DarkMode()
+  endif
+endfunction
+
+function! AutoDarkModeSetup()
+  let timer = timer_start(30000, 'Sunshine', {'repeat': -1})
+  call Sunshine(timer) " Initial call to setup the theme
+endfunction
+
+call AutoDarkModeSetup()

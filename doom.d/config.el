@@ -55,7 +55,9 @@
 (require 'auto-dark-emacs)
 (setq auto-dark-emacs/dark-theme 'doom-nova)
 ;(setq auto-dark-emacs/light-theme 'doom-tomorrow-day)
-(setq auto-dark-emacs/light-theme 'base16-tomorrow)
+;(setq auto-dark-emacs/light-theme 'base16-tomorrow)
+(setq auto-dark-emacs/light-theme 'base16-atelier-sulphurpool-light)
+(setq doom-theme 'base16-atelier-sulphurpool-light)
 
 
 ; Other Favs:
@@ -70,6 +72,7 @@
 ;(load-theme 'base16-tomorrow 'NO-CONFIRM)
 ;(load-theme 'base16-atelier-savanna-light 'NO-CONFIRM)
 ;(load-theme 'base16-atelier-estuary-light 'NO-CONFIRM)
+;(load-theme 'base16-atelier-sulphurpool-light 'NO-CONFIRM)
 ;   - Dark:
 ;(load-theme 'base16-ashes 'NO-CONFIRM)
 ;(load-theme 'doom-gruvbox 'NO-CONFIRM)
@@ -86,8 +89,8 @@
 
 
 ; run this before cycling themes to make sure all of them are loaded and available for cycle-themes
-;(cl-loop for x in cycle-themes-theme-list
-;  do (progn (if x (load-theme x t t))))
+(cl-loop for x in cycle-themes-theme-list
+  do (progn (if x (load-theme x t t))))
 (use-package! cycle-themes
   :init
   (map!
@@ -170,11 +173,13 @@
        :desc "Clock in" "i" 'org-clock-in
        :desc "Toggle last clock" "o" '+org/toggle-last-clock))
   (setq org-capture-templates
-        `(("i" "inbox TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
+        `(("i" "Inbox TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
            "* TODO %?")
-          ("t" "TODO for today" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
+          ("p" "Prepend inbox TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
+           "* TODO %?" :prepend t)
+          ("t" "inbox TODO for Today" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
            "* TODO %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"\"))")
-          ("c" "clocked item" plain (clock)
+          ("c" "add note to Clocked item" plain (clock)
            "%T: %?"
            :unnarrowed t)
           ("a" "org-protocol-capture from Alfred" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
@@ -707,6 +712,11 @@ has no effect."
 
   ; This makes org-agenda integration w/ mobile capture (Orgzly) work without conflicts
   ; (in tandem with adding ((nil . ((eval . (auto-revert-mode 1))))) into .dir-locals.el in gtd directory)
+  (defun xah-save-all-unsaved ()
+    (interactive)
+    (save-some-buffers t))
+  ;; when switching out of emacs, all unsaved files will be saved
+  (add-hook 'focus-out-hook 'xah-save-all-unsaved)
   (setq auto-save-timeout 1
       auto-save-default t
       auto-save-visited-file-name t
