@@ -22,7 +22,7 @@
 ;;
 ;(setq doom-font (font-spec :family "monospace" :size 14))
 ; spolakh/FAVS:
-(setq doom-font (font-spec :family "Menlo" :size 12))
+(setq doom-font (font-spec :family "Menlo" :size 13))
 ;(setq doom-font (font-spec :family "Anonymous Pro" :size 13 :weight 'bold))
 ;  (setq doom-font "Fira Code-12")
 ;  (setq doom-font "Ubuntu Mono-14")
@@ -54,8 +54,6 @@
 (add-to-list 'load-path "~/.doom.d/vendor/auto-dark-emacs/")
 (require 'auto-dark-emacs)
 (setq auto-dark-emacs/dark-theme 'doom-nova)
-;(setq auto-dark-emacs/light-theme 'doom-tomorrow-day)
-;(setq auto-dark-emacs/light-theme 'base16-tomorrow)
 (setq auto-dark-emacs/light-theme 'base16-atelier-sulphurpool-light)
 (setq doom-theme 'base16-atelier-sulphurpool-light)
 
@@ -89,8 +87,8 @@
 
 
 ; run this before cycling themes to make sure all of them are loaded and available for cycle-themes
-(cl-loop for x in cycle-themes-theme-list
-  do (progn (if x (load-theme x t t))))
+;(cl-loop for x in cycle-themes-theme-list
+;  do (progn (if x (load-theme x t t))))
 (use-package! cycle-themes
   :init
   (map!
