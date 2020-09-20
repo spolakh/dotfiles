@@ -156,7 +156,7 @@
         spolakh/org-phone-directory "~/Dropbox/org/private/phone/"
         spolakh/org-directory "~/Dropbox/org/")
   (setq org-agenda-files
-        (cons (concat spolakh/org-phone-directory "phone.org.gpg")
+        (cons (concat spolakh/org-phone-directory "phone.org")
               (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")))
   (defun spolakh/open-projects ()
     (interactive)
@@ -452,21 +452,21 @@ has no effect."
           ((org-agenda-overriding-header "📤 To Activate/Snooze (decide if now is a good time to do these) >")
            (org-agenda-files '(
                                ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
-                               ,(concat spolakh/org-phone-directory "phone.org.gpg")
+                               ,(concat spolakh/org-phone-directory "phone.org")
                                ,(concat spolakh/org-agenda-directory "later.org.gpg")
                                ,(concat spolakh/org-directory "ipad.org.gpg")
                                ))
            (org-agenda-skip-function '(or
                                        (org-agenda-skip-if-scheduled-for-later)
                                        (spolakh/org-agenda-leave-first-level-only)))
-           (org-agenda-max-entries 5)))
+           (org-agenda-max-entries 10)))
     (todo "Idea"
           ((org-agenda-overriding-header "🔖 to Finalize into Permanent Notes >")
            (org-agenda-files (append
                               (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$")
                               '(
                                 ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
-                                ,(concat spolakh/org-phone-directory "phone.org.gpg")
+                                ,(concat spolakh/org-phone-directory "phone.org")
                                 ,(concat spolakh/org-directory "ipad.org.gpg")
                                 )
                                ))
@@ -506,7 +506,7 @@ has no effect."
                                                               (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$")
                                                               '(
                                                                 ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
-                                                                ,(concat spolakh/org-phone-directory "phone.org.gpg")
+                                                                ,(concat spolakh/org-phone-directory "phone.org")
                                                                 ,(concat spolakh/org-directory "ipad.org.gpg")
                                                                 )))))))
                                     ("r" "Repeaters (All)" (
