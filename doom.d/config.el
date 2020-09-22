@@ -308,6 +308,7 @@ has no effect."
       "D" #'spolakh/set-todo-pass
       "S" #'spolakh/set-todo-waiting
       "s-1" #'spolakh/org-agenda-parent-to-top
+      "s-." #'spolakh/debug
       :m "J" #'spolakh/org-agenda-next-section
       :m "K" #'spolakh/org-agenda-previous-section
       :m "1" #'spolakh/org-agenda-item-to-top
@@ -321,6 +322,9 @@ has no effect."
       :m "<s-return>" nil
       :m "<s-S-return>" nil
       )
+  (defun spolakh/debug ()
+    (interactive)
+    (message "xcxc %s" (org-get-at-bol 'tags)))
   (defun spolakh/set-todo-waiting ()
     (interactive)
     (org-agenda-todo "WAITING"))
@@ -391,6 +395,16 @@ has no effect."
         subtree-end
       nil)))
 
+(defun spolakh/skip-subtree-if-irrelevant-to-current-context (filter)
+  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+        (tags (org-get-tags))
+        (tag (substring filter 1))
+        )
+    (if
+        (and (> (length tags) 0) (not (member tag tags)))
+        subtree-end
+      nil)))
+
 (defun spolakh/skip-if-waiting ()
   (let ((subtree-end (save-excursion (org-end-of-subtree t))))
     (if
@@ -430,6 +444,7 @@ has no effect."
              (org-agenda-skip-function '(or
                                          (air-org-skip-subtree-if-habit)
                                          (spolakh/skip-if-waiting)
+                                         (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
                                          (spolakh/skip-subtree-if-later)))
              ))
     (tags-todo ,(concat "STYLE=\"habit\"" filter)
@@ -652,15 +667,15 @@ has no effect."
   (after! hydra
     (defhydra hydra-schedule (:color blue)
       "Remind about this in:"
-      ("j" (lambda () (interactive) (progn (org-agenda-schedule nil "+1d") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 day")
-      ("k" (lambda () (interactive) (progn (org-agenda-schedule nil "+1w") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 week")
-      ("l" (lambda () (interactive) (progn (org-agenda-schedule nil "+1m") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 month")
-      (";" (lambda () (interactive) (progn (org-agenda-schedule nil "+3m") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 quarter")
-      ("'" (lambda () (interactive) (progn (org-agenda-schedule nil "+1y") (spolakh/refile-to-later) (spolakh/advance-inbox-processing ))) "1 year")
+      ("j" (lambda () (interactive) (progn (org-agenda-schedule nil "+1d") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 day")
+      ("k" (lambda () (interactive) (progn (org-agenda-schedule nil "+1w") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 week")
+      ("l" (lambda () (interactive) (progn (org-agenda-schedule nil "+1m") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 month")
+      (";" (lambda () (interactive) (progn (org-agenda-schedule nil "+3m") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 quarter")
+      ("'" (lambda () (interactive) (progn (org-agenda-schedule nil "+1y") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 year")
       ("h" (lambda () (interactive) ;(let ((current-prefix-arg '(4)))
              (progn
                ;(call-interactively 'org-agenda-schedule)
-               (org-agenda-refile nil nil nil) (spolakh/advance-inbox-processing )))
+               (org-agenda-refile) (spolakh/advance-inbox-processing)))
         ;)
        "subtask - don't remind me")
       )
