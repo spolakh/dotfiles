@@ -456,10 +456,11 @@ has no effect."
            '(
             ,(concat spolakh/org-agenda-directory "repeaters.org.gpg")
            ))))
-    (tags-todo ,(concat "TODO=\"WAITING\"" filter)
+    (todo "WAITING"
           ((org-agenda-overriding-header "🌒 Waiting (want to do if not blocked, else postpone) >")
           (org-agenda-skip-function '(or
                                        (org-agenda-skip-if-scheduled-for-later)
+                                       (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
                                        ))
           (org-agenda-hide-tags-regexp "")
           ))
@@ -473,6 +474,7 @@ has no effect."
                                ))
            (org-agenda-skip-function '(or
                                        (org-agenda-skip-if-scheduled-for-later)
+                                       (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
                                        (spolakh/org-agenda-leave-first-level-only)))
            (org-agenda-max-entries 10)))
     (todo "Idea"
@@ -486,19 +488,21 @@ has no effect."
                                 )
                                ))
            (org-agenda-max-entries 3)))
-    (tags-todo ,(concat "TODO=\"TODO\"" filter)
+    (todo "TODO"
           ((org-agenda-overriding-header "🚀 Projects (things that feel interesting now in addition to Repeaters) >")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org.gpg")))
           (org-agenda-skip-function '(or
                                       (org-agenda-skip-entry-if 'deadline 'scheduled)
+                                      (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
                                       (spolakh/org-agenda-leave-only-first-three-children)))
           (org-agenda-hide-tags-regexp "")
           ))
-    (tags-todo ,(concat "TODO=\"TODO\"" filter)
+    (todo "TODO"
           ((org-agenda-overriding-header "👾 One-off Tasks (under 1 Pomodoro) >")
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "oneoff.org.gpg")))
           (org-agenda-skip-function '(or
                                       (org-agenda-skip-entry-if 'deadline 'scheduled)
+                                      (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
                                       (spolakh/org-agenda-leave-first-level-only)))
           (org-agenda-hide-tags-regexp "")
           ))))
