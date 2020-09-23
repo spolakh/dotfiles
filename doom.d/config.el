@@ -156,9 +156,9 @@
         spolakh/org-phone-directory "~/Dropbox/org/private/phone/"
         spolakh/org-directory "~/Dropbox/org/")
   (setq org-agenda-files
-        (cons (concat spolakh/org-phone-directory "phone.org")
-              (concat spolakh/org-phone-directory "phone-work.org")
-              (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")))
+        (cons (concat spolakh/org-phone-directory "phone-work.org")
+              (cons (concat spolakh/org-phone-directory "phone.org")
+              (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$"))))
   (defun spolakh/open-projects ()
     (interactive)
     (find-file (concat spolakh/org-agenda-directory "projects.org.gpg")))
