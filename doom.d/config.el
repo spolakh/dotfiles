@@ -157,6 +157,7 @@
         spolakh/org-directory "~/Dropbox/org/")
   (setq org-agenda-files
         (cons (concat spolakh/org-phone-directory "phone.org")
+              (concat spolakh/org-phone-directory "phone-work.org")
               (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")))
   (defun spolakh/open-projects ()
     (interactive)
@@ -475,6 +476,7 @@ has no effect."
            (org-agenda-files '(
                                ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
                                ,(concat spolakh/org-phone-directory "phone.org")
+                               ,(concat spolakh/org-phone-directory "phone-work.org")
                                ,(concat spolakh/org-agenda-directory "later.org.gpg")
                                ,(concat spolakh/org-directory "ipad.org.gpg")
                                ))
@@ -490,6 +492,7 @@ has no effect."
                               '(
                                 ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
                                 ,(concat spolakh/org-phone-directory "phone.org")
+                                ,(concat spolakh/org-phone-directory "phone-work.org")
                                 ,(concat spolakh/org-directory "ipad.org.gpg")
                                 )
                                ))
@@ -532,6 +535,7 @@ has no effect."
                                                               '(
                                                                 ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
                                                                 ,(concat spolakh/org-phone-directory "phone.org")
+                                                                ,(concat spolakh/org-phone-directory "phone-work.org")
                                                                 ,(concat spolakh/org-directory "ipad.org.gpg")
                                                                 )))))))
                                     ("r" "Repeaters (All)" (
