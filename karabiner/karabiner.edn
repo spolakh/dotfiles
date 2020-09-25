@@ -76,6 +76,10 @@
     ]
   }
 
+ :applications {
+    :Emacs ["^org\\.gnu\\.Emacs$"]
+ }
+
 :layers {
             :caps-mode {:key :caps_lock :alone {:key :escape}}
          }
@@ -89,6 +93,7 @@
             :q-mode {:key :q}
             :d-mode {:key :d}
             :space-mode {:key :spacebar} 
+            :emacs-space-mode {:key :spacebar :condi :Emacs}
             }
 
  :templates {
@@ -154,7 +159,7 @@
        {:des "caps lock -> esc if alone, hyper if used as a modifier"
         :rules [:caps-mode
         ]}
-       {:des "vim-mode"
+       {:des "essential movements"
          :rules [:space-mode
                  [:l :right_arrow]
                  [:h :left_arrow]
@@ -167,6 +172,11 @@
                  [:u :page_up]
                  [:d :page_down]
                  [:delete_or_backspace :!Odelete_or_backspace]
+                ]}
+      {:des "essential movements - emacs flavor"
+         :rules [:emacs-space-mode
+                 ; avy-go-to-char-2 in Emacs
+                 [:s [:g :s :spacebar]]
                 ]}
        {:des "exo"
           :rules [:z-mode
