@@ -372,7 +372,8 @@ has no effect."
       (or (outline-next-heading)
           (goto-char (point-max))))
     )
-(defun org-agenda-skip-if-scheduled-for-later ()
+
+(defun org-agenda-skip-if-scheduled-for-later-with-day-granularity ()
   (ignore-errors
     (let ((subtree-end (save-excursion (org-end-of-subtree t)))
           (scheduled-day
@@ -383,6 +384,19 @@ has no effect."
        (and scheduled-day
             (> (org-time-stamp-to-now (org-entry-get nil "SCHEDULED")) 0)
             subtree-end))))
+
+(defun org-agenda-skip-if-scheduled-for-later-with-clock-granularity ()
+  (ignore-errors
+    (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+          (scheduled-seconds
+            (time-to-seconds
+              (org-time-string-to-time
+                (org-entry-get nil "SCHEDULED"))))
+          (now (time-to-seconds (current-time))))
+       (and scheduled-seconds
+            (>= scheduled-seconds now)
+            subtree-end))))
+
 (defun spolakh/was-done-today ()
   (let* ((end (save-excursion (org-end-of-subtree t)))
          (last-done-timestamp (org-entry-get nil "LAST_REPEAT"))
@@ -458,7 +472,7 @@ has no effect."
         ((org-agenda-overriding-header "👘 Repeaters >")
          (org-agenda-prefix-format
             '((tags . "[%-4e] ")))
-         (org-agenda-skip-function #'org-agenda-skip-if-scheduled-for-later)
+         (org-agenda-skip-function #'org-agenda-skip-if-scheduled-for-later-with-clock-granularity)
          (org-agenda-files
            '(
             ,(concat spolakh/org-agenda-directory "repeaters.org.gpg")
@@ -466,7 +480,7 @@ has no effect."
     (todo "WAITING"
           ((org-agenda-overriding-header "🌒 Waiting (want to do if not blocked, else postpone) >")
           (org-agenda-skip-function '(or
-                                       (org-agenda-skip-if-scheduled-for-later)
+                                       (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
                                        (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
                                        ))
           (org-agenda-hide-tags-regexp "")
@@ -481,7 +495,7 @@ has no effect."
                                ,(concat spolakh/org-directory "ipad.org.gpg")
                                ))
            (org-agenda-skip-function '(or
-                                       (org-agenda-skip-if-scheduled-for-later)
+                                       (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
                                        (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
                                        (spolakh/org-agenda-leave-first-level-only)))
            (org-agenda-max-entries 10)))
