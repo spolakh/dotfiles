@@ -175,8 +175,9 @@
                 ]}
       {:des "essential movements - emacs flavor"
          :rules [:emacs-space-mode
-                 ; avy-go-to-char-2 in Emacs
-                 [:s [:g :s :spacebar]]
+                 ; avy-goto-char-2 in Emacs
+                 [:s [:!Ox :a :v :y :hyphen :g :o :t :o :hyphen :c :h :a :r :hyphen :2 :return_or_enter]]
+                 ;[:s [:g :s :spacebar]]
                 ]}
        {:des "exo"
           :rules [:z-mode

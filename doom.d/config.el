@@ -133,8 +133,8 @@
 )
 
 (after! avy
-  (map!
-   (:map evil-motion-state-map
+  (map! :after evil-org-agenda
+   (:map evil-motion-state-map 
         (:prefix ("g" . "Go")
         (:prefix ("s" . "Snipe-ish")
           "SPC" #'avy-goto-char-2))
