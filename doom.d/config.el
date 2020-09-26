@@ -693,8 +693,9 @@ has no effect."
   (defun spolakh/refile-to-later ()
    (org-agenda-refile nil (list "" (concat spolakh/org-agenda-directory "later.org.gpg") nil nil)))
   (after! hydra
-    (defhydra hydra-schedule (:color blue)
+    (defhydra hydra-schedule (:color teal)
       "Remind about this in:"
+      ("g" (lambda () (interactive) nil) "quit")
       ("j" (lambda () (interactive) (progn (org-agenda-schedule nil "+1d") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 day")
       ("k" (lambda () (interactive) (progn (org-agenda-schedule nil "+1w") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 week")
       ("l" (lambda () (interactive) (progn (org-agenda-schedule nil "+1m") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 month")
