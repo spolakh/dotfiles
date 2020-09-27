@@ -58,3 +58,9 @@
 (package! org-fc
   :recipe (:type git :repo "https://git.sr.ht/~l3kn/org-fc" :files (:defaults "awk" "demo.org")))
 (unpin! org-roam company-org-roam)
+
+(after! base16-theme
+        (add-to-list 'load-path "~/.doom.d/themes/")
+        (add-to-list 'custom-theme-load-path "~/.doom.d/themes/")
+        (require 'base16-atelier-sulphurpool-light-theme-spolakh)
+)

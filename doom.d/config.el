@@ -56,6 +56,7 @@
 (setq auto-dark-emacs/dark-theme 'doom-nova)
 (setq auto-dark-emacs/light-theme 'base16-atelier-sulphurpool-light)
 (setq doom-theme 'base16-atelier-sulphurpool-light)
+;(load-theme 'base16-atelier-sulphurpool-light-spolakh 'NO-CONFIRM)
 
 
 ; Other Favs:
