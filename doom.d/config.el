@@ -554,8 +554,10 @@ has no effect."
                                                                 ,(concat spolakh/org-directory "ipad.org.gpg")
                                                                 )))))))
                                     ("r" "Repeaters (All)" (
-                                      (todo "TODO"
+                                      (tags-todo "STYLE=\"habit\""
                                           ((org-agenda-overriding-header "👘 Repeaters >")
+                                          (org-agenda-prefix-format
+                                            '((tags . "[%-4e] ")))
                                           (org-agenda-files
                                                               '(
                                                                 ,(concat spolakh/org-agenda-directory "repeaters.org.gpg")
