@@ -28,7 +28,7 @@
       )
 
 (defvar base16-atelier-sulphurpool-light-colors-spolakh
-  '(:base00 ,base00
+  `(:base00 ,base00
     :base01 ,base01
     :base02 ,base02
     :base03 ,base03
