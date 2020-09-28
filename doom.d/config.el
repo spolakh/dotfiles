@@ -54,9 +54,10 @@
 (add-to-list 'load-path "~/.doom.d/vendor/auto-dark-emacs/")
 (require 'auto-dark-emacs)
 (setq auto-dark-emacs/dark-theme 'doom-nova)
-(setq auto-dark-emacs/light-theme 'base16-atelier-sulphurpool-light-spolakh)
-(setq doom-theme 'base16-atelier-sulphurpool-light-spolakh)
-;(load-theme 'base16-atelier-sulphurpool-light-spolakh 'NO-CONFIRM)
+;; (setq auto-dark-emacs/light-theme 'base16-atelier-sulphurpool-light-spolakh)
+;; (setq doom-theme 'base16-atelier-sulphurpool-light-spolakh)
+(setq auto-dark-emacs/light-theme 'base16-cupcake-spolakh)
+(setq doom-theme 'base16-cupcake-spolakh)
 
 
 ; Other Favs:
@@ -84,12 +85,24 @@
 ;(load-theme 'doom-zenburn 'NO-CONFIRM)
 ;(load-theme 'base16-ocean 'NO-CONFIRM)
 ;(load-theme 'base16-zenburn 'NO-CONFIRM)
+; WORK
+; base16-drakula
+; base16-material-palenight
+
+
+; LIGHT
+;base16-cupcake
+;base16-atelier-lakeside-light
+;base16-classic-light
+;base16-mexico-light
+;base16-one-light
+;base16-tomorrow
 ;
-
-
+; DARK
+; base16-espresso
 ; run this before cycling themes to make sure all of them are loaded and available for cycle-themes
-;(cl-loop for x in cycle-themes-theme-list
-;  do (progn (if x (load-theme x t t))))
+;; (cl-loop for x in cycle-themes-theme-list
+;;   do (progn (if x (load-theme x t t))))
 (use-package! cycle-themes
   :init
   (map!

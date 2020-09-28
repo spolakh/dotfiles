@@ -6,7 +6,7 @@ fi
 
 case "$1" in
 "light")
-  kitty @ set-colors -a -c "$HOME/.config/kitty/base16-kitty/colors/base16-atelier-sulphurpool-light.conf"
+  kitty @ set-colors -a -c "$HOME/.config/kitty/base16-kitty/colors/base16-cupcake.conf"
   ;;
 "dark")
   kitty @ set-colors -a -c "$HOME/.config/kitty/kitty-themes/themes/Nova.conf"

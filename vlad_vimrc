@@ -84,7 +84,7 @@ function! DarkMode()
 endfunction
 
 function! LightMode()
-  colorscheme base16-atelier-sulphurpool-light
+  colorscheme base16-cupcake
 endfunction
 
 command! DarkMode :call DarkMode()
