@@ -930,7 +930,18 @@ has no effect."
            "%?"
            :file-name "${slug}"
            :head "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* Indexes\n* "
-           :unnarrowed t)))
+           :unnarrowed t)
+          ("D" "grail default" plain (function org-roam--capture-get-point)
+           "%?"
+           :file-name "private/grail/${slug}"
+           :head "#+TITLE: GRAIL/${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* Indexes\n* "
+           :unnarrowed t)
+          ("p" "private" plain (function org-roam--capture-get-point)
+           "%?"
+           :file-name "private/${slug}"
+           :head "#+TITLE: PRIVATE/${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* Indexes\n* "
+           :unnarrowed t)
+          ))
   (setq org-roam-dailies-capture-templates
         '(("d" "daily" plain (function org-roam-capture--get-point)
            ""
