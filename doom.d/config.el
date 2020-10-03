@@ -176,11 +176,15 @@
   (defun spolakh/open-projects ()
     (interactive)
     (find-file (concat spolakh/org-agenda-directory "projects.org.gpg")))
+  (defun spolakh/fuck-it ()
+    (interactive)
+    (find-file (concat spolakh/org-agenda-directory "non_gtd.org.gpg")))
   (map! :map org-mode-map
       :leader
       (:prefix ("n" . "notes")
        :desc "Refile" "R" 'org-refile
        :desc "Projects" "p" 'spolakh/open-projects
+       :desc "Fuck it" "F" 'spolakh/fuck-it
        :desc "Capture" "c" 'org-capture
        :desc "GoTo active clock" "C" 'org-clock-goto
        :desc "Clock in" "i" 'org-clock-in
@@ -241,7 +245,8 @@
   (setq org-refile-targets `((,(concat spolakh/org-agenda-directory "later.org.gpg") :maxlevel . 1)
                               (,(concat spolakh/org-agenda-directory "oneoff.org.gpg") :level . 0)
                               (,(concat spolakh/org-agenda-directory "repeaters.org.gpg") :level . 0)
-                              (,(concat spolakh/org-agenda-directory "projects.org.gpg") :maxlevel . 1)))
+                              (,(concat spolakh/org-agenda-directory "projects.org.gpg") :maxlevel . 1)
+                              (nil :maxlevel . 2)))
   (defun spolakh/shift-dwim-at-point ()
     (interactive)
     (let ((org-link-frame-setup (quote
