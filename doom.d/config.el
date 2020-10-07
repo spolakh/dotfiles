@@ -861,6 +861,7 @@ has no effect."
         org-gcal-file-alist `(
                               (,(get-gcal-config-value 'calendar-id) .  ,(concat spolakh/org-agenda-directory "gcal.org.gpg"))
                               (,(get-gcal-config-value 'work-calendar-id) .  ,(concat spolakh/org-agenda-directory "gcal-grail.org.gpg"))
+                              (,(get-gcal-config-value 'birthday-calendar-id) .  ,(concat spolakh/org-agenda-directory "gcal-birthdays.org.gpg"))
                               )
         org-gcal-remove-api-cancelled-events t
         org-gcal-update-cancelled-events-with-todo nil
@@ -977,3 +978,61 @@ has no effect."
 
 
 (server-start)
+
+; LSP
+; https://arenzana.org/2019/12/emacs-go-mode-revisited/
+
+(setq read-process-output-max (* 2 1024 1024)) ;; 2mb
+(use-package! lsp-mode
+  ;:commands (lsp lsp-deferred)
+  ;:hook (go-mode . lsp-deferred)
+  :config
+ ;;Set up before-save hooks to format buffer and add/delete imports.
+ ;;Make sure you don't have other gofmt/goimports hooks enabled.
+  ;; (defun lsp-go-install-save-hooks ()
+  ;;   (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  ;;   (add-hook 'before-save-hook #'lsp-organize-imports t t))
+  ;; (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+  (setq lsp-gopls-staticcheck t)
+  (setq lsp-eldoc-render-all t)
+  (setq lsp-gopls-complete-unimported t)
+  )
+
+(use-package! lsp-ui
+  :commands lsp-ui-mode
+  :init
+  :config
+  (setq
+        ;lsp-ui-doc-enable nil
+        lsp-ui-peek-enable t
+        lsp-ui-sideline-enable t
+        lsp-ui-imenu-enable t
+        lsp-ui-flycheck-enable t)
+)
+
+(use-package! company
+  :config
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 1))
+
+(use-package! company-lsp
+  :commands company-lsp)
+
+
+;; (use-package! yasnippet
+;;   :commands yas-minor-mode
+;;   :hook (go-mode . yas-minor-mode))
+
+(use-package! go-mode
+:defer t
+:mode ("\\.go\\'" . go-mode)
+)
+
+(use-package! projectile
+  :config
+  (map!
+   (:map doom-leader-project-map
+    "O" 'projectile-toggle-between-implementation-and-test
+    ))
+  )

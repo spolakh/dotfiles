@@ -64,3 +64,4 @@
         (add-to-list 'custom-theme-load-path "~/.doom.d/themes/")
        ; (require 'base16-atelier-sulphurpool-light-spolakh)
 )
+
