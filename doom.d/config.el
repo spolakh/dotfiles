@@ -217,14 +217,14 @@
    org-log-done 'time
    org-todo-keywords '(
     (sequence "TODO" "|" "DONE")
-    (sequence "Idea" "[NOTE.Inkling]" "|" "[NOTE.EVERGREEN]") ; Use Stub to filter for Notes that we need expanding on. Once ok - move to Evergreen
+    (sequence "Fleeting" "[NOTE.Inkling]" "|" "[NOTE.EVERGREEN]") ; Use Stub to filter for Notes that we need expanding on. Once ok - move to Evergreen
     (sequence "WAITING(w@/!)" "|""PASS(p@/!)")
     (sequence "TODIGEST" "|" "DIGESTED") ; Nibbles(Articles / Books / Videos / ...) for quotations
     (sequence "CANCELLED")
     )
    org-todo-keyword-faces
        '(
-         ("Idea" . (:foreground "#5F9EA0"))
+         ("Fleeting" . (:foreground "#5F9EA0"))
          ("WAITING" . (:background "firebrick" :weight bold :foreground "gold"))
          ("[NOTE.EVERGREEN]" . (:foreground "olivedrab" :weight bold))
          ("[NOTE.Inkling]" . (:foreground "mediumpurple" :weight bold))
@@ -358,7 +358,7 @@ has no effect."
     (org-agenda-todo "WAITING"))
   (defun spolakh/set-todo-idea ()
     (interactive)
-    (org-agenda-todo "Idea"))
+    (org-agenda-todo "Fleeting"))
   (defun spolakh/set-todo-done ()
     (interactive)
     (org-agenda-todo "DONE"))
@@ -520,7 +520,7 @@ has no effect."
                                        (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
                                        (spolakh/org-agenda-leave-first-level-only)))
            (org-agenda-max-entries 10)))
-    (todo "Idea"
+    (todo "Fleeting"
           ((org-agenda-overriding-header "🔖 to Finalize into Permanent Notes >")
            (org-agenda-files (append
                               (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$")
@@ -562,8 +562,8 @@ has no effect."
                                      ("m" "Agenda" ,(spolakh/agenda-for-filter "+@mine"))
                                      ("w" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))
                                      ("l" "Lily" ,(spolakh/agenda-for-filter "+Lily"))
-                                     ("i" "Ideas (full list)" (
-                                    (todo "Idea"
+                                     ("i" "Fleetings (full list)" (
+                                    (todo "Fleeting"
                                           ((org-agenda-overriding-header "🔖 to Finalize into Permanent Notes >")
                                           (org-agenda-files (append
                                                               (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$")
@@ -624,7 +624,7 @@ has no effect."
         (:prefix ("a" . "Agenda")
          :desc "Agenda" "m" #'spolakh/switch-to-agenda
          :desc "Lily" "l" #'spolakh/switch-to-lily-agenda
-         :desc "Ideas" "i" #'spolakh/switch-to-ideas-agenda
+         :desc "Fleetings" "i" #'spolakh/switch-to-ideas-agenda
          :desc "Repeaters (All)" "r" #'spolakh/switch-to-repeaters-agenda
          :desc "What feels important now?" "?" #'spolakh/switch-to-weekly-agenda
          :desc "Work Agenda" "w" #'spolakh/switch-to-work-agenda))
@@ -929,6 +929,9 @@ has no effect."
   :hook
   (after-init . org-roam-mode)
   :init
+  ; currently (✓ (124/187) org-roam updated (0cce9d1 -> a7cf48e)) is broken
+  (setq org-roam-rename-file-on-title-change nil)
+
   (add-hook 'after-init-hook 'org-roam-mode)
   (setq org-roam-directory "~/Dropbox/org")
   (setq org-roam-link-title-format "[[%s]]")
