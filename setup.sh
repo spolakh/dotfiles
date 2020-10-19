@@ -17,6 +17,11 @@ ln -s ${DIR}/vlad_skhdrc_1 ~/.skhdrc_1
 rm ~/.config/kitty/kitty.conf
 ln -s ${DIR}/vlad_kitty.conf ~/.config/kitty/kitty.conf
 
+# configure gpg-agent to not ask for password for a year
+mkdir -p ~/.gnupg
+echo default-cache-ttl 34560000 >> ~/.gnupg/gpg-agent.conf
+echo max-cache-ttl 34560000 >> ~/.gnupg/gpg-agent.conf
+
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 git config --global push.default current
 

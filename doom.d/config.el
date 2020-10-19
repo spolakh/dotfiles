@@ -22,7 +22,8 @@
 ;;
 ;(setq doom-font (font-spec :family "monospace" :size 14))
 ; spolakh/FAVS:
-(setq doom-font (font-spec :family "Menlo" :size 13))
+;(setq doom-font (font-spec :family "Menlo" :size 13))
+(setq doom-font "-*-Menlo-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1")
 ;(setq doom-font (font-spec :family "Anonymous Pro" :size 13 :weight 'bold))
 ;  (setq doom-font "Fira Code-12")
 ;  (setq doom-font "Ubuntu Mono-14")
@@ -53,9 +54,10 @@
 
 (add-to-list 'load-path "~/.doom.d/vendor/auto-dark-emacs/")
 (require 'auto-dark-emacs)
-(setq auto-dark-emacs/dark-theme 'doom-nova)
+;; (setq auto-dark-emacs/dark-theme 'doom-nova)
 ;; (setq auto-dark-emacs/light-theme 'base16-atelier-sulphurpool-light-spolakh)
 ;; (setq doom-theme 'base16-atelier-sulphurpool-light-spolakh)
+(setq auto-dark-emacs/dark-theme 'doom-one)
 (setq auto-dark-emacs/light-theme 'base16-cupcake-spolakh)
 (setq doom-theme 'base16-cupcake-spolakh)
 
@@ -924,28 +926,31 @@ has no effect."
 ; ORG-ROAM:
 
 (use-package! org-roam
+  :hook
+  (after-init . org-roam-mode)
   :init
+  (add-hook 'after-init-hook 'org-roam-mode)
   (setq org-roam-directory "~/Dropbox/org")
   (setq org-roam-link-title-format "[[%s]]")
   (setq org-roam-encrypt-files t)
   (setq epa-file-encrypt-to "onlyusefororg@example.com")
   (setq org-roam-index-file "~/Dropbox/org/index.org.gpg")
-  (setq org-roam-db-location "~/org-roam.db")
+  (setq org-roam-db-location "~/org-roam-new.db")
   (setq org-roam-capture-templates
         '(("d" "default" plain (function org-roam--capture-get-point)
            "%?"
            :file-name "${slug}"
-           :head "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* Indexes\n* "
+           :head "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* Contexts in which this might be relevant (AoRs\\Indexes\\...)\n* "
            :unnarrowed t)
           ("D" "grail default" plain (function org-roam--capture-get-point)
            "%?"
            :file-name "private/grail/${slug}"
-           :head "#+TITLE: GRAIL/${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* Indexes\n* "
+           :head "#+TITLE: GRAIL/${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* Contexts in which this might be relevant (AoRs\\Indexes\\...)\n* "
            :unnarrowed t)
           ("p" "private" plain (function org-roam--capture-get-point)
            "%?"
            :file-name "private/${slug}"
-           :head "#+TITLE: PRIVATE/${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* Indexes\n* "
+           :head "#+TITLE: PRIVATE/${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* Contexts in which this might be relevant (AoRs\\Indexes\\...)\n* "
            :unnarrowed t)
           ))
   (setq org-roam-dailies-capture-templates
@@ -953,7 +958,7 @@ has no effect."
            ""
            :immediate-finish t
            :file-name "private/dailies/%<%Y-%m-%d>"
-           :head "#+title: %<%Y-%m-%d>"))
+           :head "#+TITLE: %<%Y-%m-%d>\n\n* "))
         )
   (map! :map org-roam-mode-map
         :leader
@@ -971,21 +976,19 @@ has no effect."
   )
 
 (use-package! hydra)
-(use-package! org-fc
-  :custom (org-fc-directories '("~/Dropbox/org/private/gtd/"))
-  :config
-  (require 'org-fc-hydra))
+;; (use-package! org-fc
+;;   :custom (org-fc-directories '("~/Dropbox/org/private/gtd/"))
+;;   :config
+;;   (require 'org-fc-hydra))
 
-
-(server-start)
 
 ; LSP
 ; https://arenzana.org/2019/12/emacs-go-mode-revisited/
 
 (setq read-process-output-max (* 2 1024 1024)) ;; 2mb
 (use-package! lsp-mode
-  ;:commands (lsp lsp-deferred)
-  ;:hook (go-mode . lsp-deferred)
+  :commands (lsp lsp-deferred)
+  :hook (go-mode . lsp-deferred)
   :config
  ;;Set up before-save hooks to format buffer and add/delete imports.
  ;;Make sure you don't have other gofmt/goimports hooks enabled.
@@ -996,20 +999,22 @@ has no effect."
 
   (setq lsp-gopls-staticcheck t)
   (setq lsp-eldoc-render-all t)
-  (setq lsp-gopls-complete-unimported t)
+  ;; temp hack to fix https://github.com/emacs-lsp/lsp-mode/issues/1778
+  (setq lsp-gopls-codelens nil)
+  ;;(setq lsp-gopls-complete-unimported t)
   )
 
-(use-package! lsp-ui
-  :commands lsp-ui-mode
-  :init
-  :config
-  (setq
-        ;lsp-ui-doc-enable nil
-        lsp-ui-peek-enable t
-        lsp-ui-sideline-enable t
-        lsp-ui-imenu-enable t
-        lsp-ui-flycheck-enable t)
-)
+;; (use-package! lsp-ui
+;;   :commands lsp-ui-mode
+;;   :init
+;;   :config
+;;   (setq
+;;         ;lsp-ui-doc-enable nil
+;;         lsp-ui-peek-enable t
+;;         lsp-ui-sideline-enable t
+;;         lsp-ui-imenu-enable t
+;;         lsp-ui-flycheck-enable t)
+;; )
 
 (use-package! company
   :config
@@ -1036,3 +1041,5 @@ has no effect."
     "O" 'projectile-toggle-between-implementation-and-test
     ))
   )
+
+(server-start)

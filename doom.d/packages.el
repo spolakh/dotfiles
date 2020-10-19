@@ -55,8 +55,8 @@
 (package! twilight-bright-theme)
 (package! base16-theme)
 (package! cycle-themes)
-(package! org-fc
-  :recipe (:type git :repo "https://git.sr.ht/~l3kn/org-fc" :files (:defaults "awk" "demo.org")))
+;(package! org-fc
+;  :recipe (:type git :repo "https://git.sr.ht/~l3kn/org-fc" :files (:defaults "awk" "demo.org")))
 (unpin! org-roam company-org-roam)
 
 (after! base16-theme
