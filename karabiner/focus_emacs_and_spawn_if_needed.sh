@@ -3,16 +3,9 @@ set -uxo pipefail
 
 FRAME_NAME=$1
 
-emacs_server_is_running () {
-    ps ux | grep "\bemacs\b" | grep -v grep >/dev/null
-}
 
 spawn_new_frame_with_title () {
-    if emacs_server_is_running; then
-        emacsclient -c -F "((name . \"${FRAME_NAME}\"))" &
-    else
-        emacs -T "$1" 2>/dev/null &
-    fi
+    emacsclient -c -n -F "((name . \"${FRAME_NAME}\"))" --alternate-editor=""
 }
 
 focus_emacs_window_with_title () {

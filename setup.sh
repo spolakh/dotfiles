@@ -25,5 +25,9 @@ echo max-cache-ttl 345600 >> ~/.gnupg/gpg-agent.conf
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 git config --global push.default current
 
+# add /usr/local/bin to the path of brew-installed commands (mainly for yabai)
+sudo launchctl config user path "/usr/local/bin:$PATH"
+
 echo "Now run :BundleInstall inside vim\n"
 echo "And then run '~/.vim/bundle/YouCompleteMe/install.py --clang-completer'\n"
+

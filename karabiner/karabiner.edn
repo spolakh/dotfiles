@@ -105,7 +105,7 @@
              :focus_desktop "/usr/local/bin/yabai -m space --focus %d"
              :send_to_desktop "/usr/local/bin/yabai -m window --space %d"
              ;; https://github.com/koekeishiya/yabai/issues/83
-             :monocle_toggle "/Users/sojourner/dotfiles/karabiner/toggle_monocle_mode.sh"
+             :monocle_toggle "${HOME}/dots/karabiner/toggle_monocle_mode.sh"
              :km "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :test_mode "osascript -e 'display notification \"its me! %d\"'"}
              
