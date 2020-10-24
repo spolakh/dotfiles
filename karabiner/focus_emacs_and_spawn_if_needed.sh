@@ -26,8 +26,8 @@ emacs_frame_exists="$?"
 # if [ -z "$emacs_frame_exists" ]; then
 if [ "$emacs_frame_exists" -eq "0" ]; then
   spawn_new_frame_with_title "${FRAME_NAME}"
+  # and yabai-focus-window on it
+  focus_emacs_window_with_title "${FRAME_NAME}"
 fi
 
 
-# yabai-focus-window on it
-focus_emacs_window_with_title "${FRAME_NAME}"
