@@ -184,7 +184,7 @@
                 ]}
        {:des "exo"
           :rules [:z-mode
-                  [:i [:app "Emacs"]]
+                  [:i [:emacs "mine"]]
                   [:u [:emacs "work"]]
                   ;[:!Sequal_sign [:send_to_desktop 14]]
                   ; Ω
