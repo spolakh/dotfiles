@@ -59,16 +59,16 @@
          :delay   80   ;; to_delayed_action_delay_milliseconds (def: 500)
                        ;; basically it means time after which the key press is count delayed
 
-         :alone   500  ;; to_if_alone_timeout_milliseconds (def: 1000)
+         :alone   1000  ;; to_if_alone_timeout_milliseconds (def: 1000)
                        ;; hold for 995s and single tap registered; hold for 1005s and seen as modifier
          :held    70   ;; to_if_held_down_threshold_milliseconds (def: 500)
                        ;; key is fired twice when 500 ms is elapsed (otherwise seen as a hold command)
          }
-                :delay   500    
+                ;:delay   500
                                 
-                :alone   500    
+                ;:alone   500
                                 
-                :held    1000   
+                ;:held    1000
   }
 
  :devices {
@@ -167,15 +167,19 @@
                 [:##right_shift :right_shift nil {:alone [:!S0]}]
                 [:!S9 :vk_none]
                 [:!S0 :vk_none]
-                [:##left_command :left_command nil {:alone [:!Sopen_bracket]}]
-                [:##right_command :right_command nil {:alone [:!Sclose_bracket]}]
+                [:##left_command :left_command nil {:alone [:!Scomma]}]
+                [:##right_command :right_command nil {:alone [:!Speriod]}]
                 [:!Sopen_bracket :vk_none]
                 [:!Sclose_bracket :vk_none]
+                [:!Scomma :vk_none]
+                [:!Speriod :vk_none]
+                [:left_arrow :!Sopen_bracket]
+                [:right_arrow :!Sclose_bracket]
 
                 ; disable left shifts for left half of keyboard
                 [:!Sq :vk_none] [:!Sw :vk_none] [:!Se :vk_none] [:!Sr :vk_none] [:!St :vk_none] [:!Sa :vk_none] [:!Ss :vk_none] [:!Sd :vk_none] [:!Sf :vk_none] [:!Sg :vk_none] [:!Sz :vk_none] [:!Sx :vk_none] [:!Sc :vk_none] [:!Sv :vk_none] [:!Sb :vk_none] [:!S1 :vk_none] [:!S2 :vk_none] [:!S3 :vk_none] [:!S4 :vk_none] [:!S5 :vk_none]
                 ; disable right shifts for right half of keyboard
-                [:!Ry :vk_none] [:!Ru :vk_none] [:!Ri :vk_none] [:!Ro :vk_none] [:!Rp :vk_none] [:!Rh :vk_none] [:!Rj :vk_none] [:!Rk :vk_none] [:!Rl :vk_none] [:!Rn :vk_none] [:!Rm :vk_none] [:!R6 :vk_none] [:!R7 :vk_none] [:!R8 :vk_none] [:!R9 :vk_none] [:!R0 :vk_none]
+                [:!Ry :vk_none] [:!Ru :vk_none] [:!Ri :vk_none] [:!Ro :vk_none] [:!Rp :vk_none] [:!Rh :vk_none] [:!Rj :vk_none] [:!Rk :vk_none] [:!Rl :vk_none] [:!Rn :vk_none] [:!Rm :vk_none] [:!R6 :vk_none] [:!R7 :vk_none] [:!R8 :vk_none] [:!R9 :vk_none] [:!R0 :vk_none] [:!Rperiod :vk_none] [:!Rcomma :vk_none]
         ]}
        {:des "caps lock -> esc if alone, hyper if used as a modifier"
         :rules [:caps-mode
