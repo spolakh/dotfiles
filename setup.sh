@@ -30,4 +30,5 @@ sudo launchctl config user path "/usr/local/bin:$PATH"
 
 echo "Now run :BundleInstall inside vim\n"
 echo "And then run '~/.vim/bundle/YouCompleteMe/install.py --clang-completer'\n"
+echo "And then add `auth sufficient pam_tid.so` to the top of /private/etc/pam.d/sudo for touch-id-based sudo auth"
 

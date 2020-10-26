@@ -6,7 +6,7 @@ FRAME_NAME=$1
 
 spawn_new_frame_with_title () {
     echo "Spawning emacs with title ${FRAME_NAME}"
-    /usr/local/bin/emacsclient -c -n -F "((name . \"${FRAME_NAME}\"))" --alternate-editor=""
+    /usr/local/bin/emacsclient -c -n -F "((name . \"${FRAME_NAME}\"))" --alternate-editor="" # disown -a?	
 }
 
 focus_emacs_window_with_title () {
