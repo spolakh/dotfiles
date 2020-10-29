@@ -112,8 +112,9 @@
              ;; https://github.com/koekeishiya/yabai/issues/83
              :monocle_toggle "${HOME}/dots/karabiner/toggle_monocle_mode.sh"
              :km "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
+             :alfred "osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\" with argument \"%s\"'"
              :test_mode "osascript -e 'display notification \"its me! %d\"'"}
-             
+
 :main [
        {:des "yabai"
         :rules [
@@ -206,8 +207,8 @@
                 ]}
        {:des "exo"
           :rules [:z-mode
-                  [:i [:emacs "@mine"]]
-                  [:u [:emacs "@work"]]
+                  [:i [:app "Emacs" ""]]
+                  ;[:u [:emacs "@work"]]
                   ;[:!Sequal_sign [:send_to_desktop 14]]
                   ; Ω
                   [:x :!Oz]
@@ -244,6 +245,8 @@
           :rules [:s-mode
                   [:i [:app "Spotify"]]
                   [:u [:app "Spotify"]]
+                  [:n [:alfred "play" "com.vdesabou.spotify.mini.player" "spotify:playlist:2oIXR7f2gv55ud3RbOW4vn"]]
+                  [:period [:alfred "play" "com.vdesabou.spotify.mini.player" "spotify:playlist:1kpoYbaRkk0ZQxWn3a6vdF"]]
                   ;[:!Sequal_sign [:send_to_desktop 11]]
                 ]}
        {:des "domains (chrome)"

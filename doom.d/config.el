@@ -31,6 +31,8 @@
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type `visual)
+(global-display-line-numbers-mode)
+
 
 (setq frame-title-format "%b - @mine Emacs")
 
@@ -119,6 +121,18 @@
   (cycle-themes-mode)
 )
 
+; MODELINE
+(setq doom-modeline-icon (display-graphic-p))
+(setq doom-modeline-major-mode-icon t)
+(setq doom-modeline-major-mode-color-icon t)
+(setq doom-modeline-buffer-state-icon t)
+(setq doom-modeline-buffer-modification-icon t)
+(setq doom-modeline-lsp t)
+(setq doom-modeline-persp-name t)
+(setq doom-modeline-persp-icon t)
+
+
+
 ; NAVIGATION:
 
 (map!
@@ -126,7 +140,12 @@
   "<s-]>" #'better-jumper-jump-forward
   "s-]" #'better-jumper-jump-forward
   "<s-[>" #'better-jumper-jump-backward
-  "s-[" #'better-jumper-jump-backward))
+  "s-[" #'better-jumper-jump-backward
+  "s-{" #'winner-undo
+  "<s-{>" #'winner-undo
+  "s-}" #'winner-redo
+  "<s-}>" #'winner-redo
+  ))
 
 (map!
  (:map general-override-mode-map
@@ -139,14 +158,17 @@
   "s-J" #'evil-window-move-very-bottom
   "s-K" #'evil-window-move-very-top))
 
-(setq ivy-re-builders-alist
-      '((t . ivy--regex-fuzzy)))
+(use-package! flx
+  :config
+  (setq ivy-re-builders-alist
+        '((t . ivy--regex-fuzzy)))
+  )
 
 (after! ivy
 (map!
  (:map ivy-minibuffer-map
  "S-SPC" nil
- "M-SPC" #'ivy-restrict-to-matches)
+ "s-SPC" #'ivy-restrict-to-matches)
  )
 )
 
@@ -1047,4 +1069,5 @@ has no effect."
     ))
   )
 
+(persp-mode)
 (server-start)
