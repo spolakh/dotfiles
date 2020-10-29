@@ -169,9 +169,9 @@
     ("K" +evil/window-move-up)
     ("L" +evil/window-move-right)
     ("[" evil-window-decrease-width)
+    ("]" evil-window-increase-width)
     ("<up>" evil-window-increase-height)
     ("<down>" evil-window-decrease-height)
-    ("]" evil-window-increase-width)
     ("q" nil)
     )
   (map! (:map general-override-mode-map
