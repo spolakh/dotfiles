@@ -79,7 +79,8 @@
   }
 
  :applications {
-    :Emacs ["^org\\.gnu\\.Emacs$"]
+    :Emacs   ["^org\\.gnu\\.Emacs$"]
+    :Chromes ["^com\\.google\\.Chrome$", "^org\\.chromium\\.Chromium$", "^com\\.google\\.Chrome\\.canary$"]
  }
 
 :layers {
@@ -118,44 +119,44 @@
 :main [
        {:des "yabai"
         :rules [
-                [:!C1 [:focus_desktop 1]]
-                [:!SC1 [:send_to_desktop 1]]
-                [:!C2 [:focus_desktop 2]]
-                [:!SC2 [:send_to_desktop 2]]
-                [:!C3 [:focus_desktop 3]]
-                [:!SC3 [:send_to_desktop 3]]
-                [:!C4 [:focus_desktop 4]]
-                [:!SC4 [:send_to_desktop 4]]
-                [:!C5 [:focus_desktop 5]]
-                [:!SC5 [:send_to_desktop 5]]
-                [:!C6 [:focus_desktop 6]]
-                [:!SC6 [:send_to_desktop 6]]
-                [:!C7 [:focus_desktop 7]]
-                [:!SC7 [:send_to_desktop 7]]
-                [:!C8 [:focus_desktop 8]]
-                [:!SC8 [:send_to_desktop 8]]
-                [:!C9 [:focus_desktop 9]]
-                [:!SC9 [:send_to_desktop 9]]
-                [:!C0 [:focus_desktop 10]]
-                [:!SC0 [:send_to_desktop 10]]
+                [:!Q1 [:focus_desktop 1]]
+                [:!SQ1 [:send_to_desktop 1]]
+                [:!Q2 [:focus_desktop 2]]
+                [:!SQ2 [:send_to_desktop 2]]
+                [:!Q3 [:focus_desktop 3]]
+                [:!SQ3 [:send_to_desktop 3]]
+                [:!Q4 [:focus_desktop 4]]
+                [:!SQ4 [:send_to_desktop 4]]
+                [:!Q5 [:focus_desktop 5]]
+                [:!SQ5 [:send_to_desktop 5]]
+                [:!Q6 [:focus_desktop 6]]
+                [:!SQ6 [:send_to_desktop 6]]
+                [:!Q7 [:focus_desktop 7]]
+                [:!SQ7 [:send_to_desktop 7]]
+                [:!Q8 [:focus_desktop 8]]
+                [:!SQ8 [:send_to_desktop 8]]
+                [:!Q9 [:focus_desktop 9]]
+                [:!SQ9 [:send_to_desktop 9]]
+                [:!Q0 [:focus_desktop 10]]
+                [:!SQ0 [:send_to_desktop 10]]
 
                 ; toggle monocle mode for current space
-                [:!Cw [:monocle_toggle]]
+                [:!Qw [:monocle_toggle]]
                 ; toggle floating and bring to center 
-                [:!Ce ["/usr/local/bin/yabai -m window --toggle float; /usr/local/bin/yabai -m window --grid 4:4:1:1:2:2"]]
+                [:!Qe ["/usr/local/bin/yabai -m window --toggle float; /usr/local/bin/yabai -m window --grid 4:4:1:1:2:2"]]
                 ; rotate windows
-                [:!Cr ["/usr/local/bin/yabai -m space --rotate 90"]]
+                [:!Qr ["/usr/local/bin/yabai -m space --rotate 90"]]
                 ; move focus around windows
-                [:!Copen_bracket ["/usr/local/bin/yabai -m window --focus prev"]]
-                [:!Cclose_bracket ["/usr/local/bin/yabai -m window --focus next"]]
+                [:!Qopen_bracket ["/usr/local/bin/yabai -m window --focus prev"]]
+                [:!Qclose_bracket ["/usr/local/bin/yabai -m window --focus next"]]
                 ; non-native fullscreen
-                [:!Cf ["/usr/local/bin/yabai -m window --toggle zoom-fullscreen"]]
-                [:!Cq ["/usr/local/bin/yabai -m window --close"]]
+                [:!Qf ["/usr/local/bin/yabai -m window --toggle zoom-fullscreen"]]
+                [:!Qq ["/usr/local/bin/yabai -m window --close"]]
                 :!Emacs
-                [:!Cl ["/usr/local/bin/yabai -m window --focus east"]]
-                [:!Ch ["/usr/local/bin/yabai -m window --focus west"]]
-                [:!Ck ["/usr/local/bin/yabai -m window --focus north"]]
-                [:!Cj ["/usr/local/bin/yabai -m window --focus south"]]
+                [:!Ql ["/usr/local/bin/yabai -m window --focus east"]]
+                [:!Qh ["/usr/local/bin/yabai -m window --focus west"]]
+                [:!Qk ["/usr/local/bin/yabai -m window --focus north"]]
+                [:!Qj ["/usr/local/bin/yabai -m window --focus south"]]
         ]}
        {:des "make apple keyboard more like kinesis"
         :rules [
