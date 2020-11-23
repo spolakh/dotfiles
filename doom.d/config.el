@@ -175,7 +175,7 @@
     ("q" nil)
     )
   (map! (:map general-override-mode-map
-         ("s-e" #'hydra-window/body)
+         ("s-w" #'hydra-window/body)
          )
         )
  )
@@ -989,17 +989,17 @@ has no effect."
         '(("d" "default" plain (function org-roam--capture-get-point)
            "%?"
            :file-name "${slug}"
-           :head "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* Contexts in which this might be relevant (AoRs\\Indexes\\...)\n* "
+           :head "#+TITLE: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n"
            :unnarrowed t)
           ("D" "grail default" plain (function org-roam--capture-get-point)
            "%?"
            :file-name "private/grail/${slug}"
-           :head "#+TITLE: GRAIL/${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* Contexts in which this might be relevant (AoRs\\Indexes\\...)\n* "
+           :head "#+TITLE: GRAIL/${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n"
            :unnarrowed t)
           ("p" "private" plain (function org-roam--capture-get-point)
            "%?"
            :file-name "private/${slug}"
-           :head "#+TITLE: PRIVATE/${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n* Contexts in which this might be relevant (AoRs\\Indexes\\...)\n* "
+           :head "#+TITLE: PRIVATE/${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M>]\n\n"
            :unnarrowed t)
           ))
   (setq org-roam-dailies-capture-templates
@@ -1038,6 +1038,11 @@ has no effect."
 (use-package! lsp-mode
   :commands (lsp lsp-deferred)
   :hook (go-mode . lsp-deferred)
+
+  :init
+    (add-hook 'before-save-hook #'lsp-format-buffer)
+    (add-hook 'before-save-hook #'lsp-organize-imports)
+
   :config
  ;;Set up before-save hooks to format buffer and add/delete imports.
  ;;Make sure you don't have other gofmt/goimports hooks enabled.

@@ -3,6 +3,8 @@ export PATH=/opt/bin:$PATH
 export PATH=~/Library/Python/3.7/bin/:$PATH
 export PATH=~/dots/scripts/:$PATH
 
+ulimit -S -n 196608
+
 # Aliases
 alias gs='git status'
 alias gd='git diff'

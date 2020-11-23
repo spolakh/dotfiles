@@ -28,6 +28,11 @@ git config --global push.default current
 # add /usr/local/bin to the path of brew-installed commands (mainly for yabai)
 sudo launchctl config user path "/usr/local/bin:$PATH"
 
+# https://superuser.com/questions/433746/is-there-a-fix-for-the-too-many-open-files-in-system-error-on-os-x-10-7-1
+# bump the limits on open files significantly:
+echo 'kern.maxfiles=786432' | sudo tee -a /etc/sysctl.conf > /dev/null
+echo 'kern.maxfilesperproc=393216' | sudo tee -a /etc/sysctl.conf > /dev/null
+
 echo "Now run :BundleInstall inside vim\n"
 echo "And then run '~/.vim/bundle/YouCompleteMe/install.py --clang-completer'\n"
 echo "And then add `auth sufficient pam_tid.so` to the top of /private/etc/pam.d/sudo for touch-id-based sudo auth"
