@@ -206,6 +206,7 @@
        {:des "exo"
           :rules [:z-mode
                   [:i [:app "Emacs" ""]]
+                  [:o [:app "Todoist" ""]]
                   ;[:u [:emacs "@work"]]
                   ;[:!Sequal_sign [:send_to_desktop 14]]
                   ; Ω

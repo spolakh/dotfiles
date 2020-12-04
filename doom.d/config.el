@@ -981,6 +981,7 @@ has no effect."
   (add-hook 'after-init-hook 'org-roam-mode)
   (setq org-roam-directory "~/Dropbox/org")
   (setq org-roam-link-title-format "[[%s]]")
+  (setq +org-roam-open-buffer-on-find-file nil)
   (setq org-roam-encrypt-files t)
   (setq epa-file-encrypt-to "onlyusefororg@example.com")
   (setq org-roam-index-file "~/Dropbox/org/index.org.gpg")
