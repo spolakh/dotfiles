@@ -213,14 +213,15 @@
    (:map org-mode-map
     "<s-return>" #'org-todo))
   (require 'find-lisp)
-  (setq spolakh/org-agenda-directory "~/Dropbox/org/private/gtd/"
-        spolakh/org-dailies-directory "~/Dropbox/org/private/dailies/"
-        spolakh/org-phone-directory "~/Dropbox/org/private/phone/"
+  (setq spolakh/org-agenda-directory "~/Dropbox/org/notes/private/gtd/"
+        spolakh/org-dailies-directory "~/Dropbox/org/notes/private/dailies/"
+        spolakh/org-phone-directory "~/Dropbox/org/notes/private/phone/"
+        spolakh/org-gcal-directory "~/Dropbox/org/cal/"
         spolakh/org-directory "~/Dropbox/org/")
   (setq org-agenda-files
-        (cons (concat spolakh/org-phone-directory "phone-work.org")
-              (cons (concat spolakh/org-phone-directory "phone.org")
-              (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$"))))
+        (append `(,(concat spolakh/org-phone-directory "phone-work.org") ,(concat spolakh/org-phone-directory "phone.org"))
+              (find-lisp-find-files spolakh/org-gcal-directory "\.org.gpg$")
+              (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")))
   (defun spolakh/open-projects ()
     (interactive)
     (find-file (concat spolakh/org-agenda-directory "projects.org.gpg")))
@@ -559,7 +560,6 @@ has no effect."
                                ,(concat spolakh/org-phone-directory "phone.org")
                                ,(concat spolakh/org-phone-directory "phone-work.org")
                                ,(concat spolakh/org-agenda-directory "later.org.gpg")
-                               ,(concat spolakh/org-directory "ipad.org.gpg")
                                ))
            (org-agenda-skip-function '(or
                                        (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
@@ -574,7 +574,6 @@ has no effect."
                                 ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
                                 ,(concat spolakh/org-phone-directory "phone.org")
                                 ,(concat spolakh/org-phone-directory "phone-work.org")
-                                ,(concat spolakh/org-directory "ipad.org.gpg")
                                 )
                                ))
            (org-agenda-max-entries 3)))
@@ -617,7 +616,6 @@ has no effect."
                                                                 ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
                                                                 ,(concat spolakh/org-phone-directory "phone.org")
                                                                 ,(concat spolakh/org-phone-directory "phone-work.org")
-                                                                ,(concat spolakh/org-directory "ipad.org.gpg")
                                                                 )))))))
                                     ("r" "Repeaters (All)" (
                                       (tags-todo "STYLE=\"habit\""
@@ -907,9 +905,9 @@ has no effect."
   (setq org-gcal-client-id (get-gcal-config-value 'org-gcal-client-id)
         org-gcal-client-secret (get-gcal-config-value 'org-gcal-client-secret)
         org-gcal-file-alist `(
-                              (,(get-gcal-config-value 'calendar-id) .  ,(concat spolakh/org-agenda-directory "gcal.org.gpg"))
-                              (,(get-gcal-config-value 'work-calendar-id) .  ,(concat spolakh/org-agenda-directory "gcal-grail.org.gpg"))
-                              (,(get-gcal-config-value 'birthday-calendar-id) .  ,(concat spolakh/org-agenda-directory "gcal-birthdays.org.gpg"))
+                              (,(get-gcal-config-value 'calendar-id) .  ,(concat spolakh/org-gcal-directory "gcal.org.gpg"))
+                              (,(get-gcal-config-value 'work-calendar-id) .  ,(concat spolakh/org-gcal-directory "gcal-grail.org.gpg"))
+                              (,(get-gcal-config-value 'birthday-calendar-id) .  ,(concat spolakh/org-gcal-directory "gcal-birthdays.org.gpg"))
                               )
         org-gcal-remove-api-cancelled-events t
         org-gcal-update-cancelled-events-with-todo nil
@@ -979,12 +977,12 @@ has no effect."
   (setq org-roam-rename-file-on-title-change nil)
 
   (add-hook 'after-init-hook 'org-roam-mode)
-  (setq org-roam-directory "~/Dropbox/org")
+  (setq org-roam-directory (concat spolakh/org-directory "/notes/"))
   (setq org-roam-link-title-format "[[%s]]")
   (setq +org-roam-open-buffer-on-find-file nil)
   (setq org-roam-encrypt-files t)
   (setq epa-file-encrypt-to "onlyusefororg@example.com")
-  (setq org-roam-index-file "~/Dropbox/org/index.org.gpg")
+  (setq org-roam-index-file "~/Dropbox/org/notes/index.org.gpg")
   (setq org-roam-db-location "~/org-roam-new.db")
   (setq org-roam-capture-templates
         '(("d" "default" plain (function org-roam--capture-get-point)
@@ -1027,7 +1025,7 @@ has no effect."
 
 (use-package! hydra)
 ;; (use-package! org-fc
-;;   :custom (org-fc-directories '("~/Dropbox/org/private/gtd/"))
+;;   :custom (org-fc-directories '("~/Dropbox/org/notes/private/gtd/"))
 ;;   :config
 ;;   (require 'org-fc-hydra))
 
