@@ -1095,5 +1095,6 @@ has no effect."
     ))
   )
 
+(run-with-idle-timer 10 t #'doom-save-session)
 (persp-mode)
 (server-start)
