@@ -165,6 +165,9 @@
   "<s-9>" #'+workspace/switch-to-8
   ))
 
+(setq better-jumper-new-window-behavior 'empty)
+(setq better-jumper-add-jump-behavior 'replace)
+
 (map!
  (:map general-override-mode-map
   "s-l" #'evil-window-right
@@ -1054,7 +1057,7 @@ has no effect."
 ; LSP
 ; https://arenzana.org/2019/12/emacs-go-mode-revisited/
 
-(setq read-process-output-max (* 2 1024 1024)) ;; 2mb
+(setq read-process-output-max (* 10 1024 1024)) ;; 10mb
 (use-package! lsp-mode
   :commands (lsp lsp-deferred)
   :hook (go-mode . lsp-deferred)
@@ -1062,6 +1065,10 @@ has no effect."
   :init
     (add-hook 'before-save-hook #'lsp-format-buffer)
     (add-hook 'before-save-hook #'lsp-organize-imports)
+
+    (setq lsp-enable-file-watchers nil) ; need to reenable when figure out how to ignore all the bazel and other non-relevant things
+    (setq gc-cons-threshold 200000000)
+    (setq lsp-keep-workspace-alive t)
 
   :config
  ;;Set up before-save hooks to format buffer and add/delete imports.
