@@ -139,8 +139,8 @@
                 ; rotate windows
                 [:!Cr ["/usr/local/bin/yabai -m space --rotate 90"]]
                 ; move focus around windows
-                [:!Copen_bracket ["/usr/local/bin/yabai -m window --focus prev"]]
-                [:!Cclose_bracket ["/usr/local/bin/yabai -m window --focus next"]]
+                ;[:!Copen_bracket ["/usr/local/bin/yabai -m window --focus prev"]]
+                ;[:!Cclose_bracket ["/usr/local/bin/yabai -m window --focus next"]]
                 ; non-native fullscreen
                 [:!Cf ["/usr/local/bin/yabai -m window --toggle zoom-fullscreen"]]
                 [:!Cq ["/usr/local/bin/yabai -m window --close"]]

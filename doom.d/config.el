@@ -145,6 +145,24 @@
   "<s-{>" #'winner-undo
   "s-}" #'winner-redo
   "<s-}>" #'winner-redo
+  "s-1" #'+workspace/switch-to-0
+  "<s-1>" #'+workspace/switch-to-0
+  "s-2" #'+workspace/switch-to-1
+  "<s-2>" #'+workspace/switch-to-1
+  "s-3" #'+workspace/switch-to-2
+  "<s-3>" #'+workspace/switch-to-2
+  "s-4" #'+workspace/switch-to-3
+  "<s-4>" #'+workspace/switch-to-3
+  "s-5" #'+workspace/switch-to-4
+  "<s-5>" #'+workspace/switch-to-4
+  "s-6" #'+workspace/switch-to-5
+  "<s-6>" #'+workspace/switch-to-5
+  "s-7" #'+workspace/switch-to-6
+  "<s-7>" #'+workspace/switch-to-6
+  "s-8" #'+workspace/switch-to-7
+  "<s-8>" #'+workspace/switch-to-7
+  "s-9" #'+workspace/switch-to-8
+  "<s-9>" #'+workspace/switch-to-8
   ))
 
 (map!
@@ -359,44 +377,6 @@ has no effect."
   (setq org-agenda-use-time-grid t)
   (setq org-extend-today-until 2)
   (setq org-agenda-todo-list-sublevels t)
-  (map! :after evil-org-agenda
-        :map (evil-org-agenda-mode-map org-agenda-mode-map)
-        ; org-agenda-keymap
-        ; org-agenda-mode-map
-        ; evil-org-agenda-mode-map
-      :m "i" #'org-agenda-clock-in
-      "o" #'org-agenda-clock-out
-      :m "I" #'org-pomodoro
-      :m "O" #'org-pomodoro
-      :m "s-i" #'spolakh/set-todo-idea
-      ;"a" #'org-agenda-add-note ; we always link notes in the default item processing flow
-      "d" #'org-agenda-deadline
-      :m "e" #'spolakh/invoke-fast-effort-selection
-      "s" #'org-agenda-schedule
-      "a" #'org-agenda-archive-default-with-confirmation
-      "p" #'spolakh/org-agenda-process-single-inbox-item
-      :m "P" #'spolakh/org-agenda-bulk-process-inbox
-      :m "t"  #'org-agenda-columns
-      "R" #'org-agenda-refile
-      "<s-return>" #'org-agenda-todo
-      "<s-S-return>" #'spolakh/set-todo-done
-      "D" #'spolakh/set-todo-pass
-      "S" #'spolakh/set-todo-waiting
-      "s-1" #'spolakh/org-agenda-parent-to-top
-      "s-." #'spolakh/debug
-      :m "J" #'spolakh/org-agenda-next-section
-      :m "K" #'spolakh/org-agenda-previous-section
-      :m "1" #'spolakh/org-agenda-item-to-top
-      :m "d" nil
-      :m "s" nil
-      :m "a" nil
-      :m "p" nil
-      :m "R" nil
-      :m "S" nil
-      :m "D" nil
-      :m "<s-return>" nil
-      :m "<s-S-return>" nil
-      )
   (defun spolakh/debug ()
     (interactive)
     (message "xcxc %s" (org-get-at-bol 'tags)))
@@ -891,6 +871,47 @@ has no effect."
       ;; refresh agenda
       (org-agenda-redo)
     )
+
+    :config 
+    (map! :after evil-org-agenda
+          :map (evil-org-agenda-mode-map org-agenda-mode-map)
+                                        ; org-agenda-keymap
+                                        ; org-agenda-mode-map
+                                        ; evil-org-agenda-mode-map
+          :m "i" #'org-agenda-clock-in
+          "o" #'org-agenda-clock-out
+          :m "I" #'org-pomodoro
+          :m "O" #'org-pomodoro
+          :m "s-i" #'spolakh/set-todo-idea
+                                        ;"a" #'org-agenda-add-note ; we always link notes in the default item processing flow
+          "d" #'org-agenda-deadline
+          :m "e" #'spolakh/invoke-fast-effort-selection
+          "s" #'org-agenda-schedule
+          "a" #'org-agenda-archive-default-with-confirmation
+          "p" #'spolakh/org-agenda-process-single-inbox-item
+          :m "P" #'spolakh/org-agenda-bulk-process-inbox
+          :m "t"  #'org-agenda-columns
+          "R" #'org-agenda-refile
+          "<s-return>" #'org-agenda-todo
+          "<s-S-return>" #'spolakh/set-todo-done
+          "D" #'spolakh/set-todo-pass
+          "S" #'spolakh/set-todo-waiting
+          "s-." #'spolakh/debug
+          "!" #'spolakh/org-agenda-parent-to-top
+          :m "!" #'spolakh/org-agenda-parent-to-top
+          :m "J" #'spolakh/org-agenda-next-section
+          :m "K" #'spolakh/org-agenda-previous-section
+          :m "1" #'spolakh/org-agenda-item-to-top
+          :m "d" nil
+          :m "s" nil
+          :m "a" nil
+          :m "p" nil
+          :m "R" nil
+          :m "S" nil
+          :m "D" nil
+          :m "<s-return>" nil
+          :m "<s-S-return>" nil
+          )
 )
 
 (use-package! org-gcal
