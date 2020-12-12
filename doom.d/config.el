@@ -131,8 +131,6 @@
 (setq doom-modeline-persp-name t)
 (setq doom-modeline-persp-icon t)
 
-
-
 ; NAVIGATION:
 
 (map!
@@ -249,6 +247,10 @@
   (defun spolakh/fuck-it ()
     (interactive)
     (find-file (concat spolakh/org-agenda-directory "non_gtd.org.gpg")))
+  (map! :map org-mode-map
+      (:prefix ("g" . "go")
+       :desc "evil-next-visual-line" :n "j" 'evil-next-visual-line 
+       :desc "evil-previous-visual-line" :n "k" 'evil-previous-visual-line))
   (map! :map org-mode-map
       :leader
       (:prefix ("n" . "notes")
