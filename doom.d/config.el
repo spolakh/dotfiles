@@ -333,6 +333,21 @@
          ))
 )
 
+(use-package! org-download
+    :after org
+    :init
+    (setq org-download-method 'directory)
+    (setq org-download-timestamp "%Y%m%d-%H%M%S_")
+    (setq org-download-screenshot-method "/usr/local/bin/pngpaste %s")
+    (setq org-download-heading-lvl nil)
+    (setq org-download-image-dir "images")
+    (map! :map org-mode-map
+          :leader
+          (:prefix ("n" . "notes")
+           :desc "Paste Screenshot" "P" 'org-download-screenshot
+           ))
+    )
+
 (use-package! org-habit)
 ; From https://emacs.stackexchange.com/questions/13360/org-habit-graph-on-todo-list-agenda-view
 (defvar my/org-habit-show-graphs-everywhere t

@@ -47,7 +47,6 @@
 ;(package! builtin-package :recipe (:branch "develop"))
 
 (package! spacemacs-theme)
-(package! modus-operandi-theme)
 (package! org-gcal)
 (package! cl-lib)
 (package! nova-theme)
@@ -56,10 +55,10 @@
 (package! base16-theme)
 (package! cycle-themes)
 (package! flx)
-;(package! workgroups2)
 ;(package! org-fc
 ;  :recipe (:type git :repo "https://git.sr.ht/~l3kn/org-fc" :files (:defaults "awk" "demo.org")))
 (unpin! org-roam company-org-roam)
+(package! org-download)
 
 (after! base16-theme
         (add-to-list 'load-path "~/.doom.d/themes/")
