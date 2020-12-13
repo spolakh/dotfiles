@@ -266,10 +266,10 @@
            "* TODO %? :@mine:")
           ("I" "Inbox @work TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
            "* TODO %? :@work:")
-          ("p" "Prepend inbox @mine TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
-           "* TODO %? :@mine:" :prepend t)
-          ("P" "Prepend inbox @work TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
-           "* TODO %? :@work:" :prepend t)
+          ("p" "Project @mine TODO" entry (file ,(concat spolakh/org-agenda-directory "projects.org.gpg"))
+           "* TODO [%^{Project title}] :@mine:\n%^{Description}\nGoal: *%^{Goal}*\n** TODO %?")
+          ("P" "Project @work TODO" entry (file ,(concat spolakh/org-agenda-directory "projects.org.gpg"))
+           "* TODO [%^{Project title}] :@work:\n%^{Description}\nGoal: *%^{Goal}*\n** TODO %?")
           ("t" "inbox @mine TODO for Today" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
            "* TODO %? :@mine:\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"\"))")
           ("T" "inbox @work TODO for Today" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
@@ -282,6 +282,7 @@
             :immediate-finish t)))
   (setq
    org-use-fast-todo-selection nil
+   org-log-note-clock-out t
    org-startup-with-inline-images t
    org-image-actual-width 400
    org-log-done 'time
