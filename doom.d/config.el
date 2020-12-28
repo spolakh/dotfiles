@@ -238,7 +238,9 @@
         spolakh/org-gcal-directory "~/Dropbox/org/cal/"
         spolakh/org-directory "~/Dropbox/org/")
   (setq org-agenda-files
-        (append `(,(concat spolakh/org-phone-directory "phone-work.org") ,(concat spolakh/org-phone-directory "phone.org"))
+        (append
+         `(,(concat spolakh/org-phone-directory "phone-work.org") ,(concat spolakh/org-phone-directory "phone.org"))
+              (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$")
               (find-lisp-find-files spolakh/org-gcal-directory "\.org.gpg$")
               (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")))
   (defun spolakh/open-projects ()
@@ -267,9 +269,9 @@
           ("I" "Inbox @work TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
            "* TODO %? :@work:")
           ("p" "Project @mine TODO" entry (file ,(concat spolakh/org-agenda-directory "projects.org.gpg"))
-           "* TODO [%^{Project title}] :@mine:\n%^{Description}\nGoal: *%^{Goal}*\n** TODO %?")
+           "* TODO [%^{Project title}] :@mine:\nGoal: *%^{Goal}*\n%^{Description}\n** TODO %?")
           ("P" "Project @work TODO" entry (file ,(concat spolakh/org-agenda-directory "projects.org.gpg"))
-           "* TODO [%^{Project title}] :@work:\n%^{Description}\nGoal: *%^{Goal}*\n** TODO %?")
+           "* TODO [%^{Project title}] :@work:\nGoal: *%^{Goal}*\n%^{Description}\n** TODO %?")
           ("t" "inbox @mine TODO for Today" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
            "* TODO %? :@mine:\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"\"))")
           ("T" "inbox @work TODO for Today" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
@@ -556,12 +558,15 @@ has no effect."
           ))
     (todo "TODO"
           ((org-agenda-overriding-header "📤 To Activate/Snooze (decide if now is a good time to do these) >")
-           (org-agenda-files '(
+           (org-agenda-files (append
+                              (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$")
+                             '(
                                ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
                                ,(concat spolakh/org-phone-directory "phone.org")
                                ,(concat spolakh/org-phone-directory "phone-work.org")
                                ,(concat spolakh/org-agenda-directory "later.org.gpg")
-                               ))
+                               )
+                             ))
            (org-agenda-skip-function '(or
                                        (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
                                        (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
