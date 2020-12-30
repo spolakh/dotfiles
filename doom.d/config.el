@@ -1028,6 +1028,7 @@ has no effect."
   (setq org-roam-link-title-format "[[%s]]")
   (setq +org-roam-open-buffer-on-find-file nil)
   (setq org-roam-encrypt-files t)
+  (setq org-roam-dailies-directory "private/dailies/")
   (setq epa-file-encrypt-to "onlyusefororg@example.com")
   (setq org-roam-index-file "~/Dropbox/org/notes/index.org.gpg")
   (setq org-roam-db-location "~/org-roam-new.db")
@@ -1053,7 +1054,7 @@ has no effect."
            ""
            :immediate-finish t
            :file-name "private/dailies/%<%Y-%m-%d>"
-           :head "#+TITLE: %<%Y-%m-%d>\n\n* "))
+           :head "#+TITLE: %<%Y-%m-%d>\n\n* What's on your mind?\n* [[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:"))
         )
   (map! :map org-roam-mode-map
         :leader
@@ -1068,6 +1069,21 @@ has no effect."
     "M-6" "§"
     "M-5" "∞"
     ))
+  (after! hydra
+    (defhydra hydra-dailies (:color red)
+      ("h" org-roam-dailies-find-previous-note)
+      ("l" org-roam-dailies-find-next-note)
+      ("." org-roam-dailies-find-today)
+      ("q" nil)
+      )
+    (map! :map org-roam-dailies-map
+          :leader
+          (:prefix ("n" . "notes")
+           (:prefix ("r" . "roam")
+             (:prefix ("d" . "date")
+            :desc "hydra" "h" 'hydra-dailies/body
+            ))))
+    )
   )
 
 (use-package! hydra)
