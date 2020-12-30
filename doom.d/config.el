@@ -112,7 +112,7 @@
 (use-package! cycle-themes
   :init
   (map!
-   "s-o" #'cycle-themes)
+   "s-O" #'cycle-themes)
   (defun spolakh/message-next-theme ()
     (load-theme (cycle-themes-get-next-valid-theme) t t)
     (message "Loading theme: %s" (cycle-themes-get-next-valid-theme)))
@@ -1063,6 +1063,7 @@ has no effect."
           :desc "Entrypoint" "e" 'org-roam-jump-to-index
           :desc "Insert a link to a Note" "l" 'org-roam-insert
           )))
+  :config
   (map!
    (:map global-map
     "M-z" "Ω"
@@ -1083,6 +1084,10 @@ has no effect."
              (:prefix ("d" . "date")
             :desc "hydra" "h" 'hydra-dailies/body
             ))))
+    (map! (:map org-roam-mode-map
+             "s-i" 'org-roam-dailies-find-previous-note
+             "s-o" 'org-roam-dailies-find-next-note
+             ))
     )
   )
 
