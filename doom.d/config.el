@@ -1054,7 +1054,7 @@ has no effect."
            ""
            :immediate-finish t
            :file-name "private/dailies/%<%Y-%m-%d>"
-           :head "#+TITLE: %<%Y-%m-%d>\n\n* What's on your mind?\n* [[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:"))
+           :head "#+TITLE: %<%Y-%m-%d>\n\n* \n* [[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:"))
         )
   (map! :map org-roam-mode-map
         :leader

@@ -244,8 +244,23 @@
           :rules [:s-mode
                   [:i [:app "Spotify"]]
                   [:u [:app "Spotify"]]
-                  [:n [:alfred "play" "com.vdesabou.spotify.mini.player" "spotify:playlist:2oIXR7f2gv55ud3RbOW4vn"]]
-                  [:period [:alfred "play" "com.vdesabou.spotify.mini.player" "spotify:playlist:1kpoYbaRkk0ZQxWn3a6vdF"]]
+
+                  [:semicolon [:alfred "add_current_track_to_alfred_playlist_or_your_music" "com.vdesabou.spotify.mini.player"]] ; Add song to Likes playlist
+                  [:k [:alfred "volume_up" "com.vdesabou.spotify.mini.player"]] 
+                  [:j [:alfred "volume_down" "com.vdesabou.spotify.mini.player"]] 
+                  [:l [:alfred "next" "com.vdesabou.spotify.mini.player"]] 
+                  [:h [:alfred "prev" "com.vdesabou.spotify.mini.player"]] 
+
+                  [:y [:alfred "add_current_track_to" "com.vdesabou.spotify.mini.player"]]
+                  [:u [:alfred "remove_current_track_from" "com.vdesabou.spotify.mini.player"]]
+                  [:p [:alfred "show_playlists" "com.vdesabou.spotify.mini.player"]]
+
+                  [:spacebar [:alfred "playpause" "com.vdesabou.spotify.mini.player"]]
+
+                  [:6 [:alfred "play" "com.vdesabou.spotify.mini.player" "spotify:playlist:2oIXR7f2gv55ud3RbOW4vn"]] ; Depth
+                  [:0 [:alfred "play" "com.vdesabou.spotify.mini.player" "spotify:playlist:1kpoYbaRkk0ZQxWn3a6vdF"]] ; Anime Openings
+                  [:equal_sign [:alfred "play" "com.vdesabou.spotify.mini.player" "spotify:playlist:37i9dQZEVXcBYxUH6cwJch"]] ; Discover Weekly
+
                   ;[:!Sequal_sign [:send_to_desktop 11]]
                 ]}
        {:des "domains (chrome)"
