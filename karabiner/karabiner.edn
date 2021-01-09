@@ -246,6 +246,7 @@
                   [:u [:app "Spotify"]]
 
                   [:semicolon [:alfred "add_current_track_to_alfred_playlist_or_your_music" "com.vdesabou.spotify.mini.player"]] ; Add song to Likes playlist
+                  [:quote [:alfred "remove_current_track_from_alfred_playlist_or_your_music" "com.vdesabou.spotify.mini.player"]] ; Add song to Likes playlist
                   [:k [:alfred "volume_up" "com.vdesabou.spotify.mini.player"]] 
                   [:j [:alfred "volume_down" "com.vdesabou.spotify.mini.player"]] 
                   [:l [:alfred "next" "com.vdesabou.spotify.mini.player"]] 

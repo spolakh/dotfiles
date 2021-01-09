@@ -237,12 +237,13 @@
         spolakh/org-phone-directory "~/Dropbox/org/notes/private/phone/"
         spolakh/org-gcal-directory "~/Dropbox/org/cal/"
         spolakh/org-directory "~/Dropbox/org/")
-  (setq org-agenda-files
-        (append
-         `(,(concat spolakh/org-phone-directory "phone-work.org") ,(concat spolakh/org-phone-directory "phone.org"))
-              (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$")
-              (find-lisp-find-files spolakh/org-gcal-directory "\.org.gpg$")
-              (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")))
+  ;; defined in the agenda itself so that it's regenerated every time we create an agenda (if new daily files are added etc)
+  ;; (setq org-agenda-files
+  ;;       (append
+  ;;        `(,(concat spolakh/org-phone-directory "phone-work.org") ,(concat spolakh/org-phone-directory "phone.org"))
+  ;;             (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$")
+  ;;             (find-lisp-find-files spolakh/org-gcal-directory "\.org.gpg$")
+  ;;             (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")))
   (defun spolakh/open-projects ()
     (interactive)
     (find-file (concat spolakh/org-agenda-directory "projects.org.gpg")))
@@ -387,6 +388,7 @@ has no effect."
   :init
   (setq org-agenda-block-separator nil
         org-habit-show-habits t
+        org-agenda-skip-archived-trees t
         org-habit-show-all-today nil
         org-archive-default-command 'org-archive-to-archive-sibling
         org-agenda-start-with-log-mode t
@@ -493,7 +495,8 @@ has no effect."
         (tag (substring filter 1))
         )
     (if
-        (and (> (length tags) 0) (not (member tag tags)))
+        (or (and (> (length tags) 0) (not (member tag tags)))
+            (member "ARCHIVE" tags))
         subtree-end
       nil)))
 
@@ -531,6 +534,13 @@ has no effect."
             ((org-agenda-span 1)
              (org-agenda-start-day "today")
              (org-agenda-start-on-weekday nil)
+             (org-agenda-skip-archived-trees t)
+             (org-agenda-files
+              (append
+               `(,(concat spolakh/org-phone-directory "phone-work.org") ,(concat spolakh/org-phone-directory "phone.org"))
+               (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$")
+               (find-lisp-find-files spolakh/org-gcal-directory "\.org.gpg$")
+               (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")))
              (org-deadline-warning-days 3)
              (org-agenda-prefix-format '((agenda . " %i %-16:c%?-16t% s%b")))
              (org-agenda-skip-function '(or
