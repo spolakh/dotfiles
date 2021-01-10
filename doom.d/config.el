@@ -550,7 +550,8 @@ has no effect."
                (find-lisp-find-files spolakh/org-gcal-directory "\.org.gpg$")
                (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")))
              (org-deadline-warning-days 3)
-             (org-agenda-prefix-format '((agenda . " %i %-16:c%?-16t% s%b")))
+             ;(org-agenda-prefix-format '((agenda . " %i %-21:c%?-16t% s%b"))) ; adds category
+             (org-agenda-prefix-format '((agenda . " %i %?-16t% s%b")))
              (org-agenda-skip-function '(or
                                          (air-org-skip-subtree-if-habit)
                                          (spolakh/skip-if-waiting)
@@ -577,7 +578,7 @@ has no effect."
     (todo "TODO"
           ((org-agenda-overriding-header "📤 To Activate/Snooze (decide if now is a good time to do these) >")
            (org-agenda-files (append
-                              (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$")
+                              (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
                              '(
                                ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
                                ,(concat spolakh/org-phone-directory "phone.org")
