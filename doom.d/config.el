@@ -400,11 +400,8 @@ has no effect."
         (1200 1400 1600 1800 2000 2200 0000 0200)
         "    " "- - - - - - - - - - - - - - - - - - - - - - - - - - -"))
   (setq org-agenda-use-time-grid t)
-  (setq org-extend-today-until 2)
+  (setq org-extend-today-until 5)
   (setq org-agenda-todo-list-sublevels t)
-  (defun spolakh/debug ()
-    (interactive)
-    (message "xcxc %s" (org-get-at-bol 'tags)))
   (defun spolakh/set-todo-waiting ()
     (interactive)
     (org-agenda-todo "WAITING"))
@@ -421,6 +418,7 @@ has no effect."
     (= 1 (org-current-level)))
   (defun spolakh/org-current-is-todo ()
     (or (string= "TODO" (org-get-todo-state))))
+
   (defun spolakh/org-agenda-leave-only-first-three-children ()
   "Returns each 1st level heading and at most 3 of it's TODO subheadings"
   (let (should-skip-entry)
@@ -440,11 +438,21 @@ has no effect."
     (when should-skip-entry
       (or (outline-next-heading)
           (goto-char (point-max))))))
+
+  (defun spolakh/is-daily ()
+    (progn
+      (s-starts-with-p spolakh/org-roam-daily-prefix (org-get-category))))
+
+  (defun spolakh/org-agenda-leave-second-level-in-dailies ()
+    (when (or (> (org-current-level) 2)
+              (and (= (org-current-level) 2) (not (spolakh/is-daily))))
+      (or (outline-next-heading)
+          (goto-char (point-max)))))
+
   (defun spolakh/org-agenda-leave-first-level-only ()
     (when (not (spolakh/org-current-is-first-level-headline))
       (or (outline-next-heading)
-          (goto-char (point-max))))
-    )
+          (goto-char (point-max)))))
 
 (defun org-agenda-skip-if-scheduled-for-later-with-day-granularity ()
   (ignore-errors
@@ -580,7 +588,8 @@ has no effect."
            (org-agenda-skip-function '(or
                                        (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
                                        (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
-                                       (spolakh/org-agenda-leave-first-level-only)))
+                                       (spolakh/org-agenda-leave-second-level-in-dailies)
+                                       ))
            (org-agenda-max-entries 10)))
     (todo "Fleeting"
           ((org-agenda-overriding-header "🔖 to Finalize into Permanent Notes >")
@@ -1026,6 +1035,9 @@ has no effect."
 
 ; ORG-ROAM:
 
+(defvar spolakh/org-roam-daily-prefix "ord--"
+  "prefix to use for the filenames of daily notes")
+
 (use-package! org-roam
   :hook
   (after-init . org-roam-mode)
@@ -1060,12 +1072,20 @@ has no effect."
            :unnarrowed t)
           ))
   (setq org-roam-dailies-capture-templates
-        '(("d" "daily" plain (function org-roam-capture--get-point)
-           ""
-           :immediate-finish t
-           :file-name "private/dailies/%<%Y-%m-%d>"
-           :head "#+TITLE: %<%Y-%m-%d>\n\n* \n* [[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:"))
-        )
+        `(("d" "daily" entry (function org-roam-capture--get-point)
+           "* TODO %?"
+           ;:immediate-finish t
+           :file-name ,(concat "private/dailies/" spolakh/org-roam-daily-prefix "%<%Y-%m-%d>")
+           :head "#+TITLE: %<%Y-%m-%d>\n\n* [[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:\n\n* :@mine:\n* :@work:\n"
+           :olp (":@mine:"))
+
+          ("D" "work-daily" entry (function org-roam-capture--get-point)
+           "* TODO %?"
+           ;:immediate-finish t
+           :file-name ,(concat "private/dailies/" spolakh/org-roam-daily-prefix "%<%Y-%m-%d>")
+           :head "#+TITLE: %<%Y-%m-%d>\n\n* [[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:\n\n* :@mine:\n* :@work:\n"
+           :olp (":@work:"))
+        ))
   (map! :map org-roam-mode-map
         :leader
         (:prefix ("n" . "notes")
@@ -1177,6 +1197,6 @@ has no effect."
     ))
   )
 
-(run-with-idle-timer 10 t #'doom-save-session)
+(run-with-idle-timer 30 t #'doom-save-session)
 (persp-mode)
 (server-start)

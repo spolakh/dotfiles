@@ -228,6 +228,7 @@
                 ]}
        {:des "chats"
           :rules [:q-mode
+                  [:y [:app "zoom.us"]]
                   [:i [:app "Telegram"]]
                   [:u [:app "Slack"]]
                   [:o [:app "Discord"]]
@@ -243,7 +244,6 @@
        {:des "spotify"
           :rules [:s-mode
                   [:i [:app "Spotify"]]
-                  [:u [:app "Spotify"]]
 
                   [:semicolon [:alfred "add_current_track_to_alfred_playlist_or_your_music" "com.vdesabou.spotify.mini.player"]] ; Add song to Likes playlist
                   [:quote [:alfred "remove_current_track_from_alfred_playlist_or_your_music" "com.vdesabou.spotify.mini.player"]] ; Add song to Likes playlist
