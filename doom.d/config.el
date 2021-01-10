@@ -229,8 +229,15 @@
   (map!
    (:map evil-normal-state-map
     "<s-return>" nil)
+   (:map global-map
+    "<S-s-return>" nil)
+   (:map evil-normal-state-map
+    "<S-s-return>" nil)
    (:map org-mode-map
-    "<s-return>" #'org-todo))
+    "<s-return>" #'org-todo
+    "<S-s-return>" #'org-toggle-checkbox
+    )
+   )
   (require 'find-lisp)
   (setq spolakh/org-agenda-directory "~/Dropbox/org/notes/private/gtd/"
         spolakh/org-dailies-directory "~/Dropbox/org/notes/private/dailies/"
@@ -284,21 +291,22 @@
             "* TODO %i"
             :immediate-finish t)))
   (setq
-   org-use-fast-todo-selection nil
+   org-use-fast-todo-selection 'auto
    org-log-note-clock-out t
    org-startup-with-inline-images t
    org-image-actual-width 400
    org-log-done 'time
    org-todo-keywords '(
-    (sequence "TODO" "|" "DONE")
-    (sequence "Fleeting" "[NOTE.Inkling]" "|" "[NOTE.EVERGREEN]") ; Use Stub to filter for Notes that we need expanding on. Once ok - move to Evergreen
+    (sequence "TODO(t)" "|" "DONE(d)")
+    (sequence "SPRINT(s)" "|" "DONE")
     (sequence "WAITING(w@/!)" "|""PASS(p@/!)")
+    (sequence "Fleeting(f)")
     (sequence "TODIGEST" "|" "DIGESTED") ; Nibbles(Articles / Books / Videos / ...) for quotations
-    (sequence "CANCELLED")
     )
    org-todo-keyword-faces
        '(
          ("Fleeting" . (:foreground "#5F9EA0"))
+         ("SPRINT" . (:foreground "orange"))
          ("WAITING" . (:background "firebrick" :weight bold :foreground "gold"))
          ("[NOTE.EVERGREEN]" . (:foreground "olivedrab" :weight bold))
          ("[NOTE.Inkling]" . (:foreground "mediumpurple" :weight bold))

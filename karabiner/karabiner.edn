@@ -233,6 +233,7 @@
                   [:u [:app "Slack"]]
                   [:o [:app "Discord"]]
                   [:p [:app "Skype"]]
+                  [:backslash [:app "Messenger"]]
                   ;[:!Sequal_sign [:send_to_desktop 12]]
                 ]}
        {:des "terminal"
