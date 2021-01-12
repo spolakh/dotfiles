@@ -678,8 +678,7 @@ has no effect."
 
         (tags-todo ,(concat "STYLE=\"habit\"" filter)
                    ((org-agenda-overriding-header "👘 Repeaters >")
-                    (org-agenda-prefix-format
-                     '((tags . "[%-4e] ")))
+                    (org-agenda-prefix-format '((tags . "[%-4e] ")))
                     (org-agenda-skip-function #'org-agenda-skip-if-scheduled-for-later-with-clock-granularity)
                     (org-agenda-files '(,(concat spolakh/org-agenda-directory "repeaters.org.gpg")))))
 
@@ -687,20 +686,20 @@ has no effect."
               ((org-agenda-overriding-header "🗂 Sprint >")
                (org-agenda-files ,all-files)
                (org-agenda-hide-tags-regexp "")
+               (org-agenda-prefix-format '((todo . "[%-4e] %?-8b")))
                (org-agenda-skip-function '(or
                                            (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
                                            (org-agenda-skip-entry-if 'scheduled)
-                                           (spolakh/org-agenda-leave-second-level-in-dailies)
                                            ))
                ))
 
         (todo "WAITING"
               ((org-agenda-overriding-header "🌒 Waiting >")
                (org-agenda-files ,all-files)
+               (org-agenda-prefix-format '((todo . "[%-4e] %?-8b")))
                (org-agenda-skip-function '(or
                                            (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
                                            (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
-                                           (spolakh/org-agenda-leave-second-level-in-dailies)
                                            ))
                (org-agenda-hide-tags-regexp "")
                ))
@@ -709,10 +708,9 @@ has no effect."
         (tags "CLOSED>=\"<-7d>\""
                    ((org-agenda-overriding-header "💠 Done >")
                     (org-agenda-files ,all-files)
-                    (org-agenda-prefix-format '((tags . "[%-4e] %?-17b")))
+                    (org-agenda-prefix-format '((tags . "[%-4e] %?-8b")))
                     (org-agenda-skip-function '(or
                                                 (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
-                                                (spolakh/org-agenda-leave-second-level-in-dailies)
                                                 ))
                     (org-agenda-hide-tags-regexp "")
                     ))
