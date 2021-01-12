@@ -306,6 +306,7 @@
    org-todo-keyword-faces
        '(
          ("Fleeting" . (:foreground "#5F9EA0"))
+         ("TODO" . (:foreground "brown"))
          ("SPRINT" . (:foreground "orange"))
          ("WAITING" . (:background "firebrick" :weight bold :foreground "gold"))
          ("[NOTE.EVERGREEN]" . (:foreground "olivedrab" :weight bold))
@@ -642,12 +643,34 @@ has no effect."
                                ,(concat spolakh/org-phone-directory "phone-work.org")
                                )
                              )))
-      `((todo "SPRINT"
+      `((agenda ""
+                ((org-agenda-span 1)
+                 (org-agenda-start-day "today")
+                 (org-agenda-start-on-weekday nil)
+                 (org-agenda-skip-archived-trees t)
+                 (org-agenda-files ,all-files)
+                 (org-deadline-warning-days 3)
+                 (org-agenda-prefix-format '((agenda . " %i %?-16t% s%b")))
+                 (org-agenda-skip-function '(or
+                                             (air-org-skip-subtree-if-habit)
+                                             (spolakh/skip-if-waiting)
+                                             (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                             (spolakh/skip-subtree-if-later)))))
+
+        (tags-todo ,(concat "STYLE=\"habit\"" filter)
+                   ((org-agenda-overriding-header "👘 Repeaters >")
+                    (org-agenda-prefix-format
+                     '((tags . "[%-4e] ")))
+                    (org-agenda-skip-function #'org-agenda-skip-if-scheduled-for-later-with-clock-granularity)
+                    (org-agenda-files '(,(concat spolakh/org-agenda-directory "repeaters.org.gpg")))))
+
+        (todo "SPRINT"
               ((org-agenda-overriding-header "🗂 Sprint >")
                (org-agenda-files ,all-files)
                (org-agenda-hide-tags-regexp "")
                (org-agenda-skip-function '(or
                                            (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                           (org-agenda-skip-entry-if 'scheduled)
                                            (spolakh/org-agenda-leave-second-level-in-dailies)
                                            ))
                ))
@@ -1205,20 +1228,14 @@ has no effect."
   :hook (go-mode . lsp-deferred)
 
   :init
-    (add-hook 'before-save-hook #'lsp-format-buffer)
-    (add-hook 'before-save-hook #'lsp-organize-imports)
-
     (setq lsp-enable-file-watchers nil) ; need to reenable when figure out how to ignore all the bazel and other non-relevant things
-    (setq gc-cons-threshold 200000000)
-    (setq lsp-keep-workspace-alive t)
+    (setq gc-cons-threshold 20000000)
 
   :config
- ;;Set up before-save hooks to format buffer and add/delete imports.
- ;;Make sure you don't have other gofmt/goimports hooks enabled.
-  ;; (defun lsp-go-install-save-hooks ()
-  ;;   (add-hook 'before-save-hook #'lsp-format-buffer t t)
-  ;;   (add-hook 'before-save-hook #'lsp-organize-imports t t))
-  ;; (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+  (defun lsp-go-install-save-hooks ()
+    (add-hook 'before-save-hook #'lsp-format-buffer t t)
+    (add-hook 'before-save-hook #'lsp-organize-imports t t))
+  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
   (setq lsp-gopls-staticcheck t)
   (setq lsp-eldoc-render-all t)
@@ -1227,17 +1244,17 @@ has no effect."
   ;;(setq lsp-gopls-complete-unimported t)
   )
 
-;; (use-package! lsp-ui
-;;   :commands lsp-ui-mode
-;;   :init
-;;   :config
-;;   (setq
-;;         ;lsp-ui-doc-enable nil
-;;         lsp-ui-peek-enable t
-;;         lsp-ui-sideline-enable t
-;;         lsp-ui-imenu-enable t
-;;         lsp-ui-flycheck-enable t)
-;; )
+(use-package! lsp-ui
+  :commands lsp-ui-mode
+  :init
+  :config
+  (setq
+        ;lsp-ui-doc-enable nil
+        lsp-ui-peek-enable t
+        lsp-ui-sideline-enable t
+        lsp-ui-imenu-enable t
+        lsp-ui-flycheck-enable t)
+)
 
 (use-package! company
   :config
