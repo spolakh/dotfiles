@@ -306,7 +306,6 @@
    org-todo-keyword-faces
        '(
          ("Fleeting" . (:foreground "#5F9EA0"))
-         ("TODO" . (:foreground "brown"))
          ("SPRINT" . (:foreground "orange"))
          ("WAITING" . (:background "firebrick" :weight bold :foreground "gold"))
          ("[NOTE.EVERGREEN]" . (:foreground "olivedrab" :weight bold))
@@ -588,8 +587,8 @@ has no effect."
              ))
     (tags-todo ,(concat "STYLE=\"habit\"" filter)
         ((org-agenda-overriding-header "👘 Repeaters >")
-         (org-agenda-prefix-format
-            '((tags . "[%-4e] ")))
+         (org-todo-keyword-faces '(("TODO" . (:foreground "brown"))))
+         (org-agenda-prefix-format '((tags . "[%-4e] ")))
          (org-agenda-skip-function #'org-agenda-skip-if-scheduled-for-later-with-clock-granularity)
          (org-agenda-files
            '(
@@ -679,6 +678,7 @@ has no effect."
         (tags-todo ,(concat "STYLE=\"habit\"" filter)
                    ((org-agenda-overriding-header "👘 Repeaters >")
                     (org-agenda-prefix-format '((tags . "[%-4e] ")))
+                    (org-todo-keyword-faces '(("TODO" . (:foreground "brown"))))
                     (org-agenda-skip-function #'org-agenda-skip-if-scheduled-for-later-with-clock-granularity)
                     (org-agenda-files '(,(concat spolakh/org-agenda-directory "repeaters.org.gpg")))))
 
