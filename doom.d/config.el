@@ -533,6 +533,25 @@ has no effect."
          (not (spolakh/was-done-today)))
         subtree-end
       nil)))
+
+  ; This makes org-agenda integration w/ mobile capture (Orgzly) work without conflicts
+  ; (in tandem with adding ((nil . ((eval . (auto-revert-mode 1))))) into .dir-locals.el in gtd directory)
+  (defun xah-save-all-unsaved ()
+    (interactive)
+    (save-some-buffers t))
+  ;; when switching out of emacs, all unsaved files will be saved
+  (add-hook 'focus-out-hook 'xah-save-all-unsaved)
+  (setq auto-save-timeout 1
+      auto-save-default t
+      auto-save-visited-file-name t
+      auto-revert-use-notify nil
+      auto-revert-interval 1)
+  (defun spolakh/org-agenda-redo ()
+    (interactive)
+    (with-current-buffer "*Org Agenda*"
+      (org-agenda-maybe-redo)))
+  (add-hook 'after-revert-hook #'spolakh/org-agenda-redo)
+
   :config
 (defun spolakh/project-agenda-section-for-filter (filter)
     `(tags-todo ,(concat "TODO=\"TODO\"" filter)
@@ -935,24 +954,6 @@ has no effect."
     (spolakh/org-agenda-process-inbox-item)
      )
 
-  ; This makes org-agenda integration w/ mobile capture (Orgzly) work without conflicts
-  ; (in tandem with adding ((nil . ((eval . (auto-revert-mode 1))))) into .dir-locals.el in gtd directory)
-  (defun xah-save-all-unsaved ()
-    (interactive)
-    (save-some-buffers t))
-  ;; when switching out of emacs, all unsaved files will be saved
-  (add-hook 'focus-out-hook 'xah-save-all-unsaved)
-  (setq auto-save-timeout 1
-      auto-save-default t
-      auto-save-visited-file-name t
-      auto-revert-use-notify nil
-      auto-revert-interval 1)
-  (defun spolakh/org-agenda-redo ()
-    (interactive)
-    (with-current-buffer "*Org Agenda*"
-      (org-agenda-maybe-redo)))
-  (add-hook 'after-revert-hook #'spolakh/org-agenda-redo)
-
   ; http://pragmaticemacs.com/emacs/reorder-todo-items-in-your-org-mode-agenda/
   (defun spolakh/org-headline-to-top ()
   "Move the current org headline to the top of its section"
@@ -1231,11 +1232,12 @@ has no effect."
     (setq lsp-enable-file-watchers nil) ; need to reenable when figure out how to ignore all the bazel and other non-relevant things
     (setq gc-cons-threshold 20000000)
 
-  :config
   (defun lsp-go-install-save-hooks ()
     (add-hook 'before-save-hook #'lsp-format-buffer t t)
     (add-hook 'before-save-hook #'lsp-organize-imports t t))
   (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+  :config
 
   (setq lsp-gopls-staticcheck t)
   (setq lsp-eldoc-render-all t)
