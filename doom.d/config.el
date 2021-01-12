@@ -300,7 +300,7 @@
     (sequence "TODO(t)" "|" "DONE(d)")
     (sequence "SPRINT(s)" "|" "DONE")
     (sequence "WAITING(w@/!)" "|""PASS(p@/!)")
-    (sequence "Fleeting(f)")
+    (sequence "Fleeting(f)" "Evergreen")
     (sequence "TODIGEST" "|" "DIGESTED") ; Nibbles(Articles / Books / Videos / ...) for quotations
     )
    org-todo-keyword-faces
@@ -629,6 +629,53 @@ has no effect."
                                       (spolakh/org-agenda-leave-first-level-only)))
           (org-agenda-hide-tags-regexp "")
           ))))
+
+  (defun spolakh/kanban-for-filter (filter)
+    (let ((all-files `(append
+                              (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
+                             '(
+                               ,(concat spolakh/org-agenda-directory "projects.org.gpg")
+                               ,(concat spolakh/org-agenda-directory "oneoff.org.gpg")
+                               ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
+                               ,(concat spolakh/org-agenda-directory "later.org.gpg")
+                               ,(concat spolakh/org-phone-directory "phone.org")
+                               ,(concat spolakh/org-phone-directory "phone-work.org")
+                               )
+                             )))
+      `((todo "SPRINT"
+              ((org-agenda-overriding-header "🗂 Sprint >")
+               (org-agenda-files ,all-files)
+               (org-agenda-hide-tags-regexp "")
+               (org-agenda-skip-function '(or
+                                           (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                           (spolakh/org-agenda-leave-second-level-in-dailies)
+                                           ))
+               ))
+
+        (todo "WAITING"
+              ((org-agenda-overriding-header "🌒 Waiting >")
+               (org-agenda-files ,all-files)
+               (org-agenda-skip-function '(or
+                                           (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
+                                           (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                           (spolakh/org-agenda-leave-second-level-in-dailies)
+                                           ))
+               (org-agenda-hide-tags-regexp "")
+               ))
+        
+        ; xcxc update this to dynamically compute last saturday
+        (tags "CLOSED>=\"<-7d>\""
+                   ((org-agenda-overriding-header "💠 Done >")
+                    (org-agenda-files ,all-files)
+                    (org-agenda-prefix-format '((tags . "[%-4e] %?-17b")))
+                    (org-agenda-skip-function '(or
+                                                (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                                (spolakh/org-agenda-leave-second-level-in-dailies)
+                                                ))
+                    (org-agenda-hide-tags-regexp "")
+                    ))
+        )))
+
   (setq org-agenda-prefix-format
         '((agenda . " %i %-12:c%?-12t% s%b")
         (todo . "[%-4e] %?-17b")
@@ -638,8 +685,10 @@ has no effect."
   (add-to-list 'org-global-properties
          '("Effort_ALL". "100:00 0:15 0:30 1:00 2:00 4:00 12:00"))
   (setq org-agenda-custom-commands `(
-                                     ("m" "Agenda" ,(spolakh/agenda-for-filter "+@mine"))
-                                     ("w" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))
+                                     ("k" "Kanban" ,(spolakh/kanban-for-filter "+@mine"))
+                                     ("K" "Work Kanban" ,(spolakh/kanban-for-filter "+@work"))
+                                     ("a" "Agenda" ,(spolakh/agenda-for-filter "+@mine"))
+                                     ("A" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))
                                      ("l" "Lily" ,(spolakh/agenda-for-filter "+Lily"))
                                      ("i" "Fleetings (full list)" (
                                     (todo "Fleeting"
@@ -669,7 +718,7 @@ has no effect."
                                      ))
   (defun spolakh/switch-to-agenda ()
     (interactive)
-    (org-agenda nil "m")
+    (org-agenda nil "a")
     (spolakh/org-agenda-find-beginning-of-inbox)
     )
   (defun spolakh/switch-to-lily-agenda ()
@@ -679,7 +728,7 @@ has no effect."
     )
   (defun spolakh/switch-to-work-agenda ()
     (interactive)
-    (org-agenda nil "w")
+    (org-agenda nil "A")
     (spolakh/org-agenda-find-beginning-of-inbox)
     )
   (defun spolakh/switch-to-ideas-agenda ()
@@ -692,6 +741,14 @@ has no effect."
     (org-agenda nil "r")
     (spolakh/org-agenda-find-beginning-of-inbox)
     )
+  (defun spolakh/switch-to-kanban-agenda ()
+    (interactive)
+    (org-agenda nil "k")
+    )
+  (defun spolakh/switch-to-work-kanban-agenda ()
+    (interactive)
+    (org-agenda nil "K")
+    )
   (defun spolakh/switch-to-weekly-agenda ()
     (interactive)
     (org-agenda nil "?")
@@ -700,12 +757,14 @@ has no effect."
   (map! :map org-mode-map :leader
         (:prefix ("n" . "Notes") "a" nil)
         (:prefix ("a" . "Agenda")
-         :desc "Agenda" "m" #'spolakh/switch-to-agenda
+         :desc "Agenda" "a" #'spolakh/switch-to-agenda
          :desc "Lily" "l" #'spolakh/switch-to-lily-agenda
          :desc "Fleetings" "i" #'spolakh/switch-to-ideas-agenda
          :desc "Repeaters (All)" "r" #'spolakh/switch-to-repeaters-agenda
+         :desc "Kanban" "k" #'spolakh/switch-to-kanban-agenda
+         :desc "Work Kanban" "K" #'spolakh/switch-to-work-kanban-agenda
          :desc "What feels important now?" "?" #'spolakh/switch-to-weekly-agenda
-         :desc "Work Agenda" "w" #'spolakh/switch-to-work-agenda))
+         :desc "Work Agenda" "A" #'spolakh/switch-to-work-agenda))
   (defun spolakh/org-fast-effort-selection ()
     "Modification of `org-fast-todo-selection' for use with org-set-effert. Select an effort value with single keys.
       Returns the new effort value, or nil if no state change should occur.
