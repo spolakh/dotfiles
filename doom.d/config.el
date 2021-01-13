@@ -649,19 +649,8 @@ has no effect."
           (org-agenda-hide-tags-regexp "")
           ))))
 
-  (defun spolakh/done-for-filter (filter ndays files)
-      `(tags ,(format "CLOSED>=\"<-%dd>\"" ndays)
-                   ((org-agenda-overriding-header "💠 Done >")
-                    (org-agenda-files ,files)
-                    (org-agenda-prefix-format '((tags . "[%-4e] %?-8b")))
-                    (org-agenda-skip-function '(or
-                                                (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
-                                                ))
-                    (org-agenda-hide-tags-regexp "")
-                    )))
-
-  (defun spolakh/kanban-for-filter (filter)
-    (let* ((all-files `(append
+  (defun spolakh/done-for-filter (filter ndays)
+      (let ((all-files `(append
                               (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
                              '(
                                ,(concat spolakh/org-agenda-directory "projects.org.gpg")
@@ -671,11 +660,29 @@ has no effect."
                                ,(concat spolakh/org-phone-directory "phone.org")
                                ,(concat spolakh/org-phone-directory "phone-work.org")
                                )
-                             ))
-          (today (decoded-time-weekday (decode-time)))
-          ; 0 is Sunday
-          (days-from-last-saturday (if (= today 6) 0 (+ today 1)))
-          )
+                             )))
+       `(tags ,(format "CLOSED>=\"<-%dd>\"" ndays)
+                   ((org-agenda-overriding-header "💠 Done >")
+                    (org-agenda-files ,all-files)
+                    (org-agenda-prefix-format '((tags . "[%-4e] %?-8b")))
+                    (org-agenda-skip-function '(or
+                                                (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                                ))
+                    (org-agenda-hide-tags-regexp "")
+                    ))))
+
+  (defun spolakh/kanban-for-filter (filter)
+    (let ((all-files `(append
+                              (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
+                             '(
+                               ,(concat spolakh/org-agenda-directory "projects.org.gpg")
+                               ,(concat spolakh/org-agenda-directory "oneoff.org.gpg")
+                               ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
+                               ,(concat spolakh/org-agenda-directory "later.org.gpg")
+                               ,(concat spolakh/org-phone-directory "phone.org")
+                               ,(concat spolakh/org-phone-directory "phone-work.org")
+                               )
+                             )))
       `((agenda ""
                 ((org-agenda-span 1)
                  (org-agenda-start-day "today")
@@ -719,7 +726,7 @@ has no effect."
                (org-agenda-hide-tags-regexp "")
                ))
         
-        ,(spolakh/done-for-filter filter days-from-last-saturday all-files)
+        ,(spolakh/done-for-filter filter (if (= (decoded-time-weekday (decode-time)) 6) 0 (+ (decoded-time-weekday (decode-time)) 1)))
         )))
 
   (setq org-agenda-prefix-format
@@ -735,6 +742,8 @@ has no effect."
                                      ("K" "Work Kanban" ,(spolakh/kanban-for-filter "+@work"))
                                      ("a" "Agenda" ,(spolakh/agenda-for-filter "+@mine"))
                                      ("A" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))
+                                     ("7" "Work Done" (,(spolakh/done-for-filter "+@mine" 7)))
+                                     ("&" "Work Done" (,(spolakh/done-for-filter "+@work" 7)))
                                      ("l" "Lily" ,(spolakh/agenda-for-filter "+Lily"))
                                      ("i" "Fleetings (full list)" (
                                     (todo "Fleeting"
@@ -795,6 +804,14 @@ has no effect."
     (interactive)
     (org-agenda nil "K")
     )
+  (defun spolakh/switch-to-done-review-agenda ()
+    (interactive)
+    (org-agenda nil "7")
+    )
+  (defun spolakh/switch-to-work-done-review-agenda ()
+    (interactive)
+    (org-agenda nil "&")
+    )
   (defun spolakh/switch-to-weekly-agenda ()
     (interactive)
     (org-agenda nil "?")
@@ -809,6 +826,8 @@ has no effect."
          :desc "Repeaters (All)" "r" #'spolakh/switch-to-repeaters-agenda
          :desc "Kanban" "k" #'spolakh/switch-to-kanban-agenda
          :desc "Work Kanban" "K" #'spolakh/switch-to-work-kanban-agenda
+         :desc "Done for last 7 days" "7" #'spolakh/switch-to-done-review-agenda
+         :desc "Work Done for last 7 days" "&" #'spolakh/switch-to-work-done-review-agenda
          :desc "What feels important now?" "?" #'spolakh/switch-to-weekly-agenda
          :desc "Work Agenda" "A" #'spolakh/switch-to-work-agenda))
   (defun spolakh/org-fast-effort-selection ()
