@@ -649,8 +649,19 @@ has no effect."
           (org-agenda-hide-tags-regexp "")
           ))))
 
+  (defun spolakh/done-for-filter (filter ndays files)
+      `(tags ,(format "CLOSED>=\"<-%dd>\"" ndays)
+                   ((org-agenda-overriding-header "💠 Done >")
+                    (org-agenda-files ,files)
+                    (org-agenda-prefix-format '((tags . "[%-4e] %?-8b")))
+                    (org-agenda-skip-function '(or
+                                                (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                                ))
+                    (org-agenda-hide-tags-regexp "")
+                    )))
+
   (defun spolakh/kanban-for-filter (filter)
-    (let ((all-files `(append
+    (let* ((all-files `(append
                               (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
                              '(
                                ,(concat spolakh/org-agenda-directory "projects.org.gpg")
@@ -660,7 +671,11 @@ has no effect."
                                ,(concat spolakh/org-phone-directory "phone.org")
                                ,(concat spolakh/org-phone-directory "phone-work.org")
                                )
-                             )))
+                             ))
+          (today (decoded-time-weekday (decode-time)))
+          ; 0 is Sunday
+          (days-from-last-saturday (if (= today 6) 0 (+ today 1)))
+          )
       `((agenda ""
                 ((org-agenda-span 1)
                  (org-agenda-start-day "today")
@@ -704,23 +719,14 @@ has no effect."
                (org-agenda-hide-tags-regexp "")
                ))
         
-        ; xcxc update this to dynamically compute last saturday
-        (tags "CLOSED>=\"<-7d>\""
-                   ((org-agenda-overriding-header "💠 Done >")
-                    (org-agenda-files ,all-files)
-                    (org-agenda-prefix-format '((tags . "[%-4e] %?-8b")))
-                    (org-agenda-skip-function '(or
-                                                (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
-                                                ))
-                    (org-agenda-hide-tags-regexp "")
-                    ))
+        ,(spolakh/done-for-filter filter days-from-last-saturday all-files)
         )))
 
   (setq org-agenda-prefix-format
         '((agenda . " %i %-12:c%?-12t% s%b")
-        (todo . "[%-4e] %?-17b")
-        (tags . "[%-4e] %-17(org-format-outline-path (org-get-outline-path))")
-        (search . "[%-4e] %?-17b")))
+          (todo . "[%-4e] %?-17b")
+          (tags . "[%-4e] %-17(org-format-outline-path (org-get-outline-path))")
+          (search . "[%-4e] %?-17b")))
   (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
   (add-to-list 'org-global-properties
          '("Effort_ALL". "100:00 0:15 0:30 1:00 2:00 4:00 12:00"))
