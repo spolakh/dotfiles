@@ -402,7 +402,8 @@ has no effect."
         org-archive-default-command 'org-archive-to-archive-sibling
         org-agenda-start-with-log-mode t
         org-agenda-skip-scheduled-if-done t
-        org-agenda-log-mode-items '(closed clock state))
+        org-agenda-log-mode-items '(closed clock))
+        ; org-agenda-log-mode-items '(closed clock state))
   (add-hook 'evil-org-agenda-mode-hook #'display-line-numbers-mode)
   (setq org-agenda-time-grid
       '((daily today)
@@ -463,76 +464,76 @@ has no effect."
       (or (outline-next-heading)
           (goto-char (point-max)))))
 
-(defun org-agenda-skip-if-scheduled-for-later-with-day-granularity ()
-  (ignore-errors
-    (let ((subtree-end (save-excursion (org-end-of-subtree t)))
-          (scheduled-day
-            (time-to-days
+  (defun org-agenda-skip-if-scheduled-for-later-with-day-granularity ()
+    (ignore-errors
+      (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+            (scheduled-day
+             (time-to-days
               (org-time-string-to-time
-                (org-entry-get nil "SCHEDULED"))))
-          (now (time-to-days (current-time))))
-       (and scheduled-day
-            (> (org-time-stamp-to-now (org-entry-get nil "SCHEDULED")) 0)
-            subtree-end))))
+               (org-entry-get nil "SCHEDULED"))))
+            (now (time-to-days (current-time))))
+        (and scheduled-day
+             (> (org-time-stamp-to-now (org-entry-get nil "SCHEDULED")) 0)
+             subtree-end))))
 
-(defun org-agenda-skip-if-scheduled-for-later-with-clock-granularity ()
-  (ignore-errors
-    (let ((subtree-end (save-excursion (org-end-of-subtree t)))
-          (scheduled-seconds
-            (time-to-seconds
+  (defun org-agenda-skip-if-scheduled-for-later-with-clock-granularity ()
+    (ignore-errors
+      (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+            (scheduled-seconds
+             (time-to-seconds
               (org-time-string-to-time
-                (org-entry-get nil "SCHEDULED"))))
-          (now (time-to-seconds (current-time))))
-       (and scheduled-seconds
-            (>= scheduled-seconds now)
-            subtree-end))))
+               (org-entry-get nil "SCHEDULED"))))
+            (now (time-to-seconds (current-time))))
+        (and scheduled-seconds
+             (>= scheduled-seconds now)
+             subtree-end))))
 
-(defun spolakh/was-done-today ()
-  (let* ((end (save-excursion (org-end-of-subtree t)))
-         (last-done-timestamp (org-entry-get nil "LAST_REPEAT"))
-         (last-done (and last-done-timestamp (decode-time (org-time-string-to-time last-done-timestamp))))
-        )
-    (and last-done
-         (= (nth 0 org-agenda-current-date) (nth 4 last-done))
-         (= (nth 1 org-agenda-current-date) (nth 3 last-done))
-         (= (nth 2 org-agenda-current-date) (nth 5 last-done))
-         ))
-  )
+  (defun spolakh/was-done-today ()
+    (let* ((end (save-excursion (org-end-of-subtree t)))
+           (last-done-timestamp (org-entry-get nil "LAST_REPEAT"))
+           (last-done (and last-done-timestamp (decode-time (org-time-string-to-time last-done-timestamp))))
+           )
+      (and last-done
+           (= (nth 0 org-agenda-current-date) (nth 4 last-done))
+           (= (nth 1 org-agenda-current-date) (nth 3 last-done))
+           (= (nth 2 org-agenda-current-date) (nth 5 last-done))
+           ))
+    )
 
-(defun spolakh/skip-subtree-if-later ()
-  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
-    (if
-        (string= (org-get-category) "later.org")
-        subtree-end
-      nil)))
+  (defun spolakh/skip-subtree-if-later ()
+    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (if
+          (string= (org-get-category) "later.org")
+          subtree-end
+        nil)))
 
-(defun spolakh/skip-subtree-if-irrelevant-to-current-context (filter)
-  (let ((subtree-end (save-excursion (org-end-of-subtree t)))
-        (tags (org-get-tags))
-        (tag (substring filter 1))
-        )
-    (if
-        (or (and (> (length tags) 0) (not (member tag tags)))
-            (member "ARCHIVE" tags))
-        subtree-end
-      nil)))
+  (defun spolakh/skip-subtree-if-irrelevant-to-current-context (filter)
+    (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+          (tags (org-get-tags))
+          (tag (substring filter 1))
+          )
+      (if
+          (or (and (> (length tags) 0) (not (member tag tags)))
+              (member "ARCHIVE" tags))
+          subtree-end
+        nil)))
 
-(defun spolakh/skip-if-waiting ()
-  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
-    (if
-        (string= (org-get-todo-state) "WAITING")
-        subtree-end
-      nil)))
+  (defun spolakh/skip-if-waiting ()
+    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (if
+          (string= (org-get-todo-state) "WAITING")
+          subtree-end
+        nil)))
 
-(defun air-org-skip-subtree-if-habit ()
-  "Skip an agenda entry if it has a STYLE property equal to \"habit\"."
-  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
-    (if
-        (and
-         (string= (org-entry-get nil "STYLE") "habit")
-         (not (spolakh/was-done-today)))
-        subtree-end
-      nil)))
+  (defun air-org-skip-subtree-if-habit ()
+    "Skip an agenda entry if it has a STYLE property equal to \"habit\"."
+    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (if
+          (and
+           (string= (org-entry-get nil "STYLE") "habit")
+           (not (spolakh/was-done-today)))
+          subtree-end
+        nil)))
 
   ; This makes org-agenda integration w/ mobile capture (Orgzly) work without conflicts
   ; (in tandem with adding ((nil . ((eval . (auto-revert-mode 1))))) into .dir-locals.el in gtd directory)
@@ -552,19 +553,62 @@ has no effect."
       (org-agenda-maybe-redo)))
   (add-hook 'after-revert-hook #'spolakh/org-agenda-redo)
 
+  ; attempts at coloring the agenda
+  ;; 1. (propertize "Project" 'font-lock-face '(:foreground "red")) - apparently agenda doesn't use font-lock at all
+  ;; 2. highlight-regexp
+  (add-hook 'org-agenda-finalize-hook
+            (lambda ()
+              (highlight-regexp "\\(^Project\\) " "spolakh-hi-lock-project-face" 1)))
+
   :config
-(defun spolakh/project-agenda-section-for-filter (filter)
+
+  (defface spolakh-hi-lock-project-face '((t (:foreground  "PaleVioletRed"
+                                 :bold t)))
+    "spolakh-hi-lock-project-face")
+
+  (defun spolakh/project-agenda-section-for-filter (filter)
     `(tags-todo ,(concat "TODO=\"TODO\"" filter)
-                                          ((org-agenda-overriding-header ,(concat "🚀 Projects (" filter "): MAX 4 >"))
-                                          (org-agenda-hide-tags-regexp "")
-                                          (org-agenda-prefix-format
-                                           '((tags . "")))
-                                          (org-agenda-skip-function #'spolakh/org-agenda-leave-first-level-only)
-                                          (org-agenda-files
-                                                              '(
-                                                                ,(concat spolakh/org-agenda-directory "projects.org.gpg")
-                                                                  ))))
+                ((org-agenda-overriding-header ,(concat "🚀 Projects (" filter "): MAX 4 >"))
+                 (org-agenda-hide-tags-regexp "")
+                 (org-agenda-todo-keyword-format "Project")
+                 (org-agenda-dim-blocked-tasks nil)
+                 (org-agenda-prefix-format
+                  '((tags . "")))
+                 (org-agenda-skip-function #'spolakh/org-agenda-leave-first-level-only)
+                 (org-agenda-files
+                  '(
+                    ,(concat spolakh/org-agenda-directory "projects.org.gpg")
+                    ))))
     )
+
+; leftover items from previous sprint: waiting and SPRINT
+;
+
+  (defun spolakh/review-for-filter (filter)
+    `((tags-todo "LEVEL=2+TODO=\"Going Well\"+TIMESTAMP_IA<=\"<-1m>\""
+                 ((org-agenda-overriding-header "🏆 Going Well - without reminders - for a month. If dropped - In Progress. If still going - Resolved & 🐦 tweet it 💗")
+                  (org-agenda-prefix-format '((tags . " - ")))
+                  (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
+                  (org-todo-keyword-faces '(("Going Well" . (:foreground "LightCoral" :weight bold))))
+                  (org-agenda-files '(,(concat spolakh/org-agenda-directory "board.org.gpg")))))
+
+      (tags-todo "LEVEL=2+TODO=\"In Progress\""
+                   ((org-agenda-overriding-header "🎗 Everything In Progress. If we feel safe loosening attention around it - Going Well. If dropped - Open (or archive)")
+                    (org-agenda-prefix-format '((tags . " - ")))
+                    (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
+                    (org-todo-keyword-faces '(("In Progress" . (:foreground "DarkSalmon" :weight bold))))
+                    (org-agenda-files '(,(concat spolakh/org-agenda-directory "board.org.gpg")))))
+
+      ,(spolakh/project-agenda-section-for-filter filter)
+      ,(spolakh/project-agenda-section-for-filter "-@work-@mine")
+      )
+; all tasks from /active/ projects
+; ticklers from later - copypaste from inbox section
+
+; fleetings
+; inbox (without later ticklers)
+    )
+
   (defun spolakh/agenda-for-filter (filter)
     `((agenda ""
             ((org-agenda-span 1)
@@ -755,12 +799,8 @@ has no effect."
                                                               '(
                                                                 ,(concat spolakh/org-agenda-directory "repeaters.org.gpg")
                                                                   ))))))
-
-                                    ("?" "What feels important now?" (
-                                                                       ,(spolakh/project-agenda-section-for-filter "+@mine")
-                                                                       ,(spolakh/project-agenda-section-for-filter "+@work")
-                                                                       ,(spolakh/project-agenda-section-for-filter "-Lily-@work-@mine")
-                                                                       ))
+                                    ("/" "What feels important now?" ,(spolakh/review-for-filter "+@mine"))
+                                    ("?" "What feels important at work?" ,(spolakh/review-for-filter "+@work"))
                                      ))
   (defun spolakh/switch-to-agenda ()
     (interactive)
@@ -805,8 +845,11 @@ has no effect."
     )
   (defun spolakh/switch-to-weekly-agenda ()
     (interactive)
+    (org-agenda nil "/")
+    )
+  (defun spolakh/switch-to-weekly-work-agenda ()
+    (interactive)
     (org-agenda nil "?")
-    (spolakh/org-agenda-find-beginning-of-inbox)
     )
   (map! :map org-mode-map :leader
         (:prefix ("n" . "Notes") "a" nil)
@@ -819,7 +862,8 @@ has no effect."
          :desc "Work Kanban" "K" #'spolakh/switch-to-work-kanban-agenda
          :desc "Done for last 7 days" "7" #'spolakh/switch-to-done-review-agenda
          :desc "Work Done for last 7 days" "&" #'spolakh/switch-to-work-done-review-agenda
-         :desc "What feels important now?" "?" #'spolakh/switch-to-weekly-agenda
+         :desc "What feels important now?" "/" #'spolakh/switch-to-weekly-agenda
+         :desc "What can I drop from work tasks?" "?" #'spolakh/switch-to-weekly-work-agenda
          :desc "Work Agenda" "A" #'spolakh/switch-to-work-agenda))
   (defun spolakh/org-fast-effort-selection ()
     "Modification of `org-fast-todo-selection' for use with org-set-effert. Select an effort value with single keys.
