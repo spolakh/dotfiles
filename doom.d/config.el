@@ -225,7 +225,8 @@
 
 ; ORG-MODE:
 
-(after! org
+(use-package! org
+  :config
   (map!
    (:map evil-normal-state-map
     "<s-return>" nil)
@@ -244,13 +245,6 @@
         spolakh/org-phone-directory "~/Dropbox/org/notes/private/phone/"
         spolakh/org-gcal-directory "~/Dropbox/org/cal/"
         spolakh/org-directory "~/Dropbox/org/")
-  ;; defined in the agenda itself so that it's regenerated every time we create an agenda (if new daily files are added etc)
-  ;; (setq org-agenda-files
-  ;;       (append
-  ;;        `(,(concat spolakh/org-phone-directory "phone-work.org") ,(concat spolakh/org-phone-directory "phone.org"))
-  ;;             (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$")
-  ;;             (find-lisp-find-files spolakh/org-gcal-directory "\.org.gpg$")
-  ;;             (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")))
   (defun spolakh/open-projects ()
     (interactive)
     (find-file (concat spolakh/org-agenda-directory "projects.org.gpg")))
@@ -301,15 +295,23 @@
     (sequence "SPRINT(s)" "|" "DONE")
     (sequence "WAITING(w@/!)" "|""PASS(p@/!)")
     (sequence "Fleeting(f)" "Evergreen")
+    (sequence "Open(O!)" "In Progress(I!)" "Going Well(G!)" "Resolved(R!)") ; Board items
     (sequence "TODIGEST" "|" "DIGESTED") ; Nibbles(Articles / Books / Videos / ...) for quotations
     )
    org-todo-keyword-faces
        '(
-         ("Fleeting" . (:foreground "#5F9EA0"))
+         ; Sprint
          ("SPRINT" . (:foreground "orange"))
          ("WAITING" . (:background "firebrick" :weight bold :foreground "gold"))
-         ("[NOTE.EVERGREEN]" . (:foreground "olivedrab" :weight bold))
-         ("[NOTE.Inkling]" . (:foreground "mediumpurple" :weight bold))
+         ; Notes
+         ("Fleeting" . (:foreground "#5F9EA0"))
+         ("Evergreen" . (:foreground "olivedrab" :weight bold))
+         ; Board
+         ("Open" . (:foreground "BurlyWood" :weight bold))
+         ("In Progress" . (:foreground "DarkSalmon" :weight bold))
+         ("Going Well" . (:foreground "LightCoral" :weight bold))
+         ("Resolved" . (:foreground "SlateBlue" :weight bold))
+         ("[Inkling]" . (:foreground "mediumpurple" :weight bold))
          )
    org-directory spolakh/org-directory)
   (setq org-tag-alist (quote (
@@ -764,10 +766,10 @@ has no effect."
                                                               '(
                                                                 ,(concat spolakh/org-agenda-directory "repeaters.org.gpg")
                                                                   ))))))
+
                                     ("?" "What feels important now?" (
                                                                        ,(spolakh/project-agenda-section-for-filter "+@mine")
                                                                        ,(spolakh/project-agenda-section-for-filter "+@work")
-                                                                       ,(spolakh/project-agenda-section-for-filter "+Lily")
                                                                        ,(spolakh/project-agenda-section-for-filter "-Lily-@work-@mine")
                                                                        ))
                                      ))
@@ -1307,6 +1309,7 @@ has no effect."
     ))
   )
 
-(run-with-idle-timer 30 t #'doom-save-session)
+; currently having issues with not being able to save winner-ring's which causes this to hang for like 10s every time
+;(run-with-idle-timer 30 t #'doom-save-session)
 (persp-mode)
 (server-start)
