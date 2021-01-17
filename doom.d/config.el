@@ -666,10 +666,9 @@ has no effect."
   (defun spolakh/kanban-for-filter (filter)
     (let ((all-files `(append
                               (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
+                              (find-lisp-find-files spolakh/org-gcal-directory "\.org.gpg$")
+                              (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")
                              '(
-                               ,(concat spolakh/org-agenda-directory "projects.org.gpg")
-                               ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
-                               ,(concat spolakh/org-agenda-directory "later.org.gpg")
                                ,(concat spolakh/org-phone-directory "phone.org")
                                ,(concat spolakh/org-phone-directory "phone-work.org")
                                )
@@ -692,6 +691,7 @@ has no effect."
                    ((org-agenda-overriding-header "🎗 In Progress")
                     (org-agenda-prefix-format '((tags . " - ")))
                     (org-agenda-todo-keyword-format "")
+                    (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
                     (org-todo-keyword-faces '(("In Progress" . (:foreground "DarkSalmon" :weight bold))))
                     (org-agenda-files '(,(concat spolakh/org-agenda-directory "board.org.gpg")))))
 
