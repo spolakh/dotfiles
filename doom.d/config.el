@@ -558,7 +558,7 @@ has no effect."
   ;; 2. highlight-regexp
   (add-hook 'org-agenda-finalize-hook
             (lambda ()
-              (highlight-regexp "\\(^Project\\) " "spolakh-hi-lock-project-face" 1)))
+              (highlight-regexp "\\(Project\\) " "spolakh-hi-lock-project-face" 1)))
 
   :config
 
@@ -566,14 +566,14 @@ has no effect."
                                  :bold t)))
     "spolakh-hi-lock-project-face")
 
-  (defun spolakh/project-agenda-section-for-filter (filter)
+  (defun spolakh/project-agenda-section-for-filter (filter directions)
     `(tags-todo ,(concat "TODO=\"TODO\"" filter)
-                ((org-agenda-overriding-header ,(concat "🚀 Projects (" filter "): MAX 4 >"))
+                ((org-agenda-overriding-header ,(concat "🚀 Projects (" filter "): " directions " >"))
                  (org-agenda-hide-tags-regexp "")
                  (org-agenda-todo-keyword-format "Project")
                  (org-agenda-dim-blocked-tasks nil)
                  (org-agenda-prefix-format
-                  '((tags . "")))
+                  '((tags . " - ")))
                  (org-agenda-skip-function #'spolakh/org-agenda-leave-first-level-only)
                  (org-agenda-files
                   '(
@@ -585,29 +585,49 @@ has no effect."
 ;
 
   (defun spolakh/review-for-filter (filter)
-    `((tags-todo "LEVEL=2+TODO=\"Going Well\"+TIMESTAMP_IA<=\"<-1m>\""
-                 ((org-agenda-overriding-header "🏆 Going Well - without reminders - for a month. If dropped - In Progress. If still going - Resolved & 🐦 tweet it 💗")
-                  (org-agenda-prefix-format '((tags . " - ")))
-                  (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
-                  (org-todo-keyword-faces '(("Going Well" . (:foreground "LightCoral" :weight bold))))
-                  (org-agenda-files '(,(concat spolakh/org-agenda-directory "board.org.gpg")))))
+    (let ((all-files `(append
+                              (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
+                              (find-lisp-find-files spolakh/org-gcal-directory "\.org.gpg$")
+                              (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")
+                             '(
+                               ,(concat spolakh/org-phone-directory "phone.org")
+                               ,(concat spolakh/org-phone-directory "phone-work.org")
+                               )
+                             )))
 
-      (tags-todo "LEVEL=2+TODO=\"In Progress\""
-                   ((org-agenda-overriding-header "🎗 Everything In Progress. If we feel safe loosening attention around it - Going Well. If dropped - Open (or archive)")
+      `((tags-todo "LEVEL=2+TODO=\"Going Well\"+TIMESTAMP_IA<=\"<-1m>\""
+                   ((org-agenda-overriding-header "🏆 Going Well - without reminders - for a month. If dropped - In Progress. If still going - Resolved & 🐦 tweet it 💗 >")
+                    (org-agenda-prefix-format '((tags . " - ")))
+                    (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
+                    (org-todo-keyword-faces '(("Going Well" . (:foreground "LightCoral" :weight bold))))
+                    (org-agenda-files '(,(concat spolakh/org-agenda-directory "board.org.gpg")))))
+
+        (tags-todo "LEVEL=2+TODO=\"In Progress\""
+                   ((org-agenda-overriding-header "🎗 Everything In Progress. If we feel safe loosening attention around it - Going Well. If dropped - Open (or archive) >")
                     (org-agenda-prefix-format '((tags . " - ")))
                     (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
                     (org-todo-keyword-faces '(("In Progress" . (:foreground "DarkSalmon" :weight bold))))
                     (org-agenda-files '(,(concat spolakh/org-agenda-directory "board.org.gpg")))))
 
-      ,(spolakh/project-agenda-section-for-filter filter)
-      ,(spolakh/project-agenda-section-for-filter "-@work-@mine")
-      )
+        ,(spolakh/project-agenda-section-for-filter filter "Drop(a) \\ Defer(p)")
+        ,(spolakh/project-agenda-section-for-filter "-@work-@mine" "Tag(C-c C-c) \\ Move elsewhere (Todoist?)")
+
+        (todo "SPRINT|WAITING"
+              ((org-agenda-overriding-header "🗂 Sprint. Drop(a) \\ Defer(p) >")
+               (org-agenda-files ,all-files)
+               (org-agenda-hide-tags-regexp "")
+               (org-agenda-prefix-format '((todo . " - %?-8b")))
+               (org-agenda-skip-function '(or
+                                           (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                           ))
+               ))
+
 ; all tasks from /active/ projects
 ; ticklers from later - copypaste from inbox section
 
 ; fleetings
 ; inbox (without later ticklers)
-    )
+    )))
 
   (defun spolakh/agenda-for-filter (filter)
     `((agenda ""

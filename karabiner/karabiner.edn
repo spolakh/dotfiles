@@ -260,7 +260,8 @@
                   [:spacebar [:alfred "playpause" "com.vdesabou.spotify.mini.player"]]
 
                   [:6 [:alfred "play" "com.vdesabou.spotify.mini.player" "spotify:playlist:2oIXR7f2gv55ud3RbOW4vn"]] ; Depth
-                  [:0 [:alfred "play" "com.vdesabou.spotify.mini.player" "spotify:playlist:1kpoYbaRkk0ZQxWn3a6vdF"]] ; Anime Openings
+                  [:9 [:alfred "play" "com.vdesabou.spotify.mini.player" "spotify:playlist:1kpoYbaRkk0ZQxWn3a6vdF"]] ; Anime Openings
+                  [:0 [:alfred "play" "com.vdesabou.spotify.mini.player" "spotify:playlist:6lHWoB4CVNlSFKDJOZdatF"]] ; Anime Openings
                   [:equal_sign [:alfred "play" "com.vdesabou.spotify.mini.player" "spotify:playlist:37i9dQZEVXcBYxUH6cwJch"]] ; Discover Weekly
 
                   ;[:!Sequal_sign [:send_to_desktop 11]]
