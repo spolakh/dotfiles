@@ -329,7 +329,6 @@
                             )))
   (setq org-fast-tag-selection-single-key nil)
   (setq org-refile-targets `((,(concat spolakh/org-agenda-directory "later.org.gpg") :maxlevel . 1)
-                              (,(concat spolakh/org-agenda-directory "oneoff.org.gpg") :level . 0)
                               (,(concat spolakh/org-agenda-directory "repeaters.org.gpg") :level . 0)
                               (,(concat spolakh/org-agenda-directory "projects.org.gpg") :maxlevel . 1)
                               (nil :maxlevel . 2)))
@@ -641,22 +640,13 @@ has no effect."
                                       (spolakh/org-agenda-leave-only-first-three-children)))
           (org-agenda-hide-tags-regexp "")
           ))
-    (todo "TODO"
-          ((org-agenda-overriding-header "👾 One-off Tasks (under 1 Pomodoro) >")
-          (org-agenda-files '(,(concat spolakh/org-agenda-directory "oneoff.org.gpg")))
-          (org-agenda-skip-function '(or
-                                      (org-agenda-skip-entry-if 'deadline 'scheduled)
-                                      (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
-                                      (spolakh/org-agenda-leave-first-level-only)))
-          (org-agenda-hide-tags-regexp "")
-          ))))
+    ))
 
   (defun spolakh/done-for-filter (filter ndays)
       (let ((all-files `(append
                               (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
                              '(
                                ,(concat spolakh/org-agenda-directory "projects.org.gpg")
-                               ,(concat spolakh/org-agenda-directory "oneoff.org.gpg")
                                ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
                                ,(concat spolakh/org-agenda-directory "later.org.gpg")
                                ,(concat spolakh/org-phone-directory "phone.org")
@@ -678,7 +668,6 @@ has no effect."
                               (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
                              '(
                                ,(concat spolakh/org-agenda-directory "projects.org.gpg")
-                               ,(concat spolakh/org-agenda-directory "oneoff.org.gpg")
                                ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
                                ,(concat spolakh/org-agenda-directory "later.org.gpg")
                                ,(concat spolakh/org-phone-directory "phone.org")
@@ -699,12 +688,12 @@ has no effect."
                                              (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
                                              (spolakh/skip-subtree-if-later)))))
 
-        (tags-todo ,(concat "STYLE=\"habit\"" filter)
-                   ((org-agenda-overriding-header "👘 Repeaters >")
-                    (org-agenda-prefix-format '((tags . "[%-4e] ")))
-                    (org-todo-keyword-faces '(("TODO" . (:foreground "brown"))))
-                    (org-agenda-skip-function #'org-agenda-skip-if-scheduled-for-later-with-clock-granularity)
-                    (org-agenda-files '(,(concat spolakh/org-agenda-directory "repeaters.org.gpg")))))
+        (tags-todo "LEVEL=2+TODO=\"In Progress\""
+                   ((org-agenda-overriding-header "🎗 In Progress")
+                    (org-agenda-prefix-format '((tags . " - ")))
+                    (org-agenda-todo-keyword-format "")
+                    (org-todo-keyword-faces '(("In Progress" . (:foreground "DarkSalmon" :weight bold))))
+                    (org-agenda-files '(,(concat spolakh/org-agenda-directory "board.org.gpg")))))
 
         (todo "SPRINT"
               ((org-agenda-overriding-header "🗂 Sprint >")
@@ -923,17 +912,18 @@ has no effect."
     (defhydra hydra-schedule (:color teal)
       "Remind about this in:"
       ("g" (lambda () (interactive) nil) "quit")
-      ("j" (lambda () (interactive) (progn (org-agenda-schedule nil "+1d") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 day")
-      ("k" (lambda () (interactive) (progn (org-agenda-schedule nil "+1w") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 week")
-      ("l" (lambda () (interactive) (progn (org-agenda-schedule nil "+1m") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 month")
-      (";" (lambda () (interactive) (progn (org-agenda-schedule nil "+3m") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 quarter")
-      ("'" (lambda () (interactive) (progn (org-agenda-schedule nil "+1y") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 year")
-      ("h" (lambda () (interactive) ;(let ((current-prefix-arg '(4)))
+      ("d" (lambda () (interactive) (progn (org-agenda-schedule nil "+1d") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 Day")
+      ("w" (lambda () (interactive) (progn (org-agenda-schedule nil "+1w") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 Week")
+      ("m" (lambda () (interactive) (progn (org-agenda-schedule nil "+1m") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 Month")
+      ("q" (lambda () (interactive) (progn (org-agenda-schedule nil "+3m") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 Quarter - 3 months")
+      ("h" (lambda () (interactive) (progn (org-agenda-schedule nil "+6m") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 Half - 6 months")
+      ("y" (lambda () (interactive) (progn (org-agenda-schedule nil "+1y") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 Year")
+      ("p" (lambda () (interactive) ;(let ((current-prefix-arg '(4)))
              (progn
                ;(call-interactively 'org-agenda-schedule)
                (org-agenda-refile) (spolakh/advance-inbox-processing)))
         ;)
-       "subtask - don't remind me")
+       "refile to existing Project")
       )
     )
   (defvar spolakh/org-agenda-process-inbox-do-bulk nil)
