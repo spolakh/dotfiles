@@ -361,44 +361,10 @@
            ))
     )
 
-(use-package! org-habit)
-; From https://emacs.stackexchange.com/questions/13360/org-habit-graph-on-todo-list-agenda-view
-(defvar my/org-habit-show-graphs-everywhere t
-  "If non-nil, show habit graphs in all types of agenda buffers.")
-
-(defun my/org-agenda-mark-habits ()
-  "Mark all habits in current agenda for graph display.
-
-This function enforces `my/org-habit-show-graphs-everywhere' by
-marking all habits in the current agenda as such.  When run just
-before `org-agenda-finalize' (such as by advice; unfortunately,
-`org-agenda-finalize-hook' is run too late), this has the effect
-of displaying consistency graphs for these habits.
-
-When `my/org-habit-show-graphs-everywhere' is nil, this function
-has no effect."
-  (when (and my/org-habit-show-graphs-everywhere
-         (not (get-text-property (point) 'org-series)))
-    (let ((cursor (point))
-          item data)
-      (while (setq cursor (next-single-property-change cursor 'org-marker))
-        (setq item (get-text-property cursor 'org-marker))
-        (when (and item (org-is-habit-p item))
-          (with-current-buffer (marker-buffer item)
-            (setq data (org-habit-parse-todo item)))
-          (put-text-property cursor
-                             (next-single-property-change cursor 'org-marker)
-                             'org-habit-p data))))))
-
-(advice-add #'org-agenda-finalize :before #'my/org-agenda-mark-habits)
-
-
 (use-package! org-agenda
   :init
   (setq org-agenda-block-separator nil
-        org-habit-show-habits t
         org-agenda-skip-archived-trees t
-        org-habit-show-all-today nil
         org-archive-default-command 'org-archive-to-archive-sibling
         org-agenda-start-with-log-mode t
         org-agenda-skip-scheduled-if-done t
@@ -525,16 +491,6 @@ has no effect."
           subtree-end
         nil)))
 
-  (defun air-org-skip-subtree-if-habit ()
-    "Skip an agenda entry if it has a STYLE property equal to \"habit\"."
-    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
-      (if
-          (and
-           (string= (org-entry-get nil "STYLE") "habit")
-           (not (spolakh/was-done-today)))
-          subtree-end
-        nil)))
-
   ; This makes org-agenda integration w/ mobile capture (Orgzly) work without conflicts
   ; (in tandem with adding ((nil . ((eval . (auto-revert-mode 1))))) into .dir-locals.el in gtd directory)
   (defun xah-save-all-unsaved ()
@@ -556,33 +512,34 @@ has no effect."
   ; attempts at coloring the agenda
   ;; 1. (propertize "Project" 'font-lock-face '(:foreground "red")) - apparently agenda doesn't use font-lock at all
   ;; 2. highlight-regexp
-  (add-hook 'org-agenda-finalize-hook
-            (lambda ()
-              (highlight-regexp "\\(Project\\) " "spolakh-hi-lock-project-face" 1)))
+  ;; (defface spolakh-hi-lock-project-face '((t (:foreground  "PaleVioletRed"
+  ;;                                :bold t)))
+  ;;   "spolakh-hi-lock-project-face")
+  ;;
+  ;; (add-hook 'org-agenda-finalize-hook
+  ;;           (lambda ()
+  ;;             (highlight-regexp " - \\(Project\\) " 'spolakh-hi-lock-project-face 1)))
+  ;;
+  ;; - for some reason changing anything about ~any~ item from agenda view errors with `face-name: Wrong type argument: symbolp, "spolakh-hi-lock-project-face"`
+  ;;    so things like spolakh/org-agenda-process-single-inbox-item don't work
+  ;;    debug when I have more time
 
   :config
 
-  (defface spolakh-hi-lock-project-face '((t (:foreground  "PaleVioletRed"
-                                 :bold t)))
-    "spolakh-hi-lock-project-face")
-
-  (defun spolakh/project-agenda-section-for-filter (filter directions)
+  (defun spolakh/project-agenda-section-for-filter (filter prefix directions)
     `(tags-todo ,(concat "TODO=\"TODO\"" filter)
-                ((org-agenda-overriding-header ,(concat "🚀 Projects (" filter "): " directions " >"))
+                ((org-agenda-overriding-header ,(concat prefix "Projects (" filter "): " directions " >"))
                  (org-agenda-hide-tags-regexp "")
-                 (org-agenda-todo-keyword-format "Project")
+                 (org-agenda-todo-keyword-format "")
                  (org-agenda-dim-blocked-tasks nil)
                  (org-agenda-prefix-format
-                  '((tags . " - ")))
+                  '((tags . " -")))
                  (org-agenda-skip-function #'spolakh/org-agenda-leave-first-level-only)
                  (org-agenda-files
                   '(
                     ,(concat spolakh/org-agenda-directory "projects.org.gpg")
                     ))))
     )
-
-; leftover items from previous sprint: waiting and SPRINT
-;
 
   (defun spolakh/review-for-filter (filter)
     (let ((all-files `(append
@@ -609,8 +566,8 @@ has no effect."
                     (org-todo-keyword-faces '(("In Progress" . (:foreground "DarkSalmon" :weight bold))))
                     (org-agenda-files '(,(concat spolakh/org-agenda-directory "board.org.gpg")))))
 
-        ,(spolakh/project-agenda-section-for-filter filter "Drop(a) \\ Defer(p)")
-        ,(spolakh/project-agenda-section-for-filter "-@work-@mine" "Tag(C-c C-c) \\ Move elsewhere (Todoist?)")
+        ,(spolakh/project-agenda-section-for-filter filter "🚀 " "Drop(a) \\ Defer(p)")
+        ,(spolakh/project-agenda-section-for-filter "-@work-@mine" "🔴 Mis-tagged " "Tag(C-c C-c) \\ Move elsewhere (Todoist?)")
 
         (todo "SPRINT|WAITING"
               ((org-agenda-overriding-header "🗂 Sprint. Drop(a) \\ Defer(p) >")
@@ -619,25 +576,41 @@ has no effect."
                (org-agenda-prefix-format '((todo . " - %?-8b")))
                (org-agenda-skip-function '(or
                                            (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                           (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
                                            ))
                ))
 
         (tags-todo "LEVEL=2+TODO=\"TODO\""
-                   ((org-agenda-overriding-header "TODOs from active projects >")
+                   ((org-agenda-overriding-header "🗃 TODOs from active projects. Maybe take into Sprint >")
                     (org-agenda-prefix-format '((tags . " [%-4e] %?-8b")))
                     (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
                     (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org.gpg")))))
 
         (todo "TODO|SPRINT|WAITING"
-              ((org-agenda-overriding-header "Ticklers from Later >")
+              ((org-agenda-overriding-header "📦 Ticklers from Later. Take into Sprint \\ Add to active Projects \\ Defer(p) >")
                (org-agenda-files '(,(concat spolakh/org-agenda-directory "later.org.gpg")))
                (org-agenda-skip-function '(or
                                            (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
                                            (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
                                            ))))
 
-; fleetings
-; inbox (without later ticklers)
+        (todo "Fleeting"
+              ((org-agenda-overriding-header "🔖 Fleetings. Create new Note \\ Add to existing one >")
+               (org-agenda-files ,all-files)))
+
+        (todo "TODO"
+              ((org-agenda-overriding-header "📤 Inboxes. Drop(a) \\ Process(p) \\ Mark as Fleeting(s-RET f) >")
+               (org-agenda-files (append
+                                  (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
+                                  '(
+                                    ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
+                                    ,(concat spolakh/org-phone-directory "phone.org")
+                                    ,(concat spolakh/org-phone-directory "phone-work.org")
+                                    )
+                                  ))
+               (org-agenda-skip-function '(or
+                                           (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                           ))))
     )))
 
   (defun spolakh/agenda-for-filter (filter)
@@ -656,20 +629,11 @@ has no effect."
              ;(org-agenda-prefix-format '((agenda . " %i %-21:c%?-16t% s%b"))) ; adds category
              (org-agenda-prefix-format '((agenda . " %i %?-16t% s%b")))
              (org-agenda-skip-function '(or
-                                         (air-org-skip-subtree-if-habit)
                                          (spolakh/skip-if-waiting)
                                          (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
                                          (spolakh/skip-subtree-if-later)))
              ))
-    (tags-todo ,(concat "STYLE=\"habit\"" filter)
-        ((org-agenda-overriding-header "👘 Repeaters >")
-         (org-todo-keyword-faces '(("TODO" . (:foreground "brown"))))
-         (org-agenda-prefix-format '((tags . "[%-4e] ")))
-         (org-agenda-skip-function #'org-agenda-skip-if-scheduled-for-later-with-clock-granularity)
-         (org-agenda-files
-           '(
-            ,(concat spolakh/org-agenda-directory "repeaters.org.gpg")
-           ))))
+
     (todo "WAITING"
           ((org-agenda-overriding-header "🌒 Waiting (want to do if not blocked, else postpone) >")
           (org-agenda-skip-function '(or
@@ -757,7 +721,6 @@ has no effect."
                  (org-deadline-warning-days 3)
                  (org-agenda-prefix-format '((agenda . " %i %?-16t% s%b")))
                  (org-agenda-skip-function '(or
-                                             (air-org-skip-subtree-if-habit)
                                              (spolakh/skip-if-waiting)
                                              (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
                                              (spolakh/skip-subtree-if-later)))))
@@ -821,15 +784,6 @@ has no effect."
                                                                 ,(concat spolakh/org-phone-directory "phone.org")
                                                                 ,(concat spolakh/org-phone-directory "phone-work.org")
                                                                 )))))))
-                                    ("r" "Repeaters (All)" (
-                                      (tags-todo "STYLE=\"habit\""
-                                          ((org-agenda-overriding-header "👘 Repeaters >")
-                                          (org-agenda-prefix-format
-                                            '((tags . "[%-4e] ")))
-                                          (org-agenda-files
-                                                              '(
-                                                                ,(concat spolakh/org-agenda-directory "repeaters.org.gpg")
-                                                                  ))))))
                                     ("/" "What feels important now?" ,(spolakh/review-for-filter "+@mine"))
                                     ("?" "What feels important at work?" ,(spolakh/review-for-filter "+@work"))
                                      ))
@@ -1019,8 +973,10 @@ has no effect."
        (if spolakh/org-agenda-process-inbox-do-bulk
            (let ((current-prefix-arg 0)) (call-interactively 'recenter-top-bottom)))
        (advice-add 'org-store-log-note :after #'spolakh/org-agenda-refile)
-       (if (= 0 (length (org-get-at-bol 'tags))) (org-agenda-set-tags))
+       ;(if (= 0 (length (org-get-at-bol 'tags))) (org-agenda-set-tags))
+       (org-agenda-set-tags)
        (unless (org-entry-get (org-get-at-bol 'org-hd-marker) "Effort") (spolakh/invoke-fast-effort-selection))
+       (org-agenda-todo "TODO")
        (org-agenda-add-note)
        (org-add-log-note)
      )
