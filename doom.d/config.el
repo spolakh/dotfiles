@@ -936,7 +936,7 @@
     (let ((current-prefix-arg '(4))) (call-interactively 'recenter-top-bottom))
     )
   (defun spolakh/refile-to-later ()
-   (org-agenda-refile nil (list "" (concat spolakh/org-agenda-directory "later.org.gpg") nil nil)))
+   (org-agenda-refile nil (list "" (concat spolakh/org-agenda-directory "later.org.gpg") nil nil) t))
   (after! hydra
     (defhydra hydra-schedule (:color teal)
       "Remind about this in:"
@@ -993,9 +993,8 @@
     (next-line)
     (point)
     )
-  (defun spolakh/org-agenda-bulk-process-inbox ()
+  (defun spolakh/org-agenda-bulk-process-section ()
     (interactive)
-    (spolakh/org-agenda-find-beginning-of-inbox)
     (setq spolakh/org-agenda-process-inbox-do-bulk t)
     (spolakh/org-agenda-process-inbox-item)
      )
@@ -1072,7 +1071,7 @@
           "s" #'org-agenda-schedule
           "a" #'org-agenda-archive-default-with-confirmation
           "p" #'spolakh/org-agenda-process-single-inbox-item
-          :m "P" #'spolakh/org-agenda-bulk-process-inbox
+          :m "P" #'spolakh/org-agenda-bulk-process-section
           :m "t"  #'org-agenda-columns
           "R" #'org-agenda-refile
           "<s-return>" #'org-agenda-todo
