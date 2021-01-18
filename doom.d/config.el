@@ -622,8 +622,19 @@ has no effect."
                                            ))
                ))
 
-; all tasks from /active/ projects
-; ticklers from later - copypaste from inbox section
+        (tags-todo "LEVEL=2+TODO=\"TODO\""
+                   ((org-agenda-overriding-header "TODOs from active projects >")
+                    (org-agenda-prefix-format '((tags . " [%-4e] %?-8b")))
+                    (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
+                    (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org.gpg")))))
+
+        (todo "TODO|SPRINT|WAITING"
+              ((org-agenda-overriding-header "Ticklers from Later >")
+               (org-agenda-files '(,(concat spolakh/org-agenda-directory "later.org.gpg")))
+               (org-agenda-skip-function '(or
+                                           (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
+                                           (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                           ))))
 
 ; fleetings
 ; inbox (without later ticklers)
