@@ -1067,7 +1067,6 @@
           :m "s-i" #'spolakh/set-todo-idea
                                         ;"a" #'org-agenda-add-note ; we always link notes in the default item processing flow
           "d" #'org-agenda-deadline
-          :m "e" #'spolakh/invoke-fast-effort-selection
           "s" #'org-agenda-schedule
           "a" #'org-agenda-archive-default-with-confirmation
           "p" #'spolakh/org-agenda-process-single-inbox-item
@@ -1328,6 +1327,31 @@
     "O" 'projectile-toggle-between-implementation-and-test
     ))
   )
+
+(use-package! git-link
+  :config
+
+  (map!
+   (:map doom-leader-git-map
+    "w" 'git-link
+    "W" 'git-link-commit
+    ))
+
+  (defun git-link-sourcegraph (hostname dirname filename _branch commit start end)
+    (let ((line-or-range (if end (format "%s-%s" start end) start)))
+      (format "https://sg.eng.grail.com/grail/grail@%s/-/blob/%s#L%s"
+              commit
+              filename
+              line-or-range)))
+
+  (defun git-link-commit-sourcegraph (hostname dirname commit)
+    (format "https://sg.eng.grail.com/grail/grail@%s"
+            commit))
+
+  (add-to-list 'git-link-remote-alist '("phabricator.grailbio.com" git-link-sourcegraph))
+  (add-to-list 'git-link-commit-remote-alist '("phabricator.grailbio.com" git-link-commit-sourcegraph))
+
+  (setq git-link-open-in-browser 't))
 
 ; currently having issues with not being able to save winner-ring's which causes this to hang for like 10s every time
 ;(run-with-idle-timer 30 t #'doom-save-session)
