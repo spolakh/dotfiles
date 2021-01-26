@@ -346,6 +346,24 @@
          ))
 )
 
+(use-package! cl-lib
+  :config
+  (defun cmp-date-property (prop)
+    "Compare two `org-mode' agenda entries, `A' and `B', by some date property."
+    (let ((prop prop))
+                 #'(lambda (a b)
+
+                     (let* ((a-pos (get-text-property 0 'org-marker a))
+                            (b-pos (get-text-property 0 'org-marker b))
+                            (a-date (or (org-entry-get a-pos prop)
+                                        (format "<%s>" (org-read-date t nil "now"))))
+                            (b-date (or (org-entry-get b-pos prop)
+                                        (format "<%s>" (org-read-date t nil "now"))))
+                            (cmp (compare-strings a-date nil nil b-date nil nil))
+                            )
+                       (if (eq cmp t) nil (cl-signum cmp))
+                       )))))
+
 (use-package! org-download
     :after org
     :init
@@ -362,6 +380,7 @@
     )
 
 (use-package! org-agenda
+  :after cl-lib
   :init
   (setq org-agenda-block-separator nil
         org-agenda-skip-archived-trees t
@@ -681,6 +700,8 @@
           ))
     ))
 
+
+
   (defun spolakh/done-for-filter (filter ndays)
       (let ((all-files `(append
                               (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
@@ -694,6 +715,8 @@
                              )))
        `(tags ,(format "CLOSED>=\"<-%dd>\"" ndays)
                    ((org-agenda-overriding-header "💠 Done >")
+                    (org-agenda-cmp-user-defined (cmp-date-property "CLOSED"))
+                    (org-agenda-sorting-strategy '(user-defined-up))
                     (org-agenda-files ,all-files)
                     (org-agenda-prefix-format '((tags . "[%-4e] %?-8b")))
                     (org-agenda-skip-function '(or
@@ -1069,6 +1092,7 @@
           "d" #'org-agenda-deadline
           "s" #'org-agenda-schedule
           "a" #'org-agenda-archive-default-with-confirmation
+          "A" #'org-agenda-add-note
           "p" #'spolakh/org-agenda-process-single-inbox-item
           :m "P" #'spolakh/org-agenda-bulk-process-section
           :m "t"  #'org-agenda-columns
@@ -1086,6 +1110,7 @@
           :m "d" nil
           :m "s" nil
           :m "a" nil
+          :m "A" nil
           :m "p" nil
           :m "R" nil
           :m "S" nil
@@ -1326,6 +1351,8 @@
    (:map doom-leader-project-map
     "O" 'projectile-toggle-between-implementation-and-test
     ))
+  (setq projectile-enable-caching t)
+  (setq projectile-indexing-method 'hybrid)
   )
 
 (use-package! git-link
