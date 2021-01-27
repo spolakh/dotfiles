@@ -1,5 +1,11 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
+;;; Other's configs:
+;;; https://zzamboni.org/post/my-doom-emacs-configuration-with-commentary/
+;;; https://tecosaur.github.io/emacs-config/config.html
+;;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#use-better-defaults
+
+
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
@@ -24,6 +30,7 @@
 ; spolakh/FAVS:
 ;(setq doom-font (font-spec :family "Menlo" :size 13))
 (setq doom-font "-*-Menlo-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1")
+(setq doom-variable-pitch-font (font-spec :family "Overpass" :size 24))
 ;(setq doom-font (font-spec :family "Anonymous Pro" :size 13 :weight 'bold))
 ;  (setq doom-font "Fira Code-12")
 ;  (setq doom-font "Ubuntu Mono-14")
@@ -35,6 +42,11 @@
 
 
 (setq frame-title-format "%b - @mine Emacs")
+
+(setq undo-limit 80000000
+      evil-want-fine-undo t)
+
+(global-subword-mode 1)
 
 
 ;; Here are some additional functions/macros that could help you configure Doom:
@@ -352,7 +364,6 @@
     "Compare two `org-mode' agenda entries, `A' and `B', by some date property."
     (let ((prop prop))
                  #'(lambda (a b)
-
                      (let* ((a-pos (get-text-property 0 'org-marker a))
                             (b-pos (get-text-property 0 'org-marker b))
                             (a-date (or (org-entry-get a-pos prop)
