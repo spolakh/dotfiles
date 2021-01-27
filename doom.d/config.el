@@ -43,6 +43,8 @@
   '(font-lock-comment-face :slant italic)
   '(font-lock-keyword-face :slant italic)
   )
+
+(set-face-attribute 'link nil :weight 'normal)
 ;(setq doom-font (font-spec :family "Anonymous Pro" :size 13 :weight 'bold))
 ;  (setq doom-font "Fira Code-12")
 ;  (setq doom-font "Ubuntu Mono-14")
@@ -282,9 +284,11 @@
         spolakh/org-gcal-directory "~/Dropbox/org/cal/"
         spolakh/org-directory "~/Dropbox/org/")
 
-  (set-face-attribute 'org-level-1 nil :height 240 :weight 'semibold)
-  (set-face-attribute 'org-level-2 nil :height 210 :weight 'semibold)
-  (set-face-attribute 'org-level-3 nil :height 180 :weight 'semibold)
+  (set-face-attribute 'org-level-1 nil :height 240 :weight 'normal)
+  (set-face-attribute 'org-level-2 nil :height 210 :weight 'normal)
+  (set-face-attribute 'org-level-3 nil :height 180 :weight 'normal)
+  (set-face-attribute 'org-level-4 nil :height 140 :weight 'normal)
+  (set-face-attribute 'org-level-5 nil :height 110 :weight 'normal)
   (setq org-hide-emphasis-markers t)
   ;(setq org-hide-leading-stars t)
   (defun spolakh/open-projects ()
@@ -1248,7 +1252,7 @@
   (setq org-roam-rename-file-on-title-change nil)
 
   (add-hook 'after-init-hook 'org-roam-mode)
-  (set-face-attribute 'org-roam-link nil :underline nil)
+  (set-face-attribute 'org-roam-link nil :underline nil :weight 'normal)
   (setq org-roam-directory (concat spolakh/org-directory "/notes/"))
   (setq org-roam-link-title-format "[[%s]]")
   (setq +org-roam-open-buffer-on-find-file nil)
@@ -1279,14 +1283,14 @@
            "* TODO %?"
            ;:immediate-finish t
            :file-name ,(concat "private/dailies/" spolakh/org-roam-daily-prefix "%<%Y-%m-%d>")
-           :head "#+TITLE: %<%Y-%m-%d>\n\n* [[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:\n\n* :@mine:\n* :@work:\n"
+           :head "#+TITLE: %<%Y-%m-%d>\n\n[[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:\n\n* :@mine:\n* :@work:\n"
            :olp (":@mine:"))
 
           ("D" "work-daily" entry (function org-roam-capture--get-point)
            "* TODO %?"
            ;:immediate-finish t
            :file-name ,(concat "private/dailies/" spolakh/org-roam-daily-prefix "%<%Y-%m-%d>")
-           :head "#+TITLE: %<%Y-%m-%d>\n\n* [[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:\n\n* :@mine:\n* :@work:\n"
+           :head "#+TITLE: %<%Y-%m-%d>\n\n[[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:\n\n* :@mine:\n* :@work:\n"
            :olp (":@work:"))
         ))
   (map! :map org-roam-mode-map
