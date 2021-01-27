@@ -4,6 +4,9 @@
 ;;; https://zzamboni.org/post/my-doom-emacs-configuration-with-commentary/
 ;;; https://tecosaur.github.io/emacs-config/config.html
 ;;; https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org#use-better-defaults
+;;; https://protesilaos.com/dotemacs/
+;;; https://gitlab.com/dwt1/dotfiles/-/tree/master/.doom.d
+;;; https://github.com/fuxialexander/doom-emacs-private-xfu
 
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
@@ -30,13 +33,34 @@
 ; spolakh/FAVS:
 ;(setq doom-font (font-spec :family "Menlo" :size 13))
 (setq doom-font "-*-Menlo-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1")
-(setq doom-variable-pitch-font (font-spec :family "Overpass" :size 24))
+;; (setq doom-variable-pitch-font (font-spec :family "Yanone Kaffeesatz" :weight 'normal))
+(setq doom-variable-pitch-font (font-spec :family "Raleway" :weight 'thin))
+(after! doom-themes
+  (setq doom-themes-enable-bold t)
+  (setq doom-themes-enable-italic t)
+  )
+(custom-set-faces!
+  '(font-lock-comment-face :slant italic)
+  '(font-lock-keyword-face :slant italic)
+  )
 ;(setq doom-font (font-spec :family "Anonymous Pro" :size 13 :weight 'bold))
 ;  (setq doom-font "Fira Code-12")
 ;  (setq doom-font "Ubuntu Mono-14")
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
+
+;; TODO ns-use-thin-smoothing
+
+(use-package mixed-pitch
+  :hook
+  (org-mode . mixed-pitch-mode)
+  :config
+  (setq mixed-pitch-set-height t)
+  (set-face-attribute 'variable-pitch nil :height 160)
+  ;; (set-face-attribute 'variable-pitch nil :weight 'normal)
+  )
+
 (setq display-line-numbers-type `visual)
 (global-display-line-numbers-mode)
 
@@ -257,6 +281,12 @@
         spolakh/org-phone-directory "~/Dropbox/org/notes/private/phone/"
         spolakh/org-gcal-directory "~/Dropbox/org/cal/"
         spolakh/org-directory "~/Dropbox/org/")
+
+  (set-face-attribute 'org-level-1 nil :height 240 :weight 'semibold)
+  (set-face-attribute 'org-level-2 nil :height 210 :weight 'semibold)
+  (set-face-attribute 'org-level-3 nil :height 180 :weight 'semibold)
+  (setq org-hide-emphasis-markers t)
+  ;(setq org-hide-leading-stars t)
   (defun spolakh/open-projects ()
     (interactive)
     (find-file (concat spolakh/org-agenda-directory "projects.org.gpg")))
@@ -1218,6 +1248,7 @@
   (setq org-roam-rename-file-on-title-change nil)
 
   (add-hook 'after-init-hook 'org-roam-mode)
+  (set-face-attribute 'org-roam-link nil :underline nil)
   (setq org-roam-directory (concat spolakh/org-directory "/notes/"))
   (setq org-roam-link-title-format "[[%s]]")
   (setq +org-roam-open-buffer-on-find-file nil)

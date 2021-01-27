@@ -56,6 +56,8 @@
 (package! cycle-themes)
 (package! flx)
 (package! git-link)
+(package! mixed-pitch)
+
 ;(package! org-fc
 ;  :recipe (:type git :repo "https://git.sr.ht/~l3kn/org-fc" :files (:defaults "awk" "demo.org")))
 (unpin! org-roam company-org-roam)
