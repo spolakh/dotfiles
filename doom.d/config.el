@@ -34,7 +34,7 @@
 ; spolakh/FAVS:
 ;(setq doom-font (font-spec :family "Menlo" :size 13))
 (setq doom-font "-*-Menlo-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1")
-(setq doom-variable-pitch-font (font-spec :family "Yanone Kaffeesatz" :weight 'thin))
+(setq doom-variable-pitch-font (font-spec :family "Yanone Kaffeesatz" :weight 'light))
 ;; (setq doom-variable-pitch-font (font-spec :family "Raleway" :weight 'thin))
 (after! doom-themes
   (setq doom-themes-enable-bold t)
@@ -59,7 +59,7 @@
   :hook (org-mode . mixed-pitch-mode)
   :config
   (setq mixed-pitch-set-height t)
-  (set-face-attribute 'variable-pitch nil :height 160 :weight 'thin)
+  (set-face-attribute 'variable-pitch nil :height 160 :weight 'light)
   ;; (set-face-attribute 'variable-pitch nil :weight 'normal)
   )
 
@@ -289,10 +289,11 @@
   (set-face-attribute 'org-level-2 nil :inherit 'org-level-8 :height 1.44 :weight 'normal)
   (set-face-attribute 'org-level-3 nil :inherit 'org-level-8 :height 1.2 :weight 'normal)
   (set-face-attribute 'org-level-4 nil :inherit 'org-level-8 :height 1 :weight 'normal)
-  (set-face-attribute 'default nil :weight 'thin)
+  (set-face-attribute 'org-document-title nil :inherit 'org-level-8 :height 2.074 :weight 'normal)
+  ;; (set-face-attribute 'variable-pitch nil :weight 'light)
+
   (setq org-cycle-level-faces nil)
   (setq org-n-level-faces 4)
-  (set-face-attribute 'org-document-title nil :height 320 :weight 'semibold)
   (setq org-hide-emphasis-markers t)
   ;(setq org-hide-leading-stars t)
   (defun spolakh/open-projects ()
@@ -419,7 +420,7 @@
   :config
 
   (setq org-superstar-cycle-headline-bullets nil)
-  (setq org-superstar-headline-bullets-list '("◉" "○" "✜" "✤")) ; "✿" "▷"
+  (setq org-superstar-headline-bullets-list '("◉" "○" "✤" "✜")) ; "⁜" "✿" "▷" "🟍"
   ;; (setq org-superstar-headline-bullets-list '("\u200b"))
   ;; (setq org-superstar-leading-bullet "\u200b")
   )
@@ -1284,9 +1285,11 @@
   (setq org-roam-rename-file-on-title-change nil)
 
   (add-hook 'after-init-hook 'org-roam-mode)
+  ;; (set-face-attribute 'org-roam-link nil :underline nil :weight 'normal :underline "#ffffff")
   (set-face-attribute 'org-roam-link nil :underline nil :weight 'normal)
-  (setq org-roam-directory (concat spolakh/org-directory "/notes/"))
+  (setq org-roam-directory (file-truename (concat spolakh/org-directory "/notes/")))
   (setq org-roam-link-title-format "[[%s]]")
+  (setq org-roam-link-file-path-type 'absolute)
   (setq +org-roam-open-buffer-on-find-file nil)
   (setq org-roam-encrypt-files t)
   (setq org-roam-dailies-directory "private/dailies/")
