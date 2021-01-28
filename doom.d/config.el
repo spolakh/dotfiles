@@ -1430,6 +1430,16 @@
 )
 
 (use-package! projectile
+  :init
+  ; this makes projectile treat monorepo as one big project and don't get fancy with detecting subprojects
+  ; relies on '((projectile-main-project . "~/monorepo/")) be set in the ~/monorepo/.dir-locals.el
+  (defvar projectile-main-project nil)
+  (defun use-main-project (&rest args)
+    "Skip calling `projectile-project-root' when there is a main project defined."
+    (when projectile-main-project
+      projectile-main-project))
+  (advice-add #'projectile-project-root :before-until #'use-main-project)
+
   :config
   (map!
    (:map doom-leader-project-map
