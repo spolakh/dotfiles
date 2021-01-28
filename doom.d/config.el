@@ -7,6 +7,7 @@
 ;;; https://protesilaos.com/dotemacs/
 ;;; https://gitlab.com/dwt1/dotfiles/-/tree/master/.doom.d
 ;;; https://github.com/fuxialexander/doom-emacs-private-xfu
+;;; https://hugocisneros.com/org-config/
 
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
@@ -33,8 +34,8 @@
 ; spolakh/FAVS:
 ;(setq doom-font (font-spec :family "Menlo" :size 13))
 (setq doom-font "-*-Menlo-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1")
-;; (setq doom-variable-pitch-font (font-spec :family "Yanone Kaffeesatz" :weight 'normal))
-(setq doom-variable-pitch-font (font-spec :family "Raleway" :weight 'thin))
+(setq doom-variable-pitch-font (font-spec :family "Yanone Kaffeesatz" :weight 'thin))
+;; (setq doom-variable-pitch-font (font-spec :family "Raleway" :weight 'thin))
 (after! doom-themes
   (setq doom-themes-enable-bold t)
   (setq doom-themes-enable-italic t)
@@ -55,11 +56,10 @@
 ;; TODO ns-use-thin-smoothing
 
 (use-package mixed-pitch
-  :hook
-  (org-mode . mixed-pitch-mode)
+  :hook (org-mode . mixed-pitch-mode)
   :config
   (setq mixed-pitch-set-height t)
-  (set-face-attribute 'variable-pitch nil :height 160)
+  (set-face-attribute 'variable-pitch nil :height 160 :weight 'thin)
   ;; (set-face-attribute 'variable-pitch nil :weight 'normal)
   )
 
@@ -284,11 +284,15 @@
         spolakh/org-gcal-directory "~/Dropbox/org/cal/"
         spolakh/org-directory "~/Dropbox/org/")
 
-  (set-face-attribute 'org-level-1 nil :height 240 :weight 'normal)
-  (set-face-attribute 'org-level-2 nil :height 210 :weight 'normal)
-  (set-face-attribute 'org-level-3 nil :height 180 :weight 'normal)
-  (set-face-attribute 'org-level-4 nil :height 140 :weight 'normal)
-  (set-face-attribute 'org-level-5 nil :height 110 :weight 'normal)
+  (set-face-attribute 'org-level-8 nil :inherit 'default)
+  (set-face-attribute 'org-level-1 nil :inherit 'org-level-8 :height 1.728 :weight 'normal)
+  (set-face-attribute 'org-level-2 nil :inherit 'org-level-8 :height 1.44 :weight 'normal)
+  (set-face-attribute 'org-level-3 nil :inherit 'org-level-8 :height 1.2 :weight 'normal)
+  (set-face-attribute 'org-level-4 nil :inherit 'org-level-8 :height 1 :weight 'normal)
+  (set-face-attribute 'default nil :weight 'thin)
+  (setq org-cycle-level-faces nil)
+  (setq org-n-level-faces 4)
+  (set-face-attribute 'org-document-title nil :height 320 :weight 'semibold)
   (setq org-hide-emphasis-markers t)
   ;(setq org-hide-leading-stars t)
   (defun spolakh/open-projects ()
@@ -391,6 +395,34 @@
          "<S-return>" #'spolakh/shift-dwim-at-point
          ))
 )
+
+(use-package! ov
+  :after org
+  :hook
+  (org-mode . org-hide-keywords)
+  :config
+  (setq my-org-hidden-keywords '(title created))
+  (defun org-hide-keywords ()
+    (interactive)
+    (ov-set (concat "\\(^[ \t]*#\\+\\)\\("
+                    (mapconcat (lambda (kw)
+                                 (format "%s:\s"(symbol-name kw)))
+                               my-org-hidden-keywords "\\|")
+                    "\\)")
+            'invisible t))
+)
+
+(use-package! org-superstar
+  :after org
+  :hook
+  (org-mode . org-superstar-mode)
+  :config
+
+  (setq org-superstar-cycle-headline-bullets nil)
+  (setq org-superstar-headline-bullets-list '("◉" "○" "✜" "✤")) ; "✿" "▷"
+  ;; (setq org-superstar-headline-bullets-list '("\u200b"))
+  ;; (setq org-superstar-leading-bullet "\u200b")
+  )
 
 (use-package! cl-lib
   :config
