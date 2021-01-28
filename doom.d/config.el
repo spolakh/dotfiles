@@ -253,7 +253,7 @@
 
 (after! avy
   (map! :after evil-org-agenda
-   (:map evil-motion-state-map 
+   (:map evil-motion-state-map
         (:prefix ("g" . "Go")
         (:prefix ("s" . "Snipe-ish")
           "SPC" #'avy-goto-char-2))
@@ -304,7 +304,7 @@
     (find-file (concat spolakh/org-agenda-directory "non_gtd.org.gpg")))
   (map! :map org-mode-map
       (:prefix ("g" . "go")
-       :desc "evil-next-visual-line" :n "j" 'evil-next-visual-line 
+       :desc "evil-next-visual-line" :n "j" 'evil-next-visual-line
        :desc "evil-previous-visual-line" :n "k" 'evil-previous-visual-line))
   (map! :map org-mode-map
       :leader
@@ -402,7 +402,7 @@
   :hook
   (org-mode . org-hide-keywords)
   :config
-  (setq my-org-hidden-keywords '(title created))
+  (setq my-org-hidden-keywords '(title created roam_alias))
   (defun org-hide-keywords ()
     (interactive)
     (ov-set (concat "\\(^[ \t]*#\\+\\)\\("
@@ -855,7 +855,7 @@
                                            ))
                (org-agenda-hide-tags-regexp "")
                ))
-        
+
         ,(spolakh/done-for-filter filter (if (= (decoded-time-weekday (decode-time)) 6) 0 (+ (decoded-time-weekday (decode-time)) 1)))
         )))
 
@@ -1155,7 +1155,7 @@
       (org-agenda-redo)
     )
 
-    :config 
+    :config
     (map! :after evil-org-agenda
           :map (evil-org-agenda-mode-map org-agenda-mode-map)
                                         ; org-agenda-keymap
@@ -1283,6 +1283,7 @@
   :init
   ; currently (✓ (124/187) org-roam updated (0cce9d1 -> a7cf48e)) is broken
   (setq org-roam-rename-file-on-title-change nil)
+  ; org-roam-title-change-hook
 
   (add-hook 'after-init-hook 'org-roam-mode)
   ;; (set-face-attribute 'org-roam-link nil :underline nil :weight 'normal :underline "#ffffff")
@@ -1292,6 +1293,8 @@
   (setq org-roam-link-file-path-type 'absolute)
   (setq +org-roam-open-buffer-on-find-file nil)
   (setq org-roam-encrypt-files t)
+  (setq org-roam-completion-everywhere t)
+  (setq org-roam-completion-ignore-case t)
   (setq org-roam-dailies-directory "private/dailies/")
   (setq epa-file-encrypt-to "onlyusefororg@example.com")
   (setq org-roam-index-file "~/Dropbox/org/notes/index.org.gpg")
