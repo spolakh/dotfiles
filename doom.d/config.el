@@ -397,6 +397,8 @@
          ))
 )
 
+(use-package! org-inlinetask)
+
 (use-package! ov
   :after org
   :hook
@@ -1431,6 +1433,7 @@
 
 (use-package! projectile
   :init
+  ; https://emacs.stackexchange.com/questions/9608/can-i-make-the-projectile-chosen-project-sticky-and-not-follow-the-current-buffe?rq=1
   ; this makes projectile treat monorepo as one big project and don't get fancy with detecting subprojects
   ; relies on '((projectile-main-project . "~/monorepo/")) be set in the ~/monorepo/.dir-locals.el
   (defvar projectile-main-project nil)
