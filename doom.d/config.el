@@ -34,7 +34,7 @@
 ; spolakh/FAVS:
 ;(setq doom-font (font-spec :family "Menlo" :size 13))
 (setq doom-font "-*-Menlo-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1")
-(setq doom-variable-pitch-font (font-spec :family "Yanone Kaffeesatz" :weight 'light))
+(setq doom-variable-pitch-font (font-spec :family "Yanone Kaffeesatz" :weight 'extra-light))
 ;; (setq doom-variable-pitch-font (font-spec :family "Raleway" :weight 'thin))
 (after! doom-themes
   (setq doom-themes-enable-bold t)
@@ -59,7 +59,7 @@
   :hook (org-mode . mixed-pitch-mode)
   :config
   (setq mixed-pitch-set-height t)
-  (set-face-attribute 'variable-pitch nil :height 160 :weight 'light)
+  (set-face-attribute 'variable-pitch nil :height 190 :weight 'light)
   ;; (set-face-attribute 'variable-pitch nil :weight 'normal)
   )
 
@@ -288,7 +288,7 @@
   (set-face-attribute 'org-level-1 nil :inherit 'org-level-8 :height 1.728 :weight 'normal)
   (set-face-attribute 'org-level-2 nil :inherit 'org-level-8 :height 1.44 :weight 'normal)
   (set-face-attribute 'org-level-3 nil :inherit 'org-level-8 :height 1.2 :weight 'normal)
-  (set-face-attribute 'org-level-4 nil :inherit 'org-level-8 :height 1 :weight 'normal)
+  (set-face-attribute 'org-level-4 nil :inherit 'org-level-8 :weight 'normal)
   (set-face-attribute 'org-document-title nil :inherit 'org-level-8 :height 2.074 :weight 'normal)
   ;; (set-face-attribute 'variable-pitch nil :weight 'light)
 
@@ -296,6 +296,15 @@
   (setq org-n-level-faces 4)
   (setq org-hide-emphasis-markers t)
   ;(setq org-hide-leading-stars t)
+  (defun spolakh/org-archive-done-tasks ()
+    (interactive)
+    (org-map-entries
+     (lambda ()
+       (org-archive-to-archive-sibling)
+       ; Doesn't seem to work with `org-archive-to-archive-sibling'
+       ;(setq org-map-continue-from (org-element-property :begin (org-element-at-point)))
+       )
+     "/+DONE" 'file))
   (defun spolakh/open-projects ()
     (interactive)
     (find-file (concat spolakh/org-agenda-directory "projects.org.gpg")))
@@ -317,22 +326,22 @@
        :desc "Clock in" "i" 'org-clock-in
        :desc "Toggle last clock" "o" '+org/toggle-last-clock))
   (setq org-capture-templates
-        `(("i" "Inbox @mine TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
+        `(("i" "Inbox @mine TODO" entry (file+headline ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
            "* TODO %? :@mine:")
-          ("I" "Inbox @work TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
+          ("I" "Inbox @work TODO" entry (file+headline ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
            "* TODO %? :@work:")
-          ("p" "Project @mine TODO" entry (file ,(concat spolakh/org-agenda-directory "projects.org.gpg"))
+          ("p" "Project @mine TODO" entry (file+headline ,(concat spolakh/org-agenda-directory "projects.org.gpg") "Projects")
            "* TODO [%^{Project title}] :@mine:\nGoal: *%^{Goal}*\n%^{Description}\n** TODO %?")
-          ("P" "Project @work TODO" entry (file ,(concat spolakh/org-agenda-directory "projects.org.gpg"))
+          ("P" "Project @work TODO" entry (file+headline ,(concat spolakh/org-agenda-directory "projects.org.gpg") "Projects")
            "* TODO [%^{Project title}] :@work:\nGoal: *%^{Goal}*\n%^{Description}\n** TODO %?")
-          ("t" "inbox @mine TODO for Today" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
+          ("t" "inbox @mine TODO for Today" entry+headline (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
            "* TODO %? :@mine:\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"\"))")
-          ("T" "inbox @work TODO for Today" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
+          ("T" "inbox @work TODO for Today" entry+headline (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
            "* TODO %? :@work:\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"\"))")
           ("c" "add note to Clocked item" plain (clock)
            "%T: %?"
            :unnarrowed t)
-          ("a" "org-protocol-capture from Alfred" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
+          ("a" "org-protocol-capture from Alfred" entry+headline (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
             "* TODO %i"
             :immediate-finish t)))
   (setq
@@ -343,8 +352,7 @@
    org-log-done 'time
    org-todo-keywords '(
     (sequence "TODO(t)" "|" "DONE(d)")
-    (sequence "SPRINT(s)" "|" "DONE")
-    (sequence "WAITING(w@/!)" "|""PASS(p@/!)")
+    (sequence "SPRINT(s)" "WAITING(w@/!)" "|" "DONE")
     (sequence "Fleeting(f)" "Evergreen")
     (sequence "Open(O!)" "In Progress(I!)" "Going Well(G!)" "Resolved(R!)") ; Board items
     (sequence "TODIGEST" "|" "DIGESTED") ; Nibbles(Articles / Books / Videos / ...) for quotations
@@ -379,9 +387,9 @@
                             ;(:endgrouptag)
                             )))
   (setq org-fast-tag-selection-single-key nil)
-  (setq org-refile-targets `((,(concat spolakh/org-agenda-directory "later.org.gpg") :maxlevel . 1)
+  (setq org-refile-targets `((,(concat spolakh/org-agenda-directory "later.org.gpg") :maxlevel . 4)
                               (,(concat spolakh/org-agenda-directory "repeaters.org.gpg") :level . 0)
-                              (,(concat spolakh/org-agenda-directory "projects.org.gpg") :maxlevel . 1)
+                              (,(concat spolakh/org-agenda-directory "projects.org.gpg") :maxlevel . 4)
                               (nil :maxlevel . 2)))
   (defun spolakh/shift-dwim-at-point ()
     (interactive)
@@ -397,7 +405,12 @@
          ))
 )
 
-(use-package! org-inlinetask)
+(use-package! org-inlinetask
+  :after org
+  :config
+  (setq org-inlinetask-min-level 15)
+  (setq org-inlinetask-show-first-star t)
+  )
 
 (use-package! ov
   :after org
@@ -416,13 +429,15 @@
 )
 
 (use-package! org-superstar
-  :after org
+  :after org-inlinetask
   :hook
   (org-mode . org-superstar-mode)
   :config
 
   (setq org-superstar-cycle-headline-bullets nil)
-  (setq org-superstar-headline-bullets-list '("◉" "○" "✤" "✜")) ; "⁜" "✿" "▷" "🟍"
+  (setq org-superstar-headline-bullets-list '("◉" "○" "✜" "✤" "▷")) ; "⁜" "✿" "▷" "🟍"
+  (setq org-superstar-first-inlinetask-bullet ?🟍)
+  (setq org-superstar-cycle-headline-bullets nil)
   ;; (setq org-superstar-headline-bullets-list '("\u200b"))
   ;; (setq org-superstar-leading-bullet "\u200b")
   )
@@ -463,10 +478,10 @@
   :after cl-lib
   :init
   (setq org-agenda-block-separator nil
-        org-agenda-skip-archived-trees t
         org-archive-default-command 'org-archive-to-archive-sibling
         org-agenda-start-with-log-mode t
         org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-archived-trees nil
         org-agenda-log-mode-items '(closed clock))
         ; org-agenda-log-mode-items '(closed clock state))
   (add-hook 'evil-org-agenda-mode-hook #'display-line-numbers-mode)
@@ -486,9 +501,6 @@
   (defun spolakh/set-todo-done ()
     (interactive)
     (org-agenda-todo "DONE"))
-  (defun spolakh/set-todo-pass ()
-    (interactive)
-    (org-agenda-todo "PASS"))
   (defun spolakh/org-current-is-first-level-headline ()
     (= 1 (org-current-level)))
   (defun spolakh/org-current-is-todo ()
@@ -1179,7 +1191,6 @@
           "R" #'org-agenda-refile
           "<s-return>" #'org-agenda-todo
           "<s-S-return>" #'spolakh/set-todo-done
-          "D" #'spolakh/set-todo-pass
           "S" #'spolakh/set-todo-waiting
           "s-." #'spolakh/debug
           "!" #'spolakh/org-agenda-parent-to-top
@@ -1320,18 +1331,10 @@
           ))
   (setq org-roam-dailies-capture-templates
         `(("d" "daily" entry (function org-roam-capture--get-point)
-           "* TODO %?"
+           "**** %?"
            ;:immediate-finish t
            :file-name ,(concat "private/dailies/" spolakh/org-roam-daily-prefix "%<%Y-%m-%d>")
-           :head "#+TITLE: %<%Y-%m-%d>\n\n[[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:\n\n* :@mine:\n* :@work:\n"
-           :olp (":@mine:"))
-
-          ("D" "work-daily" entry (function org-roam-capture--get-point)
-           "* TODO %?"
-           ;:immediate-finish t
-           :file-name ,(concat "private/dailies/" spolakh/org-roam-daily-prefix "%<%Y-%m-%d>")
-           :head "#+TITLE: %<%Y-%m-%d>\n\n[[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:\n\n* :@mine:\n* :@work:\n"
-           :olp (":@work:"))
+           :head "#+TITLE: %<%Y-%m-%d>\n\n[[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:\n\n*** :@mine:\n*** :@work:\n* What's on your mind?\n")
         ))
   (map! :map org-roam-mode-map
         :leader
