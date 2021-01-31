@@ -341,17 +341,26 @@
            "* TODO %? :@mine:")
           ("I" "Inbox @work TODO" entry (file+headline ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
            "* TODO %? :@work:")
+
+          ("s" "Sprint @mine TODO" entry (file+headline ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
+           "* SPRINT %? :@mine:")
+          ("S" "Sprint @work TODO" entry (file+headline ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
+           "* SPRINT %? :@work:")
+
+          ("t" "@mine SPRINT for Today" entry (file+headline ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
+           "* SPRINT %? :@mine:\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"\"))")
+          ("T" "@work SPRINT for Today" entry (file+headline ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
+           "* SPRINT %? :@work:\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"\"))")
+
           ("p" "Project @mine TODO" entry (file+headline ,(concat spolakh/org-agenda-directory "projects.org.gpg") "Projects")
            "* TODO [%^{Project title}] :@mine:\nGoal: *%^{Goal}*\n%^{Description}\n** TODO %?")
           ("P" "Project @work TODO" entry (file+headline ,(concat spolakh/org-agenda-directory "projects.org.gpg") "Projects")
            "* TODO [%^{Project title}] :@work:\nGoal: *%^{Goal}*\n%^{Description}\n** TODO %?")
-          ("t" "inbox @mine TODO for Today" entry+headline (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
-           "* TODO %? :@mine:\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"\"))")
-          ("T" "inbox @work TODO for Today" entry+headline (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
-           "* TODO %? :@work:\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"\"))")
+
           ("c" "add note to Clocked item" plain (clock)
            "%T: %?"
            :unnarrowed t)
+
           ("a" "org-protocol-capture from Alfred" entry+headline (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
             "* TODO %i"
             :immediate-finish t)))
@@ -503,15 +512,9 @@
   (setq org-agenda-use-time-grid t)
   (setq org-extend-today-until 5)
   (setq org-agenda-todo-list-sublevels t)
-  (defun spolakh/set-todo-waiting ()
+  (defun spolakh/set-todo-sprint ()
     (interactive)
-    (org-agenda-todo "WAITING"))
-  (defun spolakh/set-todo-idea ()
-    (interactive)
-    (org-agenda-todo "Fleeting"))
-  (defun spolakh/set-todo-done ()
-    (interactive)
-    (org-agenda-todo "DONE"))
+    (org-agenda-todo "SPRINT"))
   (defun spolakh/org-current-is-first-level-headline ()
     (= 1 (org-current-level)))
   (defun spolakh/org-current-is-todo ()
@@ -710,7 +713,7 @@
                     (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
                     (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org.gpg")))))
 
-        (todo "TODO|SPRINT|WAITING"
+        (todo "TODO|WAITING"
               ((org-agenda-overriding-header "📦 Ticklers from Later. Take into Sprint \\ Add to active Projects \\ Defer(p) >")
                (org-agenda-files '(,(concat spolakh/org-agenda-directory "later.org.gpg")))
                (org-agenda-skip-function '(or
@@ -857,7 +860,8 @@
                                              (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
                                              (spolakh/skip-subtree-if-later)))))
 
-        (tags-todo "LEVEL=2+TODO=\"In Progress\""
+        ; bring back LEVEL=2 when indentation in task buffers is fixed
+        (tags-todo "+TODO=\"In Progress\""
                    ((org-agenda-overriding-header "🎗 In Progress")
                     (org-agenda-prefix-format '((tags . " - ")))
                     (org-agenda-todo-keyword-format "")
@@ -1083,6 +1087,7 @@
       ("q" (lambda () (interactive) (progn (org-agenda-schedule nil "+3m") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 Quarter - 3 months")
       ("h" (lambda () (interactive) (progn (org-agenda-schedule nil "+6m") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 Half - 6 months")
       ("y" (lambda () (interactive) (progn (org-agenda-schedule nil "+1y") (spolakh/refile-to-later) (spolakh/advance-inbox-processing))) "1 Year")
+      ("s" (lambda () (interactive) (progn (spolakh/set-todo-sprint) (spolakh/unschedule) (spolakh/advance-inbox-processing))) "Into current SPRINT")
       ("p" (lambda () (interactive) ;(let ((current-prefix-arg '(4)))
              (progn
                ;(call-interactively 'org-agenda-schedule)
@@ -1200,7 +1205,6 @@
           "o" #'org-agenda-clock-out
           :m "I" #'org-pomodoro
           :m "O" #'org-pomodoro
-          :m "s-i" #'spolakh/set-todo-idea
                                         ;"a" #'org-agenda-add-note ; we always link notes in the default item processing flow
           "d" #'org-agenda-deadline
           "s" #'org-agenda-schedule
@@ -1212,8 +1216,6 @@
           :m "t"  #'org-agenda-columns
           "R" #'org-agenda-refile
           "<s-return>" #'org-agenda-todo
-          "<s-S-return>" #'spolakh/set-todo-done
-          "D" #'spolakh/set-todo-waiting
           "s-." #'spolakh/debug
           "!" #'spolakh/org-agenda-parent-to-top
           :m "!" #'spolakh/org-agenda-parent-to-top
@@ -1356,7 +1358,7 @@
            "**** %?"
            ;:immediate-finish t
            :file-name ,(concat "private/dailies/" spolakh/org-roam-daily-prefix "%<%Y-%m-%d>")
-           :head "#+TITLE: %<%Y-%m-%d>\n\n[[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:\n\n*** :@mine:\n*** :@work:\n* What's on your mind?\n")
+           :head "#+TITLE: %<%Y-%m-%d>\n\n[[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:\n\n* What's on your mind?\n")
         ))
   (map! :map org-roam-mode-map
         :leader
