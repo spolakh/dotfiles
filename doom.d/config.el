@@ -60,7 +60,17 @@
 ;; TODO ns-use-thin-smoothing
 
 (use-package! mixed-pitch
-  :hook (org-mode . mixed-pitch-mode)
+  :init
+  (defvar spolakh/task-files
+    '("projects.org.gpg" "inbox.org.gpg" "later.org.gpg" "repeaters.org.gpg" "phone.org" "phone-work.org")
+    "Filenames of org files that won't get variable-font and scaled org headers")
+  (defun spolakh/is-this-a-task-file ()
+    (seq-some (lambda (x) (string-match-p x buffer-file-name)) spolakh/task-files))
+  (defun spolakh/maybe-turn-on-mixed-pitch-mode ()
+    (if (not (spolakh/is-this-a-task-file)) (mixed-pitch-mode)))
+
+  :hook (org-mode . spolakh/maybe-turn-on-mixed-pitch-mode)
+
   :config
   (setq mixed-pitch-set-height t)
   ; anything else except :height doesn't work here
@@ -288,13 +298,6 @@
         spolakh/org-gcal-directory "~/Dropbox/org/cal/"
         spolakh/org-directory "~/Dropbox/org/")
 
-  ;; (defun unscale-org-levels ()
-  ;;   (interactive)
-  ;;   (face-remap-set-base )
-  ;;   )
-  ;; (define-minor-mode org-task-buffer-mode
-  ;;   "Enabled on org buffers that primarily contain tasks. Those shouldn't scale the size of first 4 headers. Also turn mixed-pitch mode off"
-  ;;   :after-hook)
   (set-face-attribute 'org-level-8 nil :inherit 'default)
   (set-face-attribute 'org-level-1 nil :inherit 'org-level-8 :height 1.728 :weight 'normal)
   (set-face-attribute 'org-level-2 nil :inherit 'org-level-8 :height 1.44 :weight 'normal)
