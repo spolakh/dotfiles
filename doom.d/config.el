@@ -32,9 +32,13 @@
 ;;
 ;(setq doom-font (font-spec :family "monospace" :size 14))
 ; spolakh/FAVS:
-;(setq doom-font (font-spec :family "Menlo" :size 13))
-(setq doom-font "-*-Menlo-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1")
-(setq doom-variable-pitch-font (font-spec :family "Yanone Kaffeesatz" :weight 'extra-light))
+;; (setq doom-font "-*-Menlo-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1")
+(setq doom-font (font-spec :family "Menlo" :size 12 :weight 'extra-light))
+; https://github.com/edwardtufte/et-book
+;(setq doom-variable-pitch-font (font-spec :family "ETBook" :size 18 :weight 'extra-light))
+(setq doom-variable-pitch-font (font-spec :family "Cochin" :size 18 :weight 'extra-light))
+;(set-face-attribute 'default nil :weight 'extra-light)
+;(set-face-attribute 'variable-pitch nil :weight 'extra-light)
 ;; (setq doom-variable-pitch-font (font-spec :family "Raleway" :weight 'thin))
 (after! doom-themes
   (setq doom-themes-enable-bold t)
@@ -55,12 +59,12 @@
 
 ;; TODO ns-use-thin-smoothing
 
-(use-package mixed-pitch
+(use-package! mixed-pitch
   :hook (org-mode . mixed-pitch-mode)
   :config
   (setq mixed-pitch-set-height t)
-  (set-face-attribute 'variable-pitch nil :height 190 :weight 'light)
-  ;; (set-face-attribute 'variable-pitch nil :weight 'normal)
+  ; anything else except :height doesn't work here
+  (set-face-attribute 'variable-pitch nil :height 180)
   )
 
 (setq display-line-numbers-type `visual)
@@ -284,6 +288,13 @@
         spolakh/org-gcal-directory "~/Dropbox/org/cal/"
         spolakh/org-directory "~/Dropbox/org/")
 
+  ;; (defun unscale-org-levels ()
+  ;;   (interactive)
+  ;;   (face-remap-set-base )
+  ;;   )
+  ;; (define-minor-mode org-task-buffer-mode
+  ;;   "Enabled on org buffers that primarily contain tasks. Those shouldn't scale the size of first 4 headers."
+  ;;   :after-hook)
   (set-face-attribute 'org-level-8 nil :inherit 'default)
   (set-face-attribute 'org-level-1 nil :inherit 'org-level-8 :height 1.728 :weight 'normal)
   (set-face-attribute 'org-level-2 nil :inherit 'org-level-8 :height 1.44 :weight 'normal)
@@ -663,14 +674,16 @@
                                )
                              )))
 
-      `((tags-todo "LEVEL=2+TODO=\"Going Well\"+TIMESTAMP_IA<=\"<-1m>\""
+      ;; LEVEL=2 - add this when we fix levels scaling in task buffers
+      `((tags-todo "+TODO=\"Going Well\"+TIMESTAMP_IA<=\"<-1m>\""
                    ((org-agenda-overriding-header "🏆 Going Well - without reminders - for a month. If dropped - In Progress. If still going - Resolved & 🐦 tweet it 💗 >")
                     (org-agenda-prefix-format '((tags . " - ")))
                     (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
                     (org-todo-keyword-faces '(("Going Well" . (:foreground "LightCoral" :weight bold))))
                     (org-agenda-files '(,(concat spolakh/org-agenda-directory "board.org.gpg")))))
 
-        (tags-todo "LEVEL=2+TODO=\"In Progress\""
+      ;; LEVEL=2+ - add this when we fix levels scaling in task buffers
+        (tags-todo "+TODO=\"In Progress\""
                    ((org-agenda-overriding-header "🎗 Everything In Progress. If we feel safe loosening attention around it - Going Well. If dropped - Open (or archive) >")
                     (org-agenda-prefix-format '((tags . " - ")))
                     (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
@@ -799,14 +812,17 @@
                               (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
                              '(
                                ,(concat spolakh/org-agenda-directory "projects.org.gpg")
+                               ,(concat spolakh/org-agenda-directory "repeaters.org.gpg")
                                ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
                                ,(concat spolakh/org-agenda-directory "later.org.gpg")
                                ,(concat spolakh/org-phone-directory "phone.org")
                                ,(concat spolakh/org-phone-directory "phone-work.org")
                                )
                              )))
-       `(tags ,(format "CLOSED>=\"<-%dd>\"" ndays)
+        ; includes regular tasks finished during last sprint & repeaters done within the same time
+       `(tags ,(format "+TODO=\"DONE\"&+CLOSED>=\"<-%dd>\"|+TODO=\"TODO\"&+TIMESTAMP_IA>=\"<-%dd>\"" ndays ndays)
                    ((org-agenda-overriding-header "💠 Done >")
+                    ; this puts all repeaters in front but whatever, is good enough
                     (org-agenda-cmp-user-defined (cmp-date-property "CLOSED"))
                     (org-agenda-sorting-strategy '(user-defined-up))
                     (org-agenda-files ,all-files)
@@ -831,10 +847,11 @@
                 ((org-agenda-span 1)
                  (org-agenda-start-day "today")
                  (org-agenda-start-on-weekday nil)
-                 (org-agenda-skip-archived-trees t)
+                 (org-agenda-skip-archived-trees nil)
                  (org-agenda-files ,all-files)
                  (org-deadline-warning-days 3)
                  (org-agenda-prefix-format '((agenda . " %i %?-16t% s%b")))
+                 (org-agenda-log-mode-items '(closed clock state))
                  (org-agenda-skip-function '(or
                                              (spolakh/skip-if-waiting)
                                              (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
