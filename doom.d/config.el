@@ -32,14 +32,14 @@
 ;;
 ;(setq doom-font (font-spec :family "monospace" :size 14))
 ; spolakh/FAVS:
+;(setq doom-font (font-spec :family "Anonymous Pro" :size 13 :weight 'bold))
+;  (setq doom-font "Fira Code-12")
+;  (setq doom-font "Ubuntu Mono-14")
 ;; (setq doom-font "-*-Menlo-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1")
 (setq doom-font (font-spec :family "Menlo" :size 12 :weight 'extra-light))
 ; https://github.com/edwardtufte/et-book
 ;(setq doom-variable-pitch-font (font-spec :family "ETBook" :size 18 :weight 'extra-light))
 (setq doom-variable-pitch-font (font-spec :family "Cochin" :size 18 :weight 'extra-light))
-;(set-face-attribute 'default nil :weight 'extra-light)
-;(set-face-attribute 'variable-pitch nil :weight 'extra-light)
-;; (setq doom-variable-pitch-font (font-spec :family "Raleway" :weight 'thin))
 (after! doom-themes
   (setq doom-themes-enable-bold t)
   (setq doom-themes-enable-italic t)
@@ -50,12 +50,6 @@
   )
 
 (set-face-attribute 'link nil :weight 'normal)
-;(setq doom-font (font-spec :family "Anonymous Pro" :size 13 :weight 'bold))
-;  (setq doom-font "Fira Code-12")
-;  (setq doom-font "Ubuntu Mono-14")
-
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
 
 ;; TODO ns-use-thin-smoothing
 
@@ -65,7 +59,7 @@
     '("projects.org.gpg" "inbox.org.gpg" "later.org.gpg" "repeaters.org.gpg" "phone.org" "phone-work.org")
     "Filenames of org files that won't get variable-font and scaled org headers")
   (defun spolakh/is-this-a-task-file ()
-    (seq-some (lambda (x) (string-match-p x buffer-file-name)) spolakh/task-files))
+    (if buffer-file-name (seq-some (lambda (x) (string-match-p x buffer-file-name)) spolakh/task-files)))
   (defun spolakh/maybe-turn-on-mixed-pitch-mode ()
     (if (not (spolakh/is-this-a-task-file)) (mixed-pitch-mode)))
 
