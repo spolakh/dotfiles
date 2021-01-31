@@ -293,7 +293,7 @@
   ;;   (face-remap-set-base )
   ;;   )
   ;; (define-minor-mode org-task-buffer-mode
-  ;;   "Enabled on org buffers that primarily contain tasks. Those shouldn't scale the size of first 4 headers."
+  ;;   "Enabled on org buffers that primarily contain tasks. Those shouldn't scale the size of first 4 headers. Also turn mixed-pitch mode off"
   ;;   :after-hook)
   (set-face-attribute 'org-level-8 nil :inherit 'default)
   (set-face-attribute 'org-level-1 nil :inherit 'org-level-8 :height 1.728 :weight 'normal)
@@ -1069,6 +1069,10 @@
     )
   (defun spolakh/refile-to-later ()
    (org-agenda-refile nil (list "" (concat spolakh/org-agenda-directory "later.org.gpg") nil nil) t))
+  (defun spolakh/unschedule ()
+    (interactive)
+    (let ((current-prefix-arg '(4)))
+      (call-interactively 'org-agenda-schedule)))
   (after! hydra
     (defhydra hydra-schedule (:color teal)
       "Remind about this in:"
@@ -1200,6 +1204,7 @@
                                         ;"a" #'org-agenda-add-note ; we always link notes in the default item processing flow
           "d" #'org-agenda-deadline
           "s" #'org-agenda-schedule
+          "S" #'spolakh/unschedule
           "a" #'org-agenda-archive-default-with-confirmation
           "A" #'org-agenda-add-note
           "p" #'spolakh/org-agenda-process-single-inbox-item
@@ -1208,7 +1213,7 @@
           "R" #'org-agenda-refile
           "<s-return>" #'org-agenda-todo
           "<s-S-return>" #'spolakh/set-todo-done
-          "S" #'spolakh/set-todo-waiting
+          "D" #'spolakh/set-todo-waiting
           "s-." #'spolakh/debug
           "!" #'spolakh/org-agenda-parent-to-top
           :m "!" #'spolakh/org-agenda-parent-to-top
