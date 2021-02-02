@@ -39,7 +39,7 @@
 (setq doom-font (font-spec :family "Menlo" :size 12 :weight 'extra-light))
 ; https://github.com/edwardtufte/et-book
 ;(setq doom-variable-pitch-font (font-spec :family "ETBook" :size 18 :weight 'extra-light))
-(setq doom-variable-pitch-font (font-spec :family "Cochin" :size 18 :weight 'extra-light))
+(setq doom-variable-pitch-font (font-spec :family "Cochin" :size 16 :weight 'extra-light))
 (after! doom-themes
   (setq doom-themes-enable-bold t)
   (setq doom-themes-enable-italic t)
@@ -63,12 +63,26 @@
   (defun spolakh/maybe-turn-on-mixed-pitch-mode ()
     (if (not (spolakh/is-this-a-task-file)) (mixed-pitch-mode)))
 
+  (defun spolakh/scale-org-headers-in-current-buffer ()
+    (interactive)
+    (progn
+      (face-remap-add-relative 'org-level-8 :inherit 'default)
+      (face-remap-add-relative 'org-level-1 :inherit 'org-level-8 :height 1.728 :weight 'normal)
+      (face-remap-add-relative 'org-level-2 :inherit 'org-level-8 :height 1.44 :weight 'normal)
+      (face-remap-add-relative 'org-level-3 :inherit 'org-level-8 :height 1.2 :weight 'normal)
+      (face-remap-add-relative 'org-level-4 :inherit 'org-level-8 :weight 'normal)
+      )
+    )
+  (defun spolakh/maybe-scale-org-headers ()
+    (if (not (spolakh/is-this-a-task-file)) (spolakh/scale-org-headers-in-current-buffer)))
+  (add-hook 'org-mode-hook 'spolakh/maybe-scale-org-headers)
+
   :hook (org-mode . spolakh/maybe-turn-on-mixed-pitch-mode)
 
   :config
   (setq mixed-pitch-set-height t)
   ; anything else except :height doesn't work here
-  (set-face-attribute 'variable-pitch nil :height 180)
+  (set-face-attribute 'variable-pitch nil :height 160)
   )
 
 (setq display-line-numbers-type `visual)
@@ -292,13 +306,7 @@
         spolakh/org-gcal-directory "~/Dropbox/org/cal/"
         spolakh/org-directory "~/Dropbox/org/")
 
-  (set-face-attribute 'org-level-8 nil :inherit 'default)
-  (set-face-attribute 'org-level-1 nil :inherit 'org-level-8 :height 1.728 :weight 'normal)
-  (set-face-attribute 'org-level-2 nil :inherit 'org-level-8 :height 1.44 :weight 'normal)
-  (set-face-attribute 'org-level-3 nil :inherit 'org-level-8 :height 1.2 :weight 'normal)
-  (set-face-attribute 'org-level-4 nil :inherit 'org-level-8 :weight 'normal)
   (set-face-attribute 'org-document-title nil :inherit 'org-level-8 :height 2.074 :weight 'normal)
-  ;; (set-face-attribute 'variable-pitch nil :weight 'light)
 
   (setq org-cycle-level-faces nil)
   (setq org-n-level-faces 4)
