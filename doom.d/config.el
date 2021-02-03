@@ -412,10 +412,11 @@
                             ;(:endgrouptag)
                             )))
   (setq org-fast-tag-selection-single-key nil)
-  (setq org-refile-targets `((,(concat spolakh/org-agenda-directory "later.org.gpg") :maxlevel . 4)
+  (setq org-refile-targets `((,(concat spolakh/org-agenda-directory "later.org.gpg") :maxlevel . 1)
                               (,(concat spolakh/org-agenda-directory "repeaters.org.gpg") :level . 0)
-                              (,(concat spolakh/org-agenda-directory "projects.org.gpg") :maxlevel . 4)
-                              (nil :maxlevel . 2)))
+                              (,(concat spolakh/org-agenda-directory "inbox.org.gpg") :level . 0)
+                              (,(concat spolakh/org-agenda-directory "projects.org.gpg") :maxlevel . 1)
+                              (nil :maxlevel . 1)))
   (defun spolakh/shift-dwim-at-point ()
     (interactive)
     (let ((org-link-frame-setup (quote
@@ -839,6 +840,19 @@
                     (org-agenda-hide-tags-regexp "")
                     ))))
 
+(defun spolakh/tmp-agenda ()
+    (let ((all-files
+                              `(append (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>))
+                             ))
+      `(
+        (todo "DONE"
+                   ((org-agenda-overriding-header "tmp")
+
+                 (org-agenda-prefix-format '((todo . " %i %-12:c ")))
+                 (org-agenda-files ,all-files)
+                    ))
+        )))
+
   (defun spolakh/kanban-for-filter (filter)
     (let ((all-files `(append
                               (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
@@ -906,6 +920,7 @@
          '("Effort_ALL". "100:00 0:15 0:30 1:00 2:00 4:00 12:00"))
   (setq org-agenda-custom-commands `(
                                      ("k" "Kanban" ,(spolakh/kanban-for-filter "+@mine"))
+                                     ("t" "tmp" ,(spolakh/tmp-agenda))
                                      ("K" "Work Kanban" ,(spolakh/kanban-for-filter "+@work"))
                                      ("a" "Agenda" ,(spolakh/agenda-for-filter "+@mine"))
                                      ("A" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))
@@ -970,6 +985,10 @@
     (interactive)
     (org-agenda nil "/")
     )
+  (defun spolakh/switch-to-tmp ()
+    (interactive)
+    (org-agenda nil "t")
+    )
   (defun spolakh/switch-to-weekly-work-agenda ()
     (interactive)
     (org-agenda nil "?")
@@ -987,6 +1006,7 @@
          :desc "Work Done for last 7 days" "&" #'spolakh/switch-to-work-done-review-agenda
          :desc "What feels important now?" "/" #'spolakh/switch-to-weekly-agenda
          :desc "What can I drop from work tasks?" "?" #'spolakh/switch-to-weekly-work-agenda
+         :desc "tmp" "t" #'spolakh/switch-to-tmp
          :desc "Work Agenda" "A" #'spolakh/switch-to-work-agenda))
   (defun spolakh/org-fast-effort-selection ()
     "Modification of `org-fast-todo-selection' for use with org-set-effert. Select an effort value with single keys.
