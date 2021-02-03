@@ -674,7 +674,6 @@
 
   (defun spolakh/review-for-filter (filter)
     (let ((all-files `(append
-                              (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
                               (find-lisp-find-files spolakh/org-gcal-directory "\.org.gpg$")
                               (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")
                              '(
@@ -732,7 +731,6 @@
         (todo "TODO"
               ((org-agenda-overriding-header "📤 Inboxes. Drop(a) \\ Process(p) \\ Mark as Fleeting(s-RET f) >")
                (org-agenda-files (append
-                                  (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
                                   '(
                                     ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
                                     ,(concat spolakh/org-phone-directory "phone.org")
@@ -753,7 +751,6 @@
              (org-agenda-files
               (append
                `(,(concat spolakh/org-phone-directory "phone-work.org") ,(concat spolakh/org-phone-directory "phone.org"))
-               (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$")
                (find-lisp-find-files spolakh/org-gcal-directory "\.org.gpg$")
                (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")))
              (org-deadline-warning-days 3)
@@ -776,7 +773,6 @@
     (todo "TODO"
           ((org-agenda-overriding-header "📤 To Activate/Snooze (decide if now is a good time to do these) >")
            (org-agenda-files (append
-                              (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
                              '(
                                ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
                                ,(concat spolakh/org-phone-directory "phone.org")
@@ -793,7 +789,6 @@
     (todo "Fleeting"
           ((org-agenda-overriding-header "🔖 to Finalize into Permanent Notes >")
            (org-agenda-files (append
-                              (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$")
                               '(
                                 ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
                                 ,(concat spolakh/org-phone-directory "phone.org")
@@ -816,7 +811,6 @@
 
   (defun spolakh/done-for-filter (filter ndays)
       (let ((all-files `(append
-                              (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
                              '(
                                ,(concat spolakh/org-agenda-directory "projects.org.gpg")
                                ,(concat spolakh/org-agenda-directory "repeaters.org.gpg")
@@ -842,7 +836,6 @@
 
   (defun spolakh/kanban-for-filter (filter)
     (let ((all-files `(append
-                              (sort (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$") #'string>)
                               (find-lisp-find-files spolakh/org-gcal-directory "\.org.gpg$")
                               (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")
                              '(
@@ -917,7 +910,6 @@
                                     (todo "Fleeting"
                                           ((org-agenda-overriding-header "🔖 to Finalize into Permanent Notes >")
                                           (org-agenda-files (append
-                                                              (find-lisp-find-files spolakh/org-dailies-directory "\.org.gpg$")
                                                               '(
                                                                 ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
                                                                 ,(concat spolakh/org-phone-directory "phone.org")
