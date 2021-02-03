@@ -342,31 +342,31 @@
        :desc "Clock in" "i" 'org-clock-in
        :desc "Toggle last clock" "o" '+org/toggle-last-clock))
   (setq org-capture-templates
-        `(("i" "Inbox @mine TODO" entry (file+headline ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
+        `(("i" "Inbox @mine TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
            "* TODO %? :@mine:")
-          ("I" "Inbox @work TODO" entry (file+headline ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
+          ("I" "Inbox @work TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
            "* TODO %? :@work:")
 
-          ("s" "Sprint @mine TODO" entry (file+headline ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
+          ("s" "Sprint @mine TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
            "* SPRINT %? :@mine:")
-          ("S" "Sprint @work TODO" entry (file+headline ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
+          ("S" "Sprint @work TODO" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
            "* SPRINT %? :@work:")
 
-          ("t" "@mine SPRINT for Today" entry (file+headline ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
+          ("t" "@mine SPRINT for Today" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
            "* SPRINT %? :@mine:\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"\"))")
-          ("T" "@work SPRINT for Today" entry (file+headline ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
+          ("T" "@work SPRINT for Today" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
            "* SPRINT %? :@work:\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"\"))")
 
-          ("p" "Project @mine TODO" entry (file+headline ,(concat spolakh/org-agenda-directory "projects.org.gpg") "Projects")
+          ("p" "Project @mine TODO" entry (file ,(concat spolakh/org-agenda-directory "projects.org.gpg"))
            "* TODO [%^{Project title}] :@mine:\nGoal: *%^{Goal}*\n%^{Description}\n** TODO %?")
-          ("P" "Project @work TODO" entry (file+headline ,(concat spolakh/org-agenda-directory "projects.org.gpg") "Projects")
+          ("P" "Project @work TODO" entry (file ,(concat spolakh/org-agenda-directory "projects.org.gpg"))
            "* TODO [%^{Project title}] :@work:\nGoal: *%^{Goal}*\n%^{Description}\n** TODO %?")
 
           ("c" "add note to Clocked item" plain (clock)
            "%T: %?"
            :unnarrowed t)
 
-          ("a" "org-protocol-capture from Alfred" entry+headline (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg") "Inbox")
+          ("a" "org-protocol-capture from Alfred" entry (file ,(concat spolakh/org-agenda-directory "inbox.org.gpg"))
             "* TODO %i"
             :immediate-finish t)))
   (setq
@@ -682,16 +682,14 @@
                                )
                              )))
 
-      ;; LEVEL=2 - add this when we fix levels scaling in task buffers
-      `((tags-todo "+TODO=\"Going Well\"+TIMESTAMP_IA<=\"<-1m>\""
+      `((tags-todo "LEVEL=2+TODO=\"Going Well\"+TIMESTAMP_IA<=\"<-1m>\""
                    ((org-agenda-overriding-header "🏆 Going Well - without reminders - for a month. If dropped - In Progress. If still going - Resolved & 🐦 tweet it 💗 >")
                     (org-agenda-prefix-format '((tags . " - ")))
                     (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
                     (org-todo-keyword-faces '(("Going Well" . (:foreground "LightCoral" :weight bold))))
                     (org-agenda-files '(,(concat spolakh/org-agenda-directory "board.org.gpg")))))
 
-      ;; LEVEL=2+ - add this when we fix levels scaling in task buffers
-        (tags-todo "+TODO=\"In Progress\""
+        (tags-todo "LEVEL=2+TODO=\"In Progress\""
                    ((org-agenda-overriding-header "🎗 Everything In Progress. If we feel safe loosening attention around it - Going Well. If dropped - Open (or archive) >")
                     (org-agenda-prefix-format '((tags . " - ")))
                     (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
@@ -865,8 +863,7 @@
                                              (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
                                              (spolakh/skip-subtree-if-later)))))
 
-        ; bring back LEVEL=2 when indentation in task buffers is fixed
-        (tags-todo "+TODO=\"In Progress\""
+        (tags-todo "LEVEL=2+TODO=\"In Progress\""
                    ((org-agenda-overriding-header "🎗 In Progress")
                     (org-agenda-prefix-format '((tags . " - ")))
                     (org-agenda-todo-keyword-format "")
