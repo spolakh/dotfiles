@@ -1392,10 +1392,9 @@
     "W" 'git-link-commit
     ))
 
-  (defun git-link-sourcegraph (hostname dirname filename _branch commit start end)
+  (defun git-link-sourcegraph (hostname dirname filename _branch _commit start end)
     (let ((line-or-range (if end (format "%s-%s" start end) start)))
-      (format "https://sg.eng.grail.com/grail/grail@%s/-/blob/%s#L%s"
-              commit
+      (format "https://sg.eng.grail.com/grail/grail/-/blob/%s#L%s"
               filename
               line-or-range)))
 
