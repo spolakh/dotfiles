@@ -742,73 +742,6 @@
                                            ))))
     )))
 
-  (defun spolakh/agenda-for-filter (filter)
-    `((agenda ""
-            ((org-agenda-span 1)
-             (org-agenda-start-day "today")
-             (org-agenda-start-on-weekday nil)
-             (org-agenda-skip-archived-trees t)
-             (org-agenda-files
-              (append
-               `(,(concat spolakh/org-phone-directory "phone-work.org") ,(concat spolakh/org-phone-directory "phone.org"))
-               (find-lisp-find-files spolakh/org-gcal-directory "\.org.gpg$")
-               (find-lisp-find-files spolakh/org-agenda-directory "\.org.gpg$")))
-             (org-deadline-warning-days 3)
-             ;(org-agenda-prefix-format '((agenda . " %i %-21:c%?-16t% s%b"))) ; adds category
-             (org-agenda-prefix-format '((agenda . " %i %?-16t% s%b")))
-             (org-agenda-skip-function '(or
-                                         (spolakh/skip-if-waiting)
-                                         (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)
-                                         (spolakh/skip-subtree-if-later)))
-             ))
-
-    (todo "WAITING"
-          ((org-agenda-overriding-header "🌒 Waiting (want to do if not blocked, else postpone) >")
-          (org-agenda-skip-function '(or
-                                       (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
-                                       (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)
-                                       ))
-          (org-agenda-hide-tags-regexp "")
-          ))
-    (todo "TODO"
-          ((org-agenda-overriding-header "📤 To Activate/Snooze (decide if now is a good time to do these) >")
-           (org-agenda-files (append
-                             '(
-                               ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
-                               ,(concat spolakh/org-phone-directory "phone.org")
-                               ,(concat spolakh/org-phone-directory "phone-work.org")
-                               ,(concat spolakh/org-agenda-directory "later.org.gpg")
-                               )
-                             ))
-           (org-agenda-skip-function '(or
-                                       (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
-                                       (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)
-                                       (spolakh/org-agenda-leave-second-level-in-dailies)
-                                       ))
-           (org-agenda-max-entries 10)))
-    (todo "Fleeting"
-          ((org-agenda-overriding-header "🔖 to Finalize into Permanent Notes >")
-           (org-agenda-files (append
-                              '(
-                                ,(concat spolakh/org-agenda-directory "inbox.org.gpg")
-                                ,(concat spolakh/org-phone-directory "phone.org")
-                                ,(concat spolakh/org-phone-directory "phone-work.org")
-                                )
-                               ))
-           (org-agenda-max-entries 3)))
-    (todo "TODO"
-          ((org-agenda-overriding-header "🚀 Projects (things that feel interesting now in addition to Repeaters) >")
-          (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org.gpg")))
-          (org-agenda-skip-function '(or
-                                      (org-agenda-skip-entry-if 'deadline 'scheduled)
-                                      (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)
-                                      (spolakh/org-agenda-leave-only-first-three-children)))
-          (org-agenda-hide-tags-regexp "")
-          ))
-    ))
-
-
-
   (defun spolakh/done-for-filter (filter ndays)
       (let ((all-files `(append
                              '(
@@ -902,11 +835,8 @@
   (setq org-agenda-custom-commands `(
                                      ("k" "Kanban" ,(spolakh/kanban-for-filter "+@mine"))
                                      ("K" "Work Kanban" ,(spolakh/kanban-for-filter "+@work"))
-                                     ("a" "Agenda" ,(spolakh/agenda-for-filter "+@mine"))
-                                     ("A" "Work Agenda" ,(spolakh/agenda-for-filter "+@work"))
                                      ("7" "Work Done" (,(spolakh/done-for-filter "+@mine" 7)))
                                      ("&" "Work Done" (,(spolakh/done-for-filter "+@work" 7)))
-                                     ("l" "Lily" ,(spolakh/agenda-for-filter "+Lily"))
                                      ("i" "Fleetings (full list)" (
                                     (todo "Fleeting"
                                           ((org-agenda-overriding-header "🔖 to Finalize into Permanent Notes >")
@@ -919,29 +849,9 @@
                                     ("/" "What feels important now?" ,(spolakh/review-for-filter "+@mine"))
                                     ("?" "What feels important at work?" ,(spolakh/review-for-filter "+@work"))
                                      ))
-  (defun spolakh/switch-to-agenda ()
-    (interactive)
-    (org-agenda nil "a")
-    (spolakh/org-agenda-find-beginning-of-inbox)
-    )
-  (defun spolakh/switch-to-lily-agenda ()
-    (interactive)
-    (org-agenda nil "l")
-    (spolakh/org-agenda-find-beginning-of-inbox)
-    )
-  (defun spolakh/switch-to-work-agenda ()
-    (interactive)
-    (org-agenda nil "A")
-    (spolakh/org-agenda-find-beginning-of-inbox)
-    )
   (defun spolakh/switch-to-ideas-agenda ()
     (interactive)
     (org-agenda nil "i")
-    (spolakh/org-agenda-find-beginning-of-inbox)
-    )
-  (defun spolakh/switch-to-repeaters-agenda ()
-    (interactive)
-    (org-agenda nil "r")
     (spolakh/org-agenda-find-beginning-of-inbox)
     )
   (defun spolakh/switch-to-kanban-agenda ()
@@ -971,17 +881,14 @@
   (map! :map org-mode-map :leader
         (:prefix ("n" . "Notes") "a" nil)
         (:prefix ("a" . "Agenda")
-         :desc "Agenda" "a" #'spolakh/switch-to-agenda
-         :desc "Lily" "l" #'spolakh/switch-to-lily-agenda
          :desc "Fleetings" "i" #'spolakh/switch-to-ideas-agenda
-         :desc "Repeaters (All)" "r" #'spolakh/switch-to-repeaters-agenda
          :desc "Kanban" "k" #'spolakh/switch-to-kanban-agenda
          :desc "Work Kanban" "K" #'spolakh/switch-to-work-kanban-agenda
          :desc "Done for last 7 days" "7" #'spolakh/switch-to-done-review-agenda
          :desc "Work Done for last 7 days" "&" #'spolakh/switch-to-work-done-review-agenda
          :desc "What feels important now?" "/" #'spolakh/switch-to-weekly-agenda
          :desc "What can I drop from work tasks?" "?" #'spolakh/switch-to-weekly-work-agenda
-         :desc "Work Agenda" "A" #'spolakh/switch-to-work-agenda))
+         ))
   (defun spolakh/org-fast-effort-selection ()
     "Modification of `org-fast-todo-selection' for use with org-set-effert. Select an effort value with single keys.
       Returns the new effort value, or nil if no state change should occur.
