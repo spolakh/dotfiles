@@ -320,7 +320,7 @@
        ; Doesn't seem to work with `org-archive-to-archive-sibling'
        ;(setq org-map-continue-from (org-element-property :begin (org-element-at-point)))
        )
-     "/+DONE" 'file))
+     "-ARCHIVE+TODO=\"DONE\"" 'file))
   (defun spolakh/open-projects ()
     (interactive)
     (find-file (concat spolakh/org-agenda-directory "projects.org.gpg")))
@@ -781,7 +781,8 @@
                 ((org-agenda-span 1)
                  (org-agenda-start-day "today")
                  (org-agenda-start-on-weekday nil)
-                 (org-agenda-skip-archived-trees nil)
+                 ; if changing this, also pass nil as a second arg to #'spolakh/skip-subtree-if-irrelevant-to-current-context
+                 (org-agenda-skip-archived-trees t)
                  (org-agenda-files ,all-files)
                  (org-deadline-warning-days 3)
                  (org-agenda-prefix-format '((agenda . " %i %?-16t% s%b")))
