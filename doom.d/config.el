@@ -604,14 +604,14 @@
           subtree-end
         nil)))
 
-  (defun spolakh/skip-subtree-if-irrelevant-to-current-context (filter)
+  (defun spolakh/skip-subtree-if-irrelevant-to-current-context (filter exclude-archive)
     (let ((subtree-end (save-excursion (org-end-of-subtree t)))
           (tags (org-get-tags))
           (tag (substring filter 1))
           )
       (if
           (or (and (> (length tags) 0) (not (member tag tags)))
-              (member "ARCHIVE" tags))
+              (and exclude-archive (member "ARCHIVE" tags)))
           subtree-end
         nil)))
 
@@ -685,14 +685,14 @@
       `((tags-todo "LEVEL=2+TODO=\"Going Well\"+TIMESTAMP_IA<=\"<-1m>\""
                    ((org-agenda-overriding-header "🏆 Going Well - without reminders - for a month. If dropped - In Progress. If still going - Resolved & 🐦 tweet it 💗 >")
                     (org-agenda-prefix-format '((tags . " - ")))
-                    (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
+                    (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)))
                     (org-todo-keyword-faces '(("Going Well" . (:foreground "LightCoral" :weight bold))))
                     (org-agenda-files '(,(concat spolakh/org-agenda-directory "board.org.gpg")))))
 
         (tags-todo "LEVEL=2+TODO=\"In Progress\""
                    ((org-agenda-overriding-header "🎗 Everything In Progress. If we feel safe loosening attention around it - Going Well. If dropped - Open (or archive) >")
                     (org-agenda-prefix-format '((tags . " - ")))
-                    (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
+                    (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)))
                     (org-todo-keyword-faces '(("In Progress" . (:foreground "DarkSalmon" :weight bold))))
                     (org-agenda-files '(,(concat spolakh/org-agenda-directory "board.org.gpg")))))
 
@@ -705,7 +705,7 @@
                (org-agenda-hide-tags-regexp "")
                (org-agenda-prefix-format '((todo . " - %?-8b")))
                (org-agenda-skip-function '(or
-                                           (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                           (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)
                                            (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
                                            ))
                ))
@@ -713,7 +713,7 @@
         (tags-todo "LEVEL=2+TODO=\"TODO\""
                    ((org-agenda-overriding-header "🗃 TODOs from active projects. Maybe take into Sprint >")
                     (org-agenda-prefix-format '((tags . " [%-4e] %?-8b")))
-                    (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
+                    (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)))
                     (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org.gpg")))))
 
         (todo "TODO|WAITING"
@@ -721,7 +721,7 @@
                (org-agenda-files '(,(concat spolakh/org-agenda-directory "later.org.gpg")))
                (org-agenda-skip-function '(or
                                            (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
-                                           (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                           (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)
                                            ))))
 
         (todo "Fleeting"
@@ -738,7 +738,7 @@
                                     )
                                   ))
                (org-agenda-skip-function '(or
-                                           (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                           (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)
                                            ))))
     )))
 
@@ -758,7 +758,7 @@
              (org-agenda-prefix-format '((agenda . " %i %?-16t% s%b")))
              (org-agenda-skip-function '(or
                                          (spolakh/skip-if-waiting)
-                                         (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                         (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)
                                          (spolakh/skip-subtree-if-later)))
              ))
 
@@ -766,7 +766,7 @@
           ((org-agenda-overriding-header "🌒 Waiting (want to do if not blocked, else postpone) >")
           (org-agenda-skip-function '(or
                                        (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
-                                       (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                       (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)
                                        ))
           (org-agenda-hide-tags-regexp "")
           ))
@@ -782,7 +782,7 @@
                              ))
            (org-agenda-skip-function '(or
                                        (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
-                                       (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                       (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)
                                        (spolakh/org-agenda-leave-second-level-in-dailies)
                                        ))
            (org-agenda-max-entries 10)))
@@ -801,7 +801,7 @@
           (org-agenda-files '(,(concat spolakh/org-agenda-directory "projects.org.gpg")))
           (org-agenda-skip-function '(or
                                       (org-agenda-skip-entry-if 'deadline 'scheduled)
-                                      (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                      (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)
                                       (spolakh/org-agenda-leave-only-first-three-children)))
           (org-agenda-hide-tags-regexp "")
           ))
@@ -827,9 +827,10 @@
                     (org-agenda-cmp-user-defined (cmp-date-property "CLOSED"))
                     (org-agenda-sorting-strategy '(user-defined-up))
                     (org-agenda-files ,all-files)
+                    (org-agenda-skip-archived-trees nil)
                     (org-agenda-prefix-format '((tags . "[%-4e] %?-8b")))
                     (org-agenda-skip-function '(or
-                                                (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                                (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter nil)
                                                 ))
                     (org-agenda-hide-tags-regexp "")
                     ))))
@@ -854,14 +855,14 @@
                  (org-agenda-log-mode-items '(closed clock state))
                  (org-agenda-skip-function '(or
                                              (spolakh/skip-if-waiting)
-                                             (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                             (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)
                                              (spolakh/skip-subtree-if-later)))))
 
         (tags-todo "LEVEL=2+TODO=\"In Progress\""
                    ((org-agenda-overriding-header "🎗 In Progress")
                     (org-agenda-prefix-format '((tags . " - ")))
                     (org-agenda-todo-keyword-format "")
-                    (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)))
+                    (org-agenda-skip-function '(or (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)))
                     (org-todo-keyword-faces '(("In Progress" . (:foreground "DarkSalmon" :weight bold))))
                     (org-agenda-files '(,(concat spolakh/org-agenda-directory "board.org.gpg")))))
 
@@ -871,7 +872,7 @@
                (org-agenda-hide-tags-regexp "")
                (org-agenda-prefix-format '((todo . "[%-4e] %?-8b")))
                (org-agenda-skip-function '(or
-                                           (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                           (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)
                                            (org-agenda-skip-entry-if 'scheduled)
                                            ))
                ))
@@ -882,7 +883,7 @@
                (org-agenda-prefix-format '((todo . "[%-4e] %?-8b")))
                (org-agenda-skip-function '(or
                                            (org-agenda-skip-if-scheduled-for-later-with-day-granularity)
-                                           (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter)
+                                           (spolakh/skip-subtree-if-irrelevant-to-current-context ,filter t)
                                            ))
                (org-agenda-hide-tags-regexp "")
                ))
