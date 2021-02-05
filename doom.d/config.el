@@ -85,7 +85,8 @@
   (set-face-attribute 'variable-pitch nil :height 160)
   )
 
-(setq display-line-numbers-type `visual)
+(setq display-line-numbers-type `relative)
+(setq display-line-numbers-current-absolute nil)
 (global-display-line-numbers-mode)
 
 
