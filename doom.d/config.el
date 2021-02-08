@@ -1198,6 +1198,12 @@
 )
 
 ; ORG-POMODORO
+(use-package! org-pomodoro
+  :config
+  (setq org-pomodoro-length 35)
+  (setq org-pomodoro-short-break-length 8)
+  )
+
 (defun my/org-pomodoro-text-time ()
   "Return status info about org-pomodoro and if org-pomodoro is not running, try to print info about org-clock.
     If either org-pomodoro or org-clock aren't active, print \"No Active Task \" "
