@@ -417,7 +417,7 @@
                               (,(concat spolakh/org-agenda-directory "repeaters.org.gpg") :level . 0)
                               (,(concat spolakh/org-agenda-directory "inbox.org.gpg") :level . 0)
                               (,(concat spolakh/org-agenda-directory "projects.org.gpg") :maxlevel . 1)
-                              (nil :maxlevel . 1)))
+                              (nil :maxlevel . 3)))
   (defun spolakh/shift-dwim-at-point ()
     (interactive)
     (let ((org-link-frame-setup (quote
@@ -1352,9 +1352,12 @@
 )
 
 (use-package! company
+  :init
+  (add-to-list 'company-backends 'company-capf)
   :config
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 1))
+  (setq company-idle-delay 0.25)
+  (setq company-minimum-prefix-length 2)
+  )
 
 (use-package! company-lsp
   :commands company-lsp)
