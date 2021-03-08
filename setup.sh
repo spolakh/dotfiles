@@ -34,6 +34,9 @@ sudo launchctl config user path "/usr/local/bin:$PATH"
 echo 'kern.maxfiles=1572864' | sudo tee -a /etc/sysctl.conf > /dev/null
 echo 'kern.maxfilesperproc=786432' | sudo tee -a /etc/sysctl.conf > /dev/null
 
+ln -s /Users/vsterzhanov/dots/change-wallpaper-based-on-darkmode.plist /Users/vsterzhanov/Library/LaunchAgents/change-wallpaper-based-on-darkmode.plist
+launchctl load ~/Library/LaunchAgents/change-wallpaper-based-on-darkmode.plist
+
 echo "Now run :BundleInstall inside vim\n"
 echo "And then run '~/.vim/bundle/YouCompleteMe/install.py --clang-completer'\n"
 echo "And then add `auth sufficient pam_tid.so` to the top of /private/etc/pam.d/sudo for touch-id-based sudo auth"
