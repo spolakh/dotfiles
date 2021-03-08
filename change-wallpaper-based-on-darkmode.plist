@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+<key>Disabled</key>
+<false/>
+<key>Label</key>
+<string>change-wallpaper-based-on-darkmode</string>
+<key>Program</key>
+<string>/usr/bin/osascript</string>
+<key>StartInterval</key>
+<integer>5</integer>
+<key>ProgramArguments</key>
+<array>
+<string>osascript</string>
+<string>/Users/vsterzhanov/dots/set-wallpaper-depending-on-dark-mode.scpt</string>
+</array>
+<key>ServiceDescription</key>
+<string>Changes wallpaper of current space on all monitors every second based on current dark mode setting</string>
+<key>StandardOutPath</key>
+<string>/Users/vsterzhanov/Documents/darkmode-background-switcher.log</string>
+</dict>
+</plist>"
