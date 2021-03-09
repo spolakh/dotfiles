@@ -1269,7 +1269,7 @@
            "**** %?"
            ;:immediate-finish t
            :file-name ,(concat "private/dailies/" spolakh/org-roam-daily-prefix "%<%Y-%m-%d>")
-           :head "#+TITLE: %<%Y-%m-%d>\n\n[[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:\n\n* What's on your mind?\n")
+           :head "#+TITLE: %<%Y-%m-%d>\n\n[[roam:§ PRIVATE/Nice Things Today]] 1: 2: 3:\n\n* What's on your mind?\n* [[roam:§ Shi-Ne Meditation Journal]]\n")
         ))
   (map! :map org-roam-mode-map
         :leader
