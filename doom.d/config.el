@@ -838,7 +838,9 @@
   (setq org-agenda-custom-commands `(
                                      ("k" "Kanban" ,(spolakh/kanban-for-filter "+@mine"))
                                      ("K" "Work Kanban" ,(spolakh/kanban-for-filter "+@work"))
-                                     ("7" "Work Done" (,(spolakh/done-for-filter "+@mine" 7)))
+                                     ("1" "Done Today" (,(spolakh/done-for-filter "+@mine" 1)))
+                                     ("!" "Work Done Today" (,(spolakh/done-for-filter "+@work" 1)))
+                                     ("7" "Done" (,(spolakh/done-for-filter "+@mine" 7)))
                                      ("&" "Work Done" (,(spolakh/done-for-filter "+@work" 7)))
                                      ("i" "Fleetings (full list)" (
                                     (todo "Fleeting"
@@ -865,6 +867,14 @@
     (interactive)
     (org-agenda nil "K")
     )
+  (defun spolakh/switch-to-done-today-agenda ()
+    (interactive)
+    (org-agenda nil "1")
+    )
+  (defun spolakh/switch-to-work-done-today-agenda ()
+    (interactive)
+    (org-agenda nil "!")
+    )
   (defun spolakh/switch-to-done-review-agenda ()
     (interactive)
     (org-agenda nil "7")
@@ -887,6 +897,8 @@
          :desc "Fleetings" "i" #'spolakh/switch-to-ideas-agenda
          :desc "Kanban" "k" #'spolakh/switch-to-kanban-agenda
          :desc "Work Kanban" "K" #'spolakh/switch-to-work-kanban-agenda
+         :desc "Done today" "1" #'spolakh/switch-to-done-today-agenda
+         :desc "Work Done today" "!" #'spolakh/switch-to-work-done-today-agenda
          :desc "Done for last 7 days" "7" #'spolakh/switch-to-done-review-agenda
          :desc "Work Done for last 7 days" "&" #'spolakh/switch-to-work-done-review-agenda
          :desc "What feels important now?" "/" #'spolakh/switch-to-weekly-agenda
